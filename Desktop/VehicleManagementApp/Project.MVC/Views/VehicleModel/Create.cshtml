@@ -1,0 +1,41 @@
+@model Project.MVC.ViewModels.VehicleModelViewModel
+
+@{
+    ViewBag.Title = "Create Vehicle Model";
+}
+
+<h2>Create Vehicle Model</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="form-horizontal">
+        <h4>Vehicle Model</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <!-- Ostala polja kao u Create.cshtml za VehicleMake -->
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.MakeId, "Make", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.MakeId, ViewBag.Makes as SelectList, "Select Make", new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.MakeId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+    
+        <!-- Submit button -->
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
