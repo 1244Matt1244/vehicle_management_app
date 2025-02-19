@@ -1,4 +1,7 @@
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Project.Service.Data.Helpers
 {
@@ -11,6 +14,7 @@ namespace Project.Service.Data.Helpers
         {
             PageIndex = pageIndex;
             TotalPages = (int)Math.Ceiling(count / (double)pageSize);
+
             AddRange(items);
         }
 

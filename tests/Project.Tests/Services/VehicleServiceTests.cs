@@ -27,7 +27,7 @@ namespace Project.Tests.Services
             });
             _mapper = mapperConfig.CreateMapper();
 
-            _vehicleService = new VehicleService(_dbContextMock.Object, _mapper);
+            _vehicleService = new VehicleService(_dbContextMock.Object);
         }
 
         [Fact]
