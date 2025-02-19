@@ -1,0 +1,43 @@
+@model PaginatedList<VehicleMakeDTO>
+
+<h1>Vehicle Makes</h1>
+
+<form asp-action="Index" method="get">
+    <input type="text" name="searchString" value="@ViewData["CurrentFilter"]" placeholder="Search by name" />
+    <button type="submit">Search</button>
+</form>
+
+<table>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Abbreviation</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var make in Model)
+        {
+            <tr>
+                <td>@make.Name</td>
+                <td>@make.Abrv</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@make.Id">Edit</a> |
+                    <a asp-action="Delete" asp-route-id="@make.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div>
+    Page @(Model.TotalPages < Model.PageIndex ? 0 : Model.PageIndex) of @Model.TotalPages
+    @if (Model.HasPreviousPage)
+    {
+        <a asp-action="Index" asp-route-pageNumber="@(Model.PageIndex - 1)">Previous</a>
+    }
+    @if (Model.HasNextPage)
+    {
+        <a asp-action="Index" asp-route-pageNumber="@(Model.PageIndex + 1)">Next</a>
+    }
+</div>
