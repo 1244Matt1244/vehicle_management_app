@@ -72,6 +72,10 @@
               "target": "Package",
               "version": "[9.0.2, )"
             },
+            "Ninject": {
+              "target": "Package",
+              "version": "[3.3.6, )"
+            },
             "Serilog": {
               "target": "Package",
               "version": "[4.2.0, )"

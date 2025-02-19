@@ -1608,6 +1608,7 @@
           "Microsoft.EntityFrameworkCore": "9.0.2",
           "Microsoft.EntityFrameworkCore.Sqlite": "9.0.2",
           "Microsoft.Extensions.Logging.Abstractions": "9.0.2",
+          "Ninject": "3.3.6",
           "Serilog": "4.2.0",
           "Serilog.Extensions.Logging": "9.0.0",
           "Serilog.Sinks.Console": "6.0.0",
