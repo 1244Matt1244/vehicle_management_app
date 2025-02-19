@@ -8,10 +8,10 @@ namespace Project.Service.DTOs
 
         [Required]
         [StringLength(50)]
-        public string Name { get; set; }
+        public required string Name { get; set; }
 
         [Required]
         [StringLength(10)]
-        public string Abrv { get; set; }
+        public required string Abrv { get; set; }
     }
 }

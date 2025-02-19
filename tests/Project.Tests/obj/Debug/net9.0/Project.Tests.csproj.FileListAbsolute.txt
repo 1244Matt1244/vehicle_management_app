@@ -1,6 +1,0 @@
-C:\Users\korisnik\Desktop\vehicle_management_app\tests\Project.Tests\obj\Debug\net9.0\Project.Tests.csproj.AssemblyReference.cache
-C:\Users\korisnik\Desktop\vehicle_management_app\tests\Project.Tests\obj\Debug\net9.0\Project.Tests.GeneratedMSBuildEditorConfig.editorconfig
-C:\Users\korisnik\Desktop\vehicle_management_app\tests\Project.Tests\obj\Debug\net9.0\Project.Tests.AssemblyInfoInputs.cache
-C:\Users\korisnik\Desktop\vehicle_management_app\tests\Project.Tests\obj\Debug\net9.0\Project.Tests.AssemblyInfo.cs
-C:\Users\korisnik\Desktop\vehicle_management_app\tests\Project.Tests\obj\Debug\net9.0\Project.Tests.csproj.CoreCompileInputs.cache
-C:\Users\korisnik\Desktop\vehicle_management_app\tests\Project.Tests\obj\Debug\net9.0\Project.Tests.sourcelink.json

@@ -1,0 +1,13 @@
+<!-- VehicleModel/Index.cshtml -->
+@using Project.Service.Data.DTOs
+@{
+    var makes = ViewBag.Makes as IEnumerable<VehicleMakeDTO>;
+}
+
+<select asp-for="MakeId" class="form-control">
+    <option value="">All Makes</option>
+    @foreach (var make in makes)
+    {
+        <option value="@make.Id">@make.Name</option>
+    }
+</select>
