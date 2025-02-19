@@ -19,6 +19,3 @@ C:\Users\korisnik\Desktop\vehicle_management_app\src\Project.Service\obj\Debug\n
 C:\Users\korisnik\Desktop\vehicle_management_app\src\Project.Service\obj\Debug\net8.0\Project.Service.AssemblyInfo.cs
 C:\Users\korisnik\Desktop\vehicle_management_app\src\Project.Service\obj\Debug\net8.0\Project.Service.csproj.CoreCompileInputs.cache
 C:\Users\korisnik\Desktop\vehicle_management_app\src\Project.Service\obj\Debug\net8.0\Project.Service.sourcelink.json
-C:\Users\korisnik\Desktop\vehicle_management_app\src\Project.Service\obj\Debug\net8.0\Project.Service.dll
-C:\Users\korisnik\Desktop\vehicle_management_app\src\Project.Service\obj\Debug\net8.0\refint\Project.Service.dll
-C:\Users\korisnik\Desktop\vehicle_management_app\src\Project.Service\obj\Debug\net8.0\Project.Service.pdb
