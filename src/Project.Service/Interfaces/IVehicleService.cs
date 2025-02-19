@@ -1,26 +1,20 @@
+using Project.Service.DTOs;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Project.Service.Data.DTOs;
 
 namespace Project.Service.Interfaces
 {
     public interface IVehicleService
     {
-        // VehicleMake methods
-        Task<IEnumerable<VehicleMakeDTO>> GetAllMakesAsync();
+        Task<IEnumerable<VehicleMakeDTO>> GetAllMakesAsync(string search, string sortOrder, int page, int pageSize);
+        Task<IEnumerable<VehicleModelDTO>> GetAllModelsAsync(string search, string sortOrder, int page, int pageSize);
         Task<VehicleMakeDTO> GetMakeByIdAsync(int id);
-        Task CreateMakeAsync(VehicleMakeDTO makeDto);
-        Task UpdateMakeAsync(VehicleMakeDTO makeDto);
-        Task DeleteMakeAsync(int id);
-
-        // VehicleModel methods
-        Task<IEnumerable<VehicleModelDTO>> GetAllModelsAsync();
         Task<VehicleModelDTO> GetModelByIdAsync(int id);
-        Task CreateModelAsync(VehicleModelDTO modelDto);
+        Task AddMakeAsync(VehicleMakeDTO makeDto);
+        Task AddModelAsync(VehicleModelDTO modelDto);
+        Task UpdateMakeAsync(VehicleMakeDTO makeDto);
         Task UpdateModelAsync(VehicleModelDTO modelDto);
+        Task DeleteMakeAsync(int id);
         Task DeleteModelAsync(int id);
-
-        // Pagination and Filtering
-        Task<PaginatedList<VehicleModelDTO>> GetModelsAsync(string sortOrder, string searchString, int pageNumber, int pageSize);
     }
 }
