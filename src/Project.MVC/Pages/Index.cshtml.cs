@@ -1,19 +1,7 @@
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-
-namespace VehicleManagement.MVC.Pages;
-
-public class IndexModel : PageModel
+namespace Project.MVC.Pages
 {
-    private readonly ILogger<IndexModel> _logger;
-
-    public IndexModel(ILogger<IndexModel> logger)
+    public class IndexModel
     {
-        _logger = logger;
-    }
-
-    public void OnGet()
-    {
-
+        public string Title { get; set; } = "Home Page";
     }
 }
