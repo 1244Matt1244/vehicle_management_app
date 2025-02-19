@@ -12,15 +12,12 @@ namespace Project.Service.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<VehicleMake>().HasKey(m => m.Id);
-            modelBuilder.Entity<VehicleModel>().HasKey(m => m.Id);
-
-            // Configure relationships
             modelBuilder.Entity<VehicleModel>()
-                .HasOne(vm => vm.Make)
-                .WithMany()
-                .HasForeignKey(vm => vm.MakeId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .HasOne(vm => vm.VehicleMake)
+                .WithMany(vm => vm.VehicleModels)
+                .HasForeignKey(vm => vm.MakeId);
+
+            base.OnModelCreating(modelBuilder);
         }
     }
 }

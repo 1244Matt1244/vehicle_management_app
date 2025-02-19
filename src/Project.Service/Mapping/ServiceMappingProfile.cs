@@ -1,5 +1,5 @@
 using AutoMapper;
-using Project.Service.Data.DTOs;
+using Project.Service.DTOs;
 using Project.Service.Models;
 
 namespace Project.Service.Mapping
@@ -10,7 +10,7 @@ namespace Project.Service.Mapping
         {
             CreateMap<VehicleMake, VehicleMakeDTO>().ReverseMap();
             CreateMap<VehicleModel, VehicleModelDTO>()
-                .ForMember(dest => dest.MakeName, opt => opt.MapFrom(src => src.Make.Name))
+                .ForMember(dest => dest.MakeName, opt => opt.MapFrom(src => src.VehicleMake.Name))
                 .ReverseMap();
         }
     }
