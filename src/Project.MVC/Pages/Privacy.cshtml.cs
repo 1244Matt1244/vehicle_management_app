@@ -1,7 +1,12 @@
-﻿namespace Project.MVC.Pages
+﻿using Microsoft.AspNetCore.Mvc.RazorPages;
+
+namespace Project.MVC.Pages
 {
-    public class PrivacyModel
+    public class PrivacyModel : PageModel
     {
-        public string PrivacyPolicy { get; set; } = "Your privacy policy text here.";
+        public void OnGet()
+        {
+            // Logic for the Privacy page
+        }
     }
 }

@@ -1,7 +1,12 @@
+using Microsoft.AspNetCore.Mvc.RazorPages;
+
 namespace Project.MVC.Pages
 {
-    public class IndexModel
+    public class IndexModel : PageModel
     {
-        public string Title { get; set; } = "Home Page";
+        public void OnGet()
+        {
+            // Logic for the Index page
+        }
     }
 }

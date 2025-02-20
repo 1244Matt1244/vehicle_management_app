@@ -1,4 +1,5 @@
-@model PaginatedList<VehicleMakeDTO>
+Page @(Model.TotalPages < Model.PageIndex ? 0 : Model.PageIndex) of @Model.TotalPages
+
 
 <h1>Vehicle Makes</h1>
 

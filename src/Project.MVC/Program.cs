@@ -10,11 +10,31 @@ using Project.Service.Models; // For VehicleMake and VehicleModel
 
 var builder = WebApplication.CreateBuilder(args);
 
+using Project.Service.Interfaces;
+using Project.Service.Services;
+
+var builder = WebApplication.CreateBuilder(args);
+
 // Add services to the container
-builder.Services.AddControllersWithViews(options =>
-{
-    options.Filters.Add<CustomExceptionFilter>();
-});
+builder.Services.AddControllersWithViews();
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+builder.Services.AddScoped<IVehicleService, VehicleService>();
+
+var app = builder.Build();
+
+app.UseHttpsRedirection();
+app.UseStaticFiles();
+
+app.UseRouting();
+
+app.UseAuthorization();
+
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Home}/{action=Index}/{id?}");
+
+app.Run();
+
 
 // Configure DbContext
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
