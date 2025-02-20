@@ -1,4 +1,4 @@
-@model IEnumerable<Project.MVC.ViewModels.VehicleModelVM>
+@model Project.Service.PaginatedList<Project.Service.Models.VehicleModel>
 
 <h1>Vehicle Models</h1>
 
@@ -14,12 +14,12 @@
     <tbody>
         @foreach (var model in Model)
         {
-            <tr>
-                <td>@model.Id</td>
-                <td>@model.Name</td>
-                <td>@model.Abrv</td>
-                <td>@model.VehicleMake?.Name</td>
-            </tr>
+        <tr>
+            <td>@model.Id</td>
+            <td>@model.Name</td>
+            <td>@model.Abrv</td>
+            <td>@model.VehicleMake?.Name</td>
+        </tr>
         }
     </tbody>
 </table>
