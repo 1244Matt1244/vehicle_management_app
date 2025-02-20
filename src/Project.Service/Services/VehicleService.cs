@@ -1,45 +1,85 @@
-using Project.Service.Data.Context;
 using Project.Service.Interfaces;
-using Project.Service.Models;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Project.MVC.ViewModels;
 
 namespace Project.Service.Services
 {
     public class VehicleService : IVehicleService
     {
-        private readonly ApplicationDbContext _context;
+        // Mock data for demonstration purposes
+        private readonly List<VehicleMakeVM> _makes = new();
+        private readonly List<VehicleModelVM> _models = new();
 
-        public VehicleService(ApplicationDbContext context)
+        public Task<IEnumerable<VehicleModelVM>> GetModelsAsync()
         {
-            _context = context;
+            return Task.FromResult(_models.AsEnumerable());
         }
 
-        public async Task<IEnumerable<VehicleModel>> GetAllVehicleModelsAsync()
+        public Task CreateModelAsync(VehicleModelVM model)
         {
-            return await Task.FromResult(_context.VehicleModels.ToList());
+            model.Id = _models.Count + 1;
+            _models.Add(model);
+            return Task.CompletedTask;
         }
 
-        public async Task<VehicleModel?> GetVehicleModelByIdAsync(int id)
+        public Task<VehicleModelVM> GetModelByIdAsync(int id)
         {
-            return await Task.FromResult(_context.VehicleModels.FirstOrDefault(vm => vm.Id == id));
+            var model = _models.FirstOrDefault(m => m.Id == id);
+            return Task.FromResult(model);
         }
 
-        public async Task AddVehicleModelAsync(VehicleModel vehicleModel)
+        public Task UpdateModelAsync(VehicleModelVM model)
         {
-            _context.VehicleModels.Add(vehicleModel);
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task DeleteVehicleModelAsync(int id)
-        {
-            var vehicleModel = _context.VehicleModels.FirstOrDefault(vm => vm.Id == id);
-            if (vehicleModel != null)
+            var existing = _models.FirstOrDefault(m => m.Id == model.Id);
+            if (existing != null)
             {
-                _context.VehicleModels.Remove(vehicleModel);
-                await _context.SaveChangesAsync();
+                existing.Name = model.Name;
+                existing.Abrv = model.Abrv;
+                existing.VehicleMakeId = model.VehicleMakeId;
             }
+            return Task.CompletedTask;
+        }
+
+        public Task DeleteModelAsync(int id)
+        {
+            var model = _models.FirstOrDefault(m => m.Id == id);
+            if (model != null) _models.Remove(model);
+            return Task.CompletedTask;
+        }
+
+        public Task<IEnumerable<VehicleMakeVM>> GetAllMakesAsync()
+        {
+            return Task.FromResult(_makes.AsEnumerable());
+        }
+
+        public Task CreateMakeAsync(VehicleMakeVM make)
+        {
+            make.Id = _makes.Count + 1;
+            _makes.Add(make);
+            return Task.CompletedTask;
+        }
+
+        public Task<VehicleMakeVM> GetMakeByIdAsync(int id)
+        {
+            var make = _makes.FirstOrDefault(m => m.Id == id);
+            return Task.FromResult(make);
+        }
+
+        public Task UpdateMakeAsync(VehicleMakeVM make)
+        {
+            var existing = _makes.FirstOrDefault(m => m.Id == make.Id);
+            if (existing != null)
+            {
+                existing.Name = make.Name;
+                existing.Abrv = make.Abrv;
+            }
+            return Task.CompletedTask;
+        }
+
+        public Task DeleteMakeAsync(int id)
+        {
+            var make = _makes.FirstOrDefault(m => m.Id == id);
+            if (make != null) _makes.Remove(make);
+            return Task.CompletedTask;
         }
     }
 }

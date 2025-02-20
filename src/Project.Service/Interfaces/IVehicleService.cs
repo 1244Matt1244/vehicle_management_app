@@ -1,14 +1,17 @@
-using Project.Service.Models;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-
 namespace Project.Service.Interfaces
 {
     public interface IVehicleService
     {
-        Task<IEnumerable<VehicleModel>> GetAllVehicleModelsAsync();
-        Task<VehicleModel?> GetVehicleModelByIdAsync(int id); // Nullable return type
-        Task AddVehicleModelAsync(VehicleModel vehicleModel);
-        Task DeleteVehicleModelAsync(int id);
+        Task<IEnumerable<VehicleModelVM>> GetModelsAsync();
+        Task CreateModelAsync(VehicleModelVM model);
+        Task<VehicleModelVM> GetModelByIdAsync(int id);
+        Task UpdateModelAsync(VehicleModelVM model);
+        Task DeleteModelAsync(int id);
+
+        Task<IEnumerable<VehicleMakeVM>> GetAllMakesAsync();
+        Task CreateMakeAsync(VehicleMakeVM make);
+        Task<VehicleMakeVM> GetMakeByIdAsync(int id);
+        Task UpdateMakeAsync(VehicleMakeVM make);
+        Task DeleteMakeAsync(int id);
     }
 }
