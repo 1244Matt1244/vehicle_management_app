@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using Project.Service.Models;
+using Project.Service.Shared.Models;
 using Project.Service.Data;
 
 namespace Project.Service.Data.Context

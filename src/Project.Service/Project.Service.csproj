@@ -6,7 +6,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Project.Service.Shared\Project.Service.Shared.csproj" />
+    <ProjectReference Include="..\..\src\Project.Service.Shared\Project.Service.Shared.csproj" />
+
   </ItemGroup>
 
   <ItemGroup>

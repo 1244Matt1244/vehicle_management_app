@@ -24,9 +24,8 @@
 
 
   <ItemGroup>
-  <ProjectReference Include="..\..\src\Project.Service\Project.Service.csproj" />
-  <ProjectReference Include="..\..\src\Project.MVC\Project.MVC.csproj" />
+    <ProjectReference Include="..\..\src\Project.Service\Project.Service.csproj" />
+    <ProjectReference Include="..\..\src\Project.Service.Shared\Project.Service.Shared.csproj" />
   </ItemGroup>
-
 
 </Project>
