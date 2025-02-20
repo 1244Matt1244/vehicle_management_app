@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "WbilV499kt4=",
+  "dgSpecHash": "BunQGWkOt7U=",
   "success": true,
   "projectFilePath": "C:\\Users\\korisnik\\Desktop\\vehicle_management_app\\tests\\Project.Tests\\Project.Tests.csproj",
   "expectedPackageFiles": [
@@ -58,6 +58,7 @@
     "C:\\Users\\korisnik\\.nuget\\packages\\sqlitepclraw.provider.e_sqlite3\\2.1.10\\sqlitepclraw.provider.e_sqlite3.2.1.10.nupkg.sha512",
     "C:\\Users\\korisnik\\.nuget\\packages\\system.diagnostics.eventlog\\6.0.0\\system.diagnostics.eventlog.6.0.0.nupkg.sha512",
     "C:\\Users\\korisnik\\.nuget\\packages\\system.io\\4.3.0\\system.io.4.3.0.nupkg.sha512",
+    "C:\\Users\\korisnik\\.nuget\\packages\\system.linq.dynamic.core\\1.6.0.2\\system.linq.dynamic.core.1.6.0.2.nupkg.sha512",
     "C:\\Users\\korisnik\\.nuget\\packages\\system.memory\\4.5.3\\system.memory.4.5.3.nupkg.sha512",
     "C:\\Users\\korisnik\\.nuget\\packages\\system.reflection\\4.3.0\\system.reflection.4.3.0.nupkg.sha512",
     "C:\\Users\\korisnik\\.nuget\\packages\\system.reflection.emit.ilgeneration\\4.3.0\\system.reflection.emit.ilgeneration.4.3.0.nupkg.sha512",
