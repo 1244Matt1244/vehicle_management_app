@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Moq;
 using Project.Service.Data;
 using Project.Service.Interfaces;
-using Project.Service.Models;
+using Project.Service.Shared.Models;
 using Project.Service.Services;
 using System.Collections.Generic;
 using System.Linq;
