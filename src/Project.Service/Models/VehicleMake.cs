@@ -8,6 +8,6 @@ namespace Project.Service.Models
         public required string Name { get; set; }
         public required string Abrv { get; set; }
 
-        public required ICollection<VehicleModel> VehicleModels { get; set; }
+        public required ICollection<VehicleModel> Models { get; set; }
     }
 }

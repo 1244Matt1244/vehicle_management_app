@@ -1,6 +1,17 @@
 // Program.cs
+using AutoMapper;
+using Ninject;
 using Ninject.Web.AspNetCore.Hosting;
 using Project.Service.Data.Context;
+using Project.MVC.Filters;
+using Microsoft.EntityFrameworkCore;
+using Project.Service.Data;
+using Project.Service.Models;
+using Project.MVC.Mappings;
+using Project.Service.Interfaces;
+using Project.Service.Services;
+using Project.Service.Mapping;
+
 
 var builder = WebApplication.CreateBuilder(args);
 

@@ -7,6 +7,7 @@ using Project.Service.Data.Context;
 using Project.Service.Interfaces;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Project.Service.Models;
 
 namespace Project.Service.Services
 {
