@@ -1,0 +1,26 @@
+@model Project.MVC.ViewModels.VehicleModelVM
+
+<h1>Create Vehicle Model</h1>
+
+<form asp-action="Create" method="post">
+    <div>
+        <label asp-for="Name"></label>
+        <input asp-for="Name" />
+        <span asp-validation-for="Name"></span>
+    </div>
+    <div>
+        <label asp-for="Abrv"></label>
+        <input asp-for="Abrv" />
+        <span asp-validation-for="Abrv"></span>
+    </div>
+    <div>
+        <label asp-for="VehicleMakeId">Vehicle Make</label>
+        <select asp-for="VehicleMakeId" asp-items="@(new SelectList(ViewBag.VehicleMakes, "Id", "Name"))"></select>
+        <span asp-validation-for="VehicleMakeId"></span>
+    </div>
+    <button type="submit">Submit</button>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,3 +1,5 @@
+using Project.MVC.ViewModels;
+
 namespace Project.Service.Interfaces
 {
     public interface IVehicleService

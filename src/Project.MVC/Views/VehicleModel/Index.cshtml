@@ -1,15 +1,25 @@
-@using Project.Service.Data.DTOs
-@{
-    var makes = ViewBag.Makes as IEnumerable<VehicleMakeDTO>;
-}
+@model IEnumerable<Project.MVC.ViewModels.VehicleModelVM>
 
-<select asp-for="MakeId" class="form-control">
-    <option value="">All Makes</option>
-    @if (makes != null)
-    {
-        foreach (var make in makes)
+<h1>Vehicle Models</h1>
+
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Abbreviation</th>
+            <th>Vehicle Make</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var model in Model)
         {
-            <option value="@make.Id">@make.Name</option>
+            <tr>
+                <td>@model.Id</td>
+                <td>@model.Name</td>
+                <td>@model.Abrv</td>
+                <td>@model.VehicleMake?.Name</td>
+            </tr>
         }
-    }
-</select>
+    </tbody>
+</table>
