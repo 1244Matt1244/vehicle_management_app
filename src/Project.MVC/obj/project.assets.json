@@ -1645,6 +1645,7 @@
           "Microsoft.EntityFrameworkCore.Sqlite": "9.0.2",
           "Microsoft.Extensions.Logging.Abstractions": "9.0.2",
           "Ninject": "3.3.6",
+          "Project.Service.Shared": "1.0.0",
           "Serilog": "4.2.0",
           "Serilog.Extensions.Logging": "9.0.0",
           "Serilog.Sinks.Console": "6.0.0",
@@ -1656,6 +1657,19 @@
         },
         "runtime": {
           "bin/placeholder/Project.Service.dll": {}
+        }
+      },
+      "Project.Service.Shared/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v8.0",
+        "dependencies": {
+          "AutoMapper": "12.0.1"
+        },
+        "compile": {
+          "bin/placeholder/Project.Service.Shared.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Project.Service.Shared.dll": {}
         }
       }
     }
@@ -4849,6 +4863,11 @@
       "type": "project",
       "path": "../Project.Service/Project.Service.csproj",
       "msbuildProject": "../Project.Service/Project.Service.csproj"
+    },
+    "Project.Service.Shared/1.0.0": {
+      "type": "project",
+      "path": "../Project.Service.Shared/Project.Service.Shared.csproj",
+      "msbuildProject": "../Project.Service.Shared/Project.Service.Shared.csproj"
     }
   },
   "projectFileDependencyGroups": {
@@ -4862,6 +4881,7 @@
       "Ninject.Web.AspNetCore >= 9.0.0",
       "Ninject.Web.Common >= 3.3.2",
       "Project.Service >= 1.0.0",
+      "Project.Service.Shared >= 1.0.0",
       "Serilog.AspNetCore >= 9.0.0",
       "Serilog.Sinks.Console >= 6.0.0",
       "Serilog.Sinks.File >= 6.0.0"
@@ -4899,6 +4919,9 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "projectReferences": {
+            "C:\\Users\\korisnik\\Desktop\\vehicle_management_app\\src\\Project.Service.Shared\\Project.Service.Shared.csproj": {
+              "projectPath": "C:\\Users\\korisnik\\Desktop\\vehicle_management_app\\src\\Project.Service.Shared\\Project.Service.Shared.csproj"
+            },
             "C:\\Users\\korisnik\\Desktop\\vehicle_management_app\\src\\Project.Service\\Project.Service.csproj": {
               "projectPath": "C:\\Users\\korisnik\\Desktop\\vehicle_management_app\\src\\Project.Service\\Project.Service.csproj"
             }

@@ -1,39 +1,27 @@
-// Program.cs
-using AutoMapper;
-using Ninject;
-using Ninject.Web.AspNetCore.Hosting;
-using Project.Service.Data.Context;
-using Project.MVC.Filters;
+// 1. Program.cs (Updated Ninject Configuration)
 using Microsoft.EntityFrameworkCore;
-using Project.Service.Data;
-using Project.Service.Models;
-using Project.MVC.Mappings;
+using Ninject.Web.AspNetCore;
+using Project.Service.Data.Context;
 using Project.Service.Interfaces;
 using Project.Service.Services;
-using Project.Service.Mapping;
-
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add global error handling
-builder.Services.AddControllersWithViews(options => 
-{
-    options.Filters.Add<GlobalExceptionFilter>();
-});
-
-// Ninject
-builder.Host.UseNinject();
+// Ninject Configuration
+builder.Host.UseServiceProviderFactory(new NinjectServiceProviderFactory());
 builder.Host.ConfigureContainer<NinjectServiceProviderBuilder>(services =>
 {
+    // Database Context
     services.Bind<ApplicationDbContext>()
         .ToSelf()
         .InRequestScope()
-        .WithConstructorArgument("options", 
+        .WithConstructorArgument("options",
             new DbContextOptionsBuilder<ApplicationDbContext>()
                 .UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"))
                 .Options);
 
-    services.Bind<IVehicleService>().To<VehicleService>();
+    // Services
+    services.Bind<IVehicleService>().To<VehicleService>().InTransientScope();
 });
 
 // AutoMapper
@@ -54,6 +42,6 @@ app.UseStaticFiles();
 app.UseRouting();
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Vehicle}/{action=Makes}/{id?}");
+    pattern: "{controller=Vehicle}/{action=Index}/{id?}");
 
 app.Run();

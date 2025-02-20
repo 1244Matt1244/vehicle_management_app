@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "tAEDEyo+74Q=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\korisnik\\Desktop\\vehicle_management_app\\src\\Project.Service.Shared\\Project.Service.Shared.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\korisnik\\.nuget\\packages\\automapper\\12.0.1\\automapper.12.0.1.nupkg.sha512",
+    "C:\\Users\\korisnik\\.nuget\\packages\\microsoft.csharp\\4.7.0\\microsoft.csharp.4.7.0.nupkg.sha512"
+  ],
+  "logs": []
+}
