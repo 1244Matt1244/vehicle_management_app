@@ -1,4 +1,4 @@
-// 1. Program.cs (Updated Ninject Configuration)
+// 2. Program.cs (Corrected Configuration)
 using Microsoft.EntityFrameworkCore;
 using Ninject.Web.AspNetCore;
 using Project.Service.Data.Context;
@@ -11,7 +11,6 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Host.UseServiceProviderFactory(new NinjectServiceProviderFactory());
 builder.Host.ConfigureContainer<NinjectServiceProviderBuilder>(services =>
 {
-    // Database Context
     services.Bind<ApplicationDbContext>()
         .ToSelf()
         .InRequestScope()
@@ -20,12 +19,11 @@ builder.Host.ConfigureContainer<NinjectServiceProviderBuilder>(services =>
                 .UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"))
                 .Options);
 
-    // Services
     services.Bind<IVehicleService>().To<VehicleService>().InTransientScope();
 });
 
 // AutoMapper
-builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
+builder.Services.AddAutoMapper(typeof(ServiceMappings), typeof(WebMappings));
 
 var app = builder.Build();
 
@@ -36,7 +34,6 @@ using (var scope = app.Services.CreateScope())
     await context.Database.MigrateAsync();
 }
 
-// MVC Configuration
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
