@@ -1,13 +1,13 @@
 // Project.Service/Services/VehicleService.cs
 using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
-using Project.Service.Data;
-using Project.Service.Shared.DTOs;
 using Project.Service.Data.Context;
 using Project.Service.Interfaces;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+using Project.Service.Shared.DTOs;
+using Project.Service.Shared.Helpers;
 using Project.Service.Models;
+using System.Linq.Dynamic.Core;
 
 namespace Project.Service.Services
 {
@@ -22,13 +22,105 @@ namespace Project.Service.Services
             _mapper = mapper;
         }
 
-        // Vehicle Model Methods
-        public async Task<IEnumerable<VehicleModelDTO>> GetModelsAsync()
+        #region Vehicle Makes
+        public async Task<PaginatedList<VehicleMakeDTO>> GetMakesAsync(
+            int pageIndex = 1,
+            int pageSize = 10,
+            string sortBy = "Name",
+            string sortOrder = "asc",
+            string searchString = "")
         {
-            return await _context.VehicleModels
+            var query = _context.VehicleMakes
+                .AsNoTracking()
+                .AsQueryable();
+
+            // Filtering
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                query = query.Where(m => 
+                    m.Name.Contains(searchString) || 
+                    m.Abrv.Contains(searchString));
+            }
+
+            // Sorting
+            query = query.OrderBy($"{sortBy} {sortOrder}");
+
+            // Projection and Pagination
+            return await PaginatedList<VehicleMakeDTO>.CreateAsync(
+                query.ProjectTo<VehicleMakeDTO>(_mapper.ConfigurationProvider),
+                pageIndex,
+                pageSize
+            );
+        }
+
+        public async Task<VehicleMakeDTO> GetMakeByIdAsync(int id)
+        {
+            var make = await _context.VehicleMakes.FindAsync(id);
+            return _mapper.Map<VehicleMakeDTO>(make);
+        }
+
+        public async Task CreateMakeAsync(VehicleMakeDTO makeDto)
+        {
+            var make = _mapper.Map<VehicleMake>(makeDto);
+            _context.VehicleMakes.Add(make);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task UpdateMakeAsync(VehicleMakeDTO makeDto)
+        {
+            var make = await _context.VehicleMakes.FindAsync(makeDto.Id);
+            _mapper.Map(makeDto, make);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task DeleteMakeAsync(int id)
+        {
+            var make = await _context.VehicleMakes.FindAsync(id);
+            if (make != null)
+            {
+                _context.VehicleMakes.Remove(make);
+                await _context.SaveChangesAsync();
+            }
+        }
+        #endregion
+
+        #region Vehicle Models
+        public async Task<PaginatedList<VehicleModelDTO>> GetModelsAsync(
+            int pageIndex = 1,
+            int pageSize = 10,
+            string sortBy = "Name",
+            string sortOrder = "asc",
+            string searchString = "",
+            int? makeId = null)
+        {
+            var query = _context.VehicleModels
+                .AsNoTracking()
                 .Include(m => m.Make)
-                .Select(m => _mapper.Map<VehicleModelDTO>(m))
-                .ToListAsync();
+                .AsQueryable();
+
+            // Filtering
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                query = query.Where(m => 
+                    m.Name.Contains(searchString) || 
+                    m.Abrv.Contains(searchString) ||
+                    m.Make.Name.Contains(searchString));
+            }
+
+            if (makeId.HasValue)
+            {
+                query = query.Where(m => m.MakeId == makeId.Value);
+            }
+
+            // Sorting
+            query = query.OrderBy($"{sortBy} {sortOrder}");
+
+            // Projection and Pagination
+            return await PaginatedList<VehicleModelDTO>.CreateAsync(
+                query.ProjectTo<VehicleModelDTO>(_mapper.ConfigurationProvider),
+                pageIndex,
+                pageSize
+            );
         }
 
         public async Task<VehicleModelDTO> GetModelByIdAsync(int id)
@@ -62,43 +154,6 @@ namespace Project.Service.Services
                 await _context.SaveChangesAsync();
             }
         }
-
-        // Vehicle Make Methods
-        public async Task<IEnumerable<VehicleMakeDTO>> GetMakesAsync()
-        {
-            return await _context.VehicleMakes
-                .Select(m => _mapper.Map<VehicleMakeDTO>(m))
-                .ToListAsync();
-        }
-
-        public async Task<VehicleMakeDTO> GetMakeByIdAsync(int id)
-        {
-            var make = await _context.VehicleMakes.FindAsync(id);
-            return _mapper.Map<VehicleMakeDTO>(make);
-        }
-
-        public async Task CreateMakeAsync(VehicleMakeDTO makeDto)
-        {
-            var make = _mapper.Map<VehicleMake>(makeDto);
-            _context.VehicleMakes.Add(make);
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task UpdateMakeAsync(VehicleMakeDTO makeDto)
-        {
-            var make = await _context.VehicleMakes.FindAsync(makeDto.Id);
-            _mapper.Map(makeDto, make);
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task DeleteMakeAsync(int id)
-        {
-            var make = await _context.VehicleMakes.FindAsync(id);
-            if (make != null)
-            {
-                _context.VehicleMakes.Remove(make);
-                await _context.SaveChangesAsync();
-            }
-        }
+        #endregion
     }
 }

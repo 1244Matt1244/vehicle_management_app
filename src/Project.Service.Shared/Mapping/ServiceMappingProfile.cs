@@ -1,7 +1,6 @@
 // Project.Service.Shared/Mappings/ServiceMappings.cs
 using AutoMapper;
 using Project.Service.Shared.DTOs;
-using Project.Service.Models;
 
 public class ServiceMappings : Profile
 {

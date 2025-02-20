@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Project.Service.Data.DTOs
+namespace Project.Service.Shared.DTOs
 {
 
     public class VehicleModelDTO
