@@ -1,67 +1,46 @@
-using Microsoft.EntityFrameworkCore;
-using Ninject;
+// Project.MVC/Program.cs
+using Ninject.Web.AspNetCore.Hosting;
 using Project.Service.Data.Context;
-using Project.Service.Mapping;
-using Project.Service.Services;
-using Project.MVC.Filters;
-using Project.Service.Data; 
-using Project.Service.Models; // For VehicleMake and VehicleModel
-
-
-var builder = WebApplication.CreateBuilder(args);
-
 using Project.Service.Interfaces;
 using Project.Service.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container
-builder.Services.AddControllersWithViews();
-builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-builder.Services.AddScoped<IVehicleService, VehicleService>();
-
-var app = builder.Build();
-
-app.UseHttpsRedirection();
-app.UseStaticFiles();
-
-app.UseRouting();
-
-app.UseAuthorization();
-
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
-
-app.Run();
-
-
-// Configure DbContext
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlite("Data Source=vehicle_management_dba.db"));
-
-// Configure AutoMapper
-builder.Services.AddAutoMapper(typeof(ServiceMappingProfile));
-
-// Configure Dependency Injection
-builder.Services.AddScoped<IVehicleService, VehicleService>();
-
-var app = builder.Build();
-
-// Configure the HTTP request pipeline
-if (!app.Environment.IsDevelopment())
+// Ninject Configuration
+builder.Host.UseNinject();
+builder.Host.ConfigureContainer<NinjectServiceProviderBuilder>((context, services) =>
 {
-    app.UseExceptionHandler("/Home/Error");
-    app.UseHsts();
+    // Database Context
+    services.Bind<ApplicationDbContext>()
+        .ToSelf()
+        .InRequestScope()
+        .WithConstructorArgument("options", 
+            new DbContextOptionsBuilder<ApplicationDbContext>()
+                .UseSqlite(context.Configuration.GetConnectionString("DefaultConnection"))
+                .Options);
+
+    // Services
+    services.Bind<IVehicleService>().To<VehicleService>().InTransientScope();
+});
+
+// AutoMapper
+builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
+
+var app = builder.Build();
+
+// Database Migration
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    await context.Database.MigrateAsync();
 }
 
+// MVC Configuration
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
-app.UseAuthorization();
-
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Make}/{action=Index}/{id?}");
 
 app.Run();

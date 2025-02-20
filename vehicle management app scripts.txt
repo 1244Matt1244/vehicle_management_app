@@ -1,0 +1,135 @@
+---
+
+### **1. Database Setup Script** (`setup_db.sh`)
+```bash
+#!/bin/bash
+
+# Create and migrate database
+dotnet ef migrations add InitialCreate --project Project.Service \
+--startup-project Project.MVC \
+--context ApplicationDbContext
+
+dotnet ef database update --project Project.Service \
+--startup-project Project.MVC
+```
+
+---
+
+### **2. Build & Run Script** (`run_app.sh`)
+```bash
+#!/bin/bash
+
+# Clean previous builds
+dotnet clean
+
+# Restore dependencies
+dotnet restore
+
+# Build solution
+dotnet build
+
+# Run application
+dotnet run --project Project.MVC
+```
+
+---
+
+### **3. Test Script** (`run_tests.sh`) *(if you have tests)*
+```bash
+#!/bin/bash
+
+# Run all unit tests
+dotnet test Project.Service.Tests/Project.Service.Tests.csproj
+```
+
+---
+
+### **4. Docker Deployment Script** (`Dockerfile`)
+```dockerfile
+FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
+WORKDIR /src
+COPY . .
+RUN dotnet restore
+RUN dotnet publish -c Release -o /app
+
+FROM mcr.microsoft.com/dotnet/aspnet:7.0
+WORKDIR /app
+COPY --from=build /app .
+ENTRYPOINT ["dotnet", "Project.MVC.dll"]
+```
+
+---
+
+### **5. CI/CD Pipeline Script** (`.github/workflows/deploy.yml`)
+```yaml
+name: Deploy Vehicle Management App
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: 7.0.x
+    - name: Restore dependencies
+      run: dotnet restore
+    - name: Build
+      run: dotnet build --no-restore
+    - name: Run tests
+      run: dotnet test --no-build --verbosity normal
+    - name: Publish
+      run: dotnet publish -c Release -o published
+    - name: Deploy to Azure
+      uses: azure/webapps-deploy@v2
+      with:
+        app-name: your-app-name
+        publish-profile: ${{ secrets.AZURE_PUBLISH_PROFILE }}
+        package: published
+```
+
+---
+
+### **6. Database Seed Script** (`seed_data.sql`)
+```sql
+INSERT INTO VehicleMakes (Name, Abrv) VALUES
+('Volkswagen', 'VW'),
+('Toyota', 'TYT'),
+('Ford', 'FD');
+
+INSERT INTO VehicleModels (Name, Abrv, VehicleMakeId) VALUES
+('Golf', 'G7', 1),
+('Corolla', 'C12', 2),
+('Focus', 'F3', 3);
+```
+
+---
+
+### **7. Post-Deployment Cleanup Script** (`cleanup.sh`)
+```bash
+#!/bin/bash
+
+# Remove bin/obj directories
+find . -type d \( -name bin -o -name obj \) -exec rm -rf {} +
+
+# Remove migration files
+rm -rf Project.Service/Data/Migrations/
+```
+
+---
+
+### **How to Use:**
+1. Make scripts executable:
+```bash
+chmod +x *.sh
+```
+2. Execution order:
+```bash
+./setup_db.sh
+./run_app.sh
+```
