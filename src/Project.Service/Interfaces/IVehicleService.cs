@@ -1,19 +1,24 @@
-using Project.MVC.ViewModels;
+// Project.Service/Interfaces/IVehicleService.cs
+using Project.Service.Data.DTOs;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Project.Service.Interfaces
 {
     public interface IVehicleService
     {
-        Task<IEnumerable<VehicleModelVM>> GetModelsAsync();
-        Task CreateModelAsync(VehicleModelVM model);
-        Task<VehicleModelVM> GetModelByIdAsync(int id);
-        Task UpdateModelAsync(VehicleModelVM model);
+        // Vehicle Model Operations
+        Task<IEnumerable<VehicleModelDTO>> GetModelsAsync();
+        Task<VehicleModelDTO> GetModelByIdAsync(int id);
+        Task CreateModelAsync(VehicleModelDTO model);
+        Task UpdateModelAsync(VehicleModelDTO model);
         Task DeleteModelAsync(int id);
 
-        Task<IEnumerable<VehicleMakeVM>> GetAllMakesAsync();
-        Task CreateMakeAsync(VehicleMakeVM make);
-        Task<VehicleMakeVM> GetMakeByIdAsync(int id);
-        Task UpdateMakeAsync(VehicleMakeVM make);
+        // Vehicle Make Operations
+        Task<IEnumerable<VehicleMakeDTO>> GetMakesAsync();
+        Task<VehicleMakeDTO> GetMakeByIdAsync(int id);
+        Task CreateMakeAsync(VehicleMakeDTO make);
+        Task UpdateMakeAsync(VehicleMakeDTO make);
         Task DeleteMakeAsync(int id);
     }
 }
