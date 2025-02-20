@@ -1,0 +1,6 @@
+C:\Users\korisnik\Desktop\vehicle_management_app\src\Project.Service.Shared\obj\Debug\net8.0\Project.Service.Shared.csproj.AssemblyReference.cache
+C:\Users\korisnik\Desktop\vehicle_management_app\src\Project.Service.Shared\obj\Debug\net8.0\Project.Service.Shared.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\korisnik\Desktop\vehicle_management_app\src\Project.Service.Shared\obj\Debug\net8.0\Project.Service.Shared.AssemblyInfoInputs.cache
+C:\Users\korisnik\Desktop\vehicle_management_app\src\Project.Service.Shared\obj\Debug\net8.0\Project.Service.Shared.AssemblyInfo.cs
+C:\Users\korisnik\Desktop\vehicle_management_app\src\Project.Service.Shared\obj\Debug\net8.0\Project.Service.Shared.csproj.CoreCompileInputs.cache
+C:\Users\korisnik\Desktop\vehicle_management_app\src\Project.Service.Shared\obj\Debug\net8.0\Project.Service.Shared.sourcelink.json

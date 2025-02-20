@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Project.Service\Project.Service.csproj" />
+    <ProjectReference Include="..\Project.Service.Shared\Project.Service.Shared.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,5 +1,5 @@
 // Project.Service/Interfaces/IVehicleService.cs
-using Project.Service.Data.DTOs;
+using Project.Service.Shared.DTOs;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

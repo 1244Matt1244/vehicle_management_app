@@ -2,7 +2,7 @@
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Project.Service.Data;
-using Project.Service.Data.DTOs;
+using Project.Service.Shared.DTOs;
 using Project.Service.Data.Context;
 using Project.Service.Interfaces;
 using System.Collections.Generic;
