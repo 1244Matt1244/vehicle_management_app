@@ -1,35 +1,42 @@
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
+using Ninject;
 using Project.Service.Data.Context;
 using Project.Service.Interfaces;
 using Project.Service.Services;
-using AutoMapper;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Configure services
+// Add services to the container.
+builder.Services.AddControllersWithViews();
+
+// Configure DbContext
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-builder.Services.AddScoped<IVehicleService, VehicleService>();
+// Configure Ninject
+var kernel = new StandardKernel();
+kernel.Bind<IVehicleService>().To<VehicleService>();
+builder.Services.AddSingleton<IKernel>(kernel);
 
-builder.Services.AddAutoMapper(typeof(ServiceMappingProfile));
+// Configure AutoMapper
+builder.Services.AddAutoMapper(typeof(Program), typeof(VehicleService));
 
 var app = builder.Build();
 
-// Database Migration
-using (var scope = app.Services.CreateScope())
+// Configure the HTTP request pipeline
+if (!app.Environment.IsDevelopment())
 {
-    var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-    await context.Database.MigrateAsync();
+    app.UseExceptionHandler("/Home/Error");
+    app.UseHsts();
 }
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
+app.UseAuthorization();
+
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Vehicle}/{action=Index}/{id?}");
+    pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();

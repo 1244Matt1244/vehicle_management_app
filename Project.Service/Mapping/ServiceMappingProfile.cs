@@ -1,13 +1,12 @@
 using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using Project.Service.Data.DTOs;
 using Project.Service.Models;
 
 namespace Project.Service.Mapping
 {
-    public class ServiceMappingProfile : Profile
+    public class ServiceProfile : Profile
     {
-        public ServiceMappingProfile()
+        public ServiceProfile()
         {
             CreateMap<VehicleMake, VehicleMakeDTO>().ReverseMap();
             CreateMap<VehicleModel, VehicleModelDTO>()

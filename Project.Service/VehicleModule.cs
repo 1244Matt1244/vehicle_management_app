@@ -1,14 +1,10 @@
 using AutoMapper;
-using AutoMapper.QueryableExtensions;
-using Ninject;
+using Microsoft.EntityFrameworkCore;
 using Ninject.Modules;
-using Ninject.Web.Common;
-using Ninject.Web.Common.WebHost;
 using Project.Service.Data.Context;
 using Project.Service.Interfaces;
 using Project.Service.Mapping;
 using Project.Service.Services;
-
 
 namespace Project.Service
 {
@@ -16,29 +12,30 @@ namespace Project.Service
     {
         public override void Load()
         {
-            // Custom scope definition
-            Func<IContext, object> requestScope = ctx => ctx.Kernel.Components.Get<Ninject.Activation.Caching.ICache>().TryGet(ctx.Request.ParentRequest, out var context)
-                ? context : ctx;
-
-            // Bind ApplicationDbContext
+            // Database Context (scoped per request)
             Bind<ApplicationDbContext>()
                 .ToSelf()
-                .InScope(requestScope);
+                .InTransientScope()  // For EF Core, let DI handle the scope
+                .WithConstructorArgument("options", CreateDbContextOptions());
 
-            // Bind VehicleService
+            // Service Layer
             Bind<IVehicleService>()
                 .To<VehicleService>()
-                .InScope(requestScope);
+                .InSingletonScope();
 
-            // Configure AutoMapper
-            Bind<IMapper>().ToMethod(context =>
-            {
-                var config = new MapperConfiguration(cfg =>
-                {
+            // AutoMapper Configuration
+            Bind<IMapper>().ToMethod(ctx => 
+                new MapperConfiguration(cfg => {
                     cfg.AddProfile<ServiceMappingProfile>();
-                });
-                return config.CreateMapper();
-            }).InSingletonScope();
+                }).CreateMapper()
+            ).InSingletonScope();
+        }
+
+        private DbContextOptions<ApplicationDbContext> CreateDbContextOptions()
+        {
+            return new DbContextOptionsBuilder<ApplicationDbContext>()
+                .UseSqlite("Data Source=vehicle_management.db")
+                .Options;
         }
     }
 }

@@ -38,11 +38,6 @@
             }
           }
         },
-        "warningProperties": {
-          "warnAsError": [
-            "NU1605"
-          ]
-        },
         "restoreAuditProperties": {
           "enableAudit": "true",
           "auditLevel": "low",
@@ -76,17 +71,9 @@
               "target": "Package",
               "version": "[3.3.6, )"
             },
-            "Ninject.Extensions.DependencyInjection": {
-              "target": "Package",
-              "version": "[1.0.2, )"
-            },
             "Ninject.Web.AspNetCore": {
               "target": "Package",
               "version": "[9.0.0, )"
-            },
-            "Ninject.Web.Common": {
-              "target": "Package",
-              "version": "[3.3.2, )"
             },
             "Serilog.AspNetCore": {
               "target": "Package",
@@ -154,11 +141,6 @@
             "projectReferences": {}
           }
         },
-        "warningProperties": {
-          "warnAsError": [
-            "NU1605"
-          ]
-        },
         "restoreAuditProperties": {
           "enableAudit": "true",
           "auditLevel": "low",
@@ -203,14 +185,6 @@
             "Ninject.Web.AspNetCore": {
               "target": "Package",
               "version": "[9.0.0, )"
-            },
-            "Ninject.Web.Common": {
-              "target": "Package",
-              "version": "[3.3.2, )"
-            },
-            "Ninject.Web.Common.WebHost": {
-              "target": "Package",
-              "version": "[3.3.2, )"
             },
             "Serilog": {
               "target": "Package",

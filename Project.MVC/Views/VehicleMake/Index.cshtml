@@ -1,44 +1,28 @@
-Page @(Model.TotalPages < Model.PageIndex ? 0 : Model.PageIndex) of @Model.TotalPages
+@model Project.Service.Data.Helpers.PaginatedList<Project.MVC.ViewModels.VehicleMakeVM>
+@{
+    ViewData["Title"] = "Vehicle Makes";
+}
 
-
-<h1>Vehicle Makes</h1>
-
-<form asp-action="Index" method="get">
-    <input type="text" name="searchString" value="@ViewData["CurrentFilter"]" placeholder="Search by name" />
-    <button type="submit">Search</button>
-</form>
-
-<table>
+<table class="table">
     <thead>
         <tr>
-            <th>Name</th>
-            <th>Abbreviation</th>
-            <th>Actions</th>
+            <th>
+                <a asp-action="Index" 
+                asp-route-sortOrder="@ViewData["NameSort"]"
+                asp-route-search="@ViewData["CurrentFilter"]">
+                    Name @(ViewData["NameSort"]?.ToString() == "desc" ? "▼" : "▲")
+                </a>
+            </th>
+            <!-- Add other columns -->
         </tr>
     </thead>
     <tbody>
-        @foreach (var make in Model)
+        @foreach (var item in Model.Items)
         {
             <tr>
-                <td>@make.Name</td>
-                <td>@make.Abrv</td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@make.Id">Edit</a> |
-                    <a asp-action="Delete" asp-route-id="@make.Id">Delete</a>
-                </td>
+                <td>@item.Name</td>
+                <!-- Other properties -->
             </tr>
         }
     </tbody>
 </table>
-
-<div>
-    Page @(Model.TotalPages < Model.PageIndex ? 0 : Model.PageIndex) of @Model.TotalPages
-    @if (Model.HasPreviousPage)
-    {
-        <a asp-action="Index" asp-route-pageNumber="@(Model.PageIndex - 1)">Previous</a>
-    }
-    @if (Model.HasNextPage)
-    {
-        <a asp-action="Index" asp-route-pageNumber="@(Model.PageIndex + 1)">Next</a>
-    }
-</div>
