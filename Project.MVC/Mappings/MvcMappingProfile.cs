@@ -1,11 +1,11 @@
 using AutoMapper;
-using Project.Service.DTOs;
+using Project.Service.Data.DTOs;
 using Project.Service.Helpers;
 using Project.MVC.ViewModels;
 
-public class MvcMapping : Profile
+public class MvcMappingProfile : Profile
 {
-    public MvcMapping()
+    public MvcMappingProfile()
     {
         // DTO <-> ViewModel conversions
         CreateMap<VehicleMakeDTO, VehicleMakeVM>()

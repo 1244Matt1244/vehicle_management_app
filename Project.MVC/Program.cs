@@ -3,6 +3,10 @@ using Ninject.Web.AspNetCore;
 using Project.Service.Data.Context;
 using Project.Service.Interfaces;
 using Project.Service.Services;
+using Ninject;
+using Ninject.Web.Common;
+using Ninject.Web.Mvc;
+using Project.MVC.NinjectModules;
 
 var builder = WebApplication.CreateBuilder(args);
 

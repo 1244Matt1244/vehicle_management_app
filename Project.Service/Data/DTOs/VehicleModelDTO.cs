@@ -1,12 +1,11 @@
 namespace Project.Service.Data.DTOs
 {
-public class VehicleModelDTO
-{
-    public required int Id { get; set; }
-    public required string Name { get; set; } = string.Empty;
-    public required string Abrv { get; set; } = string.Empty;
-    // Change to match entity relationship
-    public required int MakeId { get; set; }
-    public required string MakeName { get; set; } // If you want to include Make name
-}
+    public class VehicleModelDTO
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string Abrv { get; set; }
+        public int VehicleMakeId { get; set; }
+        public string MakeName { get; set; } // For display purposes
+    }
 }

@@ -1,37 +1,77 @@
-// Controllers/MakeController.cs
-using Microsoft.AspNetCore.Mvc;
 using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
+using Project.MVC.Models;
+using Project.Service.DTOs;
 using Project.Service.Interfaces;
-using Project.MVC.ViewModels;
+using System.Threading.Tasks;
 
 namespace Project.MVC.Controllers
 {
-    public class MakeController : Controller
+    public class VehicleMakeController : Controller
     {
-        private readonly IVehicleService _service;
+        private readonly IVehicleService _vehicleService;
         private readonly IMapper _mapper;
 
-        public MakeController(IVehicleService service, IMapper mapper)
+        public VehicleMakeController(IVehicleService vehicleService, IMapper mapper)
         {
-            _service = service;
+            _vehicleService = vehicleService;
             _mapper = mapper;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> Index(int page = 1, string sortOrder = "name_asc", string searchString = "")
+        // GET: VehicleMake
+        public async Task<IActionResult> Index(string search, string sortBy, string sortOrder, int page = 1)
         {
-            var makes = await _service.GetMakesAsync(page, 10, sortOrder, searchString);
-            return View(_mapper.Map<PaginatedList<VehicleMakeVM>>(makes));
+            var parameters = new QueryParams
+            {
+                Search = search,
+                SortBy = sortBy,
+                SortOrder = sortOrder,
+                Page = page,
+                PageSize = 10
+            };
+
+            var paginatedList = await _vehicleService.GetMakesAsync(parameters);
+            var viewModelList = _mapper.Map<IEnumerable<VehicleMakeViewModel>>(paginatedList.Items);
+
+            // Prepare pagination info for the view
+            ViewBag.TotalPages = (int)Math.Ceiling((double)paginatedList.TotalCount / parameters.PageSize);
+            ViewBag.CurrentPage = parameters.Page;
+
+            return View(viewModelList);
         }
 
+        // GET: VehicleMake/Details/5
+        public async Task<IActionResult> Details(int id)
+        {
+            var makeDto = await _vehicleService.GetMakeByIdAsync(id);
+            if (makeDto == null)
+            {
+                return NotFound();
+            }
+            var viewModel = _mapper.Map<VehicleMakeViewModel>(makeDto);
+            return View(viewModel);
+        }
+
+        // GET: VehicleMake/Create
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        // POST: VehicleMake/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(VehicleMakeVM vm)
+        public async Task<IActionResult> Create(VehicleMakeViewModel viewModel)
         {
-            if (!ModelState.IsValid) return View(vm);
-            
-            await _service.CreateMakeAsync(_mapper.Map<VehicleMakeDTO>(vm));
-            return RedirectToAction(nameof(Index));
+            if (ModelState.IsValid)
+            {
+                var makeDto = _mapper.Map<VehicleMakeDTO>(viewModel);
+                await _vehicleService.CreateMakeAsync(makeDto);
+                return RedirectToAction(nameof(Index));
+            }
+            return View(viewModel);
         }
+
+        // Similar actions for Edit and Delete
     }
 }
