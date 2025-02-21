@@ -1,18 +1,22 @@
+using Project.Data.Models;
+using Project.Service.Data.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Project.Service.Models;
 
-namespace Vehicle.Web.Repositories
+namespace Project.Service.Interfaces
 {
     public interface IVehicleRepository
     {
-        Task<IEnumerable<VehicleMake>> GetMakesAsync();
+        // VehicleMake Operations
+        Task<PaginatedList<VehicleMake>> GetMakesPaginatedAsync(int page, int pageSize, string sortOrder, string searchString);
         Task<VehicleMake> GetMakeByIdAsync(int id);
         Task AddMakeAsync(VehicleMake make);
         Task UpdateMakeAsync(VehicleMake make);
         Task DeleteMakeAsync(int id);
 
-        Task<IEnumerable<VehicleModel>> GetModelsAsync();
+        // VehicleModel Operations
+        Task<PaginatedList<VehicleModel>> GetModelsPaginatedAsync(int page, int pageSize, string sortOrder, string searchString, int? makeId);
         Task<VehicleModel> GetModelByIdAsync(int id);
         Task AddModelAsync(VehicleModel model);
         Task UpdateModelAsync(VehicleModel model);

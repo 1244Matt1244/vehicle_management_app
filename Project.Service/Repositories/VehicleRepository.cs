@@ -1,126 +1,136 @@
+using Microsoft.EntityFrameworkCore;
+using Project.Data.Models;
+using Project.Service.Interfaces;
+using Project.Service.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using AutoMapper;
-using AutoMapper.QueryableExtensions;
-using Microsoft.EntityFrameworkCore;
-using Project.Service.Data.Context;
-using Project.Service.Data.DTOs;
-using Project.Service.Interfaces;
 
-namespace Project.Service.Data.Repositories
+namespace Project.Service.Repositories
 {
     public class VehicleRepository : IVehicleRepository
     {
         private readonly ApplicationDbContext _context;
-        private readonly IMapper _mapper;
 
-        public VehicleRepository(ApplicationDbContext context, IMapper mapper)
+        public VehicleRepository(ApplicationDbContext context)
         {
             _context = context;
-            _mapper = mapper;
         }
 
-        // Vehicle Model Methods
-        public async Task<IEnumerable<VehicleModelDTO>> GetModelsAsync(int page, int pageSize, string sortOrder, int makeId = 0)
+        // VehicleMake Methods
+        public async Task<PaginatedList<VehicleMake>> GetMakesPaginatedAsync(int page, int pageSize, string sortOrder, string searchString)
         {
-            var query = _context.VehicleModels.AsNoTracking();
+            var query = _context.VehicleMakes.AsQueryable();
 
-            if (makeId > 0)
-                query = query.Where(m => m.MakeId == makeId);
+            // Filtering
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                query = query.Where(m => m.Name.Contains(searchString));
+            }
 
-            query = sortOrder == "desc" 
-                ? query.OrderByDescending(m => m.Name) 
-                : query.OrderBy(m => m.Name);
+            // Sorting
+            query = sortOrder switch
+            {
+                "name_desc" => query.OrderByDescending(m => m.Name),
+                _ => query.OrderBy(m => m.Name),
+            };
 
-            return await query
+            // Pagination
+            var totalCount = await query.CountAsync();
+            var items = await query
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
-                .ProjectTo<VehicleModelDTO>(_mapper.ConfigurationProvider)
                 .ToListAsync();
+
+            return new PaginatedList<VehicleMake>(
+                items,
+                page,
+                (int)Math.Ceiling(totalCount / (double)pageSize),
+                totalCount
+            );
         }
 
-        public async Task<VehicleModelDTO> GetModelByIdAsync(int id)
+        public async Task<VehicleMake> GetMakeByIdAsync(int id)
         {
-            return await _context.VehicleModels
-                .AsNoTracking()
-                .Where(m => m.Id == id)
-                .ProjectTo<VehicleModelDTO>(_mapper.ConfigurationProvider)
-                .FirstOrDefaultAsync();
+            return await _context.VehicleMakes.FindAsync(id) 
+                ?? throw new KeyNotFoundException("VehicleMake not found.");
         }
 
-        public async Task AddModelAsync(VehicleModelDTO model)
+        public async Task AddMakeAsync(VehicleMake make)
         {
-            var entity = _mapper.Map<VehicleModel>(model);
-            _context.VehicleModels.Add(entity);
+            await _context.VehicleMakes.AddAsync(make);
             await _context.SaveChangesAsync();
         }
 
-        public async Task UpdateModelAsync(VehicleModelDTO model)
+        public async Task UpdateMakeAsync(VehicleMake make)
         {
-            var entity = await _context.VehicleModels.FindAsync(model.Id);
-            if (entity == null) throw new KeyNotFoundException($"Vehicle model with ID {model.Id} not found.");
-
-            _mapper.Map(model, entity);
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task DeleteModelAsync(int id)
-        {
-            var entity = await _context.VehicleModels.FindAsync(id);
-            if (entity == null) throw new KeyNotFoundException($"Vehicle model with ID {id} not found.");
-
-            _context.VehicleModels.Remove(entity);
-            await _context.SaveChangesAsync();
-        }
-
-        // Vehicle Make Methods
-        public async Task<IEnumerable<VehicleMakeDTO>> GetMakesAsync(int page, int pageSize, string sortOrder)
-        {
-            var query = _context.VehicleMakes.AsNoTracking();
-
-            query = sortOrder == "desc"
-                ? query.OrderByDescending(m => m.Name)
-                : query.OrderBy(m => m.Name);
-
-            return await query
-                .Skip((page - 1) * pageSize)
-                .Take(pageSize)
-                .ProjectTo<VehicleMakeDTO>(_mapper.ConfigurationProvider)
-                .ToListAsync();
-        }
-
-        public async Task<VehicleMakeDTO> GetMakeByIdAsync(int id)
-        {
-            return await _context.VehicleMakes
-                .AsNoTracking()
-                .Where(m => m.Id == id)
-                .ProjectTo<VehicleMakeDTO>(_mapper.ConfigurationProvider)
-                .FirstOrDefaultAsync();
-        }
-
-        public async Task CreateMakeAsync(VehicleMakeDTO makeDto)
-        {
-            var entity = _mapper.Map<VehicleMake>(makeDto);
-            _context.VehicleMakes.Add(entity);
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task UpdateMakeAsync(VehicleMakeDTO makeDto)
-        {
-            var entity = await _context.VehicleMakes.FindAsync(makeDto.Id);
-            if (entity == null) throw new KeyNotFoundException($"Vehicle make with ID {makeDto.Id} not found.");
-
-            _mapper.Map(makeDto, entity);
+            _context.VehicleMakes.Update(make);
             await _context.SaveChangesAsync();
         }
 
         public async Task DeleteMakeAsync(int id)
         {
-            var entity = await _context.VehicleMakes.FindAsync(id);
-            if (entity == null) throw new KeyNotFoundException($"Vehicle make with ID {id} not found.");
+            var make = await GetMakeByIdAsync(id);
+            _context.VehicleMakes.Remove(make);
+            await _context.SaveChangesAsync();
+        }
 
-            _context.VehicleMakes.Remove(entity);
+        // VehicleModel Methods
+        public async Task<PaginatedList<VehicleModel>> GetModelsPaginatedAsync(int page, int pageSize, string sortOrder, int? makeId)
+        {
+            var query = _context.VehicleModels.AsQueryable();
+
+            // Filtering by MakeId
+            if (makeId.HasValue)
+            {
+                query = query.Where(m => m.MakeId == makeId.Value);
+            }
+
+            // Sorting
+            query = sortOrder switch
+            {
+                "name_desc" => query.OrderByDescending(m => m.Name),
+                _ => query.OrderBy(m => m.Name),
+            };
+
+            // Pagination
+            var totalCount = await query.CountAsync();
+            var items = await query
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            return new PaginatedList<VehicleModel>(
+                items,
+                page,
+                (int)Math.Ceiling(totalCount / (double)pageSize),
+                totalCount
+            );
+        }
+
+        public async Task<VehicleModel> GetModelByIdAsync(int id)
+        {
+            return await _context.VehicleModels.FindAsync(id) 
+                ?? throw new KeyNotFoundException("VehicleModel not found.");
+        }
+
+        public async Task AddModelAsync(VehicleModel model)
+        {
+            await _context.VehicleModels.AddAsync(model);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task UpdateModelAsync(VehicleModel model)
+        {
+            _context.VehicleModels.Update(model);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task DeleteModelAsync(int id)
+        {
+            var model = await GetModelByIdAsync(id);
+            _context.VehicleModels.Remove(model);
             await _context.SaveChangesAsync();
         }
     }
