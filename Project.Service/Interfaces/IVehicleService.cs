@@ -1,24 +1,22 @@
 // Project.Service/Interfaces/IVehicleService.cs
-using Project.Service.Shared.DTOs;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+using Project.Service.DTOs;
 
 namespace Project.Service.Interfaces
 {
     public interface IVehicleService
     {
-        // Vehicle Model Operations
-        Task<IEnumerable<VehicleModelDTO>> GetModelsAsync();
-        Task<VehicleModelDTO> GetModelByIdAsync(int id);
-        Task CreateModelAsync(VehicleModelDTO model);
-        Task UpdateModelAsync(VehicleModelDTO model);
-        Task DeleteModelAsync(int id);
-
-        // Vehicle Make Operations
-        Task<IEnumerable<VehicleMakeDTO>> GetMakesAsync();
+        // Vehicle Make Methods
+        Task<IEnumerable<VehicleMakeDTO>> GetAllMakesAsync();
         Task<VehicleMakeDTO> GetMakeByIdAsync(int id);
-        Task CreateMakeAsync(VehicleMakeDTO make);
-        Task UpdateMakeAsync(VehicleMakeDTO make);
+        Task CreateMakeAsync(VehicleMakeDTO makeDto);
+        Task UpdateMakeAsync(VehicleMakeDTO makeDto);
         Task DeleteMakeAsync(int id);
+
+        // Vehicle Model Methods
+        Task<IEnumerable<VehicleModelDTO>> GetAllModelsAsync();
+        Task<VehicleModelDTO> GetModelByIdAsync(int id);
+        Task CreateModelAsync(VehicleModelDTO modelDto);
+        Task UpdateModelAsync(VehicleModelDTO modelDto);
+        Task DeleteModelAsync(int id);
     }
 }
