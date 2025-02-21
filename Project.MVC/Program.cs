@@ -8,6 +8,10 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews(); // Fixes CS1061
 
+// Install NuGet: Ninject, Ninject.Web.AspNetCore
+builder.Host.UseNinject();
+
+// In NinjectModule:
 builder.Services.AddScoped<IVehicleRepository, VehicleRepository>();
 builder.Services.AddScoped<IVehicleService, VehicleService>();
 

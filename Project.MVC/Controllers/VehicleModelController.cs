@@ -1,8 +1,9 @@
+/* This C# code snippet represents a controller class named `VehicleModelController` in an ASP.NET Core
+MVC project. Here's a breakdown of what the code is doing: */
 using Microsoft.AspNetCore.Mvc;
 using Project.MVC.ViewModels;
 using Project.Service.Data.DTOs; // Add this for DTOs
 using Project.Service.Interfaces;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Project.MVC.Controllers
@@ -17,19 +18,19 @@ namespace Project.MVC.Controllers
         }
 
         // GET: VehicleModel
-        public async Task<IActionResult> Index(int page = 1, string sortOrder = "", int makeId = 0)
+        public async Task<IActionResult> Index(int page = 1, string sortOrder = "name", string searchString = "", int? makeId = null)
         {
-            var paginatedModels = await _vehicleService.GetModelsAsync(page, 10, sortOrder, "asc", null, makeId);
+            var models = await _vehicleService.GetModelsAsync(page, 10, sortOrder, searchString, makeId);
             var makes = await _vehicleService.GetAllMakesAsync();
 
             var vm = new VehicleModelIndexVM
             {
-                Items = paginatedModels.Items,
+                Items = models.Items,
                 Pagination = new PaginationVM
                 {
                     Page = page,
                     PageSize = 10,
-                    TotalItems = paginatedModels.TotalItems
+                    TotalItems = models.TotalCount
                 },
                 Makes = makes.Items, // Ensure IVehicleService returns a list of VehicleMakeVM
                 CurrentMakeId = makeId,
