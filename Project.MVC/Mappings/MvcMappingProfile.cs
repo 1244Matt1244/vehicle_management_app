@@ -1,7 +1,7 @@
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Project.Service.Data.DTOs;
-using Project.Service.Helpers;
+using Project.Service.Data.Helpers;
 using Project.MVC.ViewModels;
 
 public class MvcMappingProfile : Profile

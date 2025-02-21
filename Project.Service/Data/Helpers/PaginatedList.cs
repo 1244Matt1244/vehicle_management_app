@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace Project.Service.Data.Helpers
 {
     public class PaginatedList<T> : List<T>
@@ -9,9 +11,12 @@ namespace Project.Service.Data.Helpers
         public PaginatedList(List<T> items, int count, int pageIndex, int pageSize)
         {
             PageIndex = pageIndex;
-            TotalPages = (int)Math.Ceiling(count / (double)pageSize);
+            TotalPages = (int)System.Math.Ceiling(count / (double)pageSize);
             TotalCount = count;
             AddRange(items);
         }
+
+        public bool HasPreviousPage => PageIndex > 1;
+        public bool HasNextPage => PageIndex < TotalPages;
     }
 }

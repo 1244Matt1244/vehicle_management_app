@@ -73,7 +73,7 @@
             },
             "Ninject.Web.AspNetCore": {
               "target": "Package",
-              "version": "[9.0.0, )"
+              "version": "[3.0.3, )"
             },
             "Serilog.AspNetCore": {
               "target": "Package",
@@ -184,7 +184,7 @@
             },
             "Ninject.Web.AspNetCore": {
               "target": "Package",
-              "version": "[9.0.0, )"
+              "version": "[3.0.3, )"
             },
             "Serilog": {
               "target": "Package",

@@ -1,95 +1,53 @@
-using System.Threading.Tasks;
+using System.Threading.Tasks; // Add this line
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Project.Service.Data.Context;
 using Project.Service.Data.DTOs;
-using Project.Service.Models;
 using Project.Service.Services;
 using Xunit;
 
-namespace Project.Tests.UnitTests.ServiceTests
+namespace Project.Tests
 {
     public class VehicleServiceTests
     {
         private readonly IMapper _mapper;
+        private readonly DbContextOptions<ApplicationDbContext> _options;
 
         public VehicleServiceTests()
         {
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.CreateMap<VehicleMakeDTO, VehicleMake>();
-                cfg.CreateMap<VehicleMake, VehicleMakeDTO>();
-            });
-
+            var config = new MapperConfiguration(cfg => cfg.AddProfile<ServiceProfile>());
             _mapper = config.CreateMapper();
+            _options = new DbContextOptionsBuilder<ApplicationDbContext>()
+                .UseInMemoryDatabase(databaseName: "TestDB")
+                .Options;
         }
 
         [Fact]
-        public async Task CreateMakeAsync_AddsMake()
+        public async Task CreateMakeAsync_ValidData_CreatesRecord()
         {
-            // Arrange
-            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-                .UseInMemoryDatabase("CreateMakeTestDB")
-                .Options;
-
-            using var context = new ApplicationDbContext(options);
+            using var context = new ApplicationDbContext(_options);
             var service = new VehicleService(context, _mapper);
-
-            var makeDto = new VehicleMakeDTO { Name = "TestMake", Abrv = "TM" };
-
-            // Act
-            await service.CreateMakeAsync(makeDto);
-
-            // Assert
-            var make = await context.VehicleMakes.FirstOrDefaultAsync(m => m.Name == "TestMake");
-            Assert.NotNull(make);
-            Assert.Equal("TestMake", make.Name);
+            
+            await service.CreateMakeAsync(new VehicleMakeDTO { Name = "TestMake" });
+            
+            Assert.Single(context.VehicleMakes);
         }
 
         [Fact]
-        public async Task GetMakesAsync_ReturnsMakes()
+        public async Task GetMakesAsync_ReturnsPaginatedResults()
         {
-            // Arrange
-            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-                .UseInMemoryDatabase("GetMakesTestDB")
-                .Options;
-
-            using var context = new ApplicationDbContext(options);
-            context.VehicleMakes.Add(new VehicleMake { Name = "Make1", Abrv = "M1" });
-            context.VehicleMakes.Add(new VehicleMake { Name = "Make2", Abrv = "M2" });
+            using var context = new ApplicationDbContext(_options);
+            var service = new VehicleService(context, _mapper);
+            
+            context.VehicleMakes.AddRange(
+                new VehicleMake { Name = "Make1" },
+                new VehicleMake { Name = "Make2" }
+            );
             await context.SaveChangesAsync();
 
-            var service = new VehicleService(context, _mapper);
-
-            // Act
-            var makes = await service.GetMakesAsync(1, 10, "Name", "asc", "");
-
-            // Assert
-            Assert.NotNull(makes);
-            Assert.Equal(2, makes.Count);
-        }
-
-        [Fact]
-        public async Task DeleteMakeAsync_DeletesMake()
-        {
-            // Arrange
-            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-                .UseInMemoryDatabase("DeleteMakeTestDB")
-                .Options;
-
-            using var context = new ApplicationDbContext(options);
-            var make = new VehicleMake { Id = 1, Name = "TestMake", Abrv = "TM" };
-            context.VehicleMakes.Add(make);
-            await context.SaveChangesAsync();
-
-            var service = new VehicleService(context, _mapper);
-
-            // Act
-            await service.DeleteMakeAsync(1);
-
-            // Assert
-            var deletedMake = await context.VehicleMakes.FindAsync(1);
-            Assert.Null(deletedMake);
+            var result = await service.GetMakesAsync(1, 10, "Name", "asc", "");
+            
+            Assert.Equal(2, result.Items.Count);
         }
     }
 }

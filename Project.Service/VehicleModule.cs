@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Ninject.Modules;
 using Project.Service.Data.Context;
 using Project.Service.Interfaces;
-using Project.Service.Mapping;
+using Project.Service.Mapping; // Ensure this namespace is correct
 using Project.Service.Services;
 
 namespace Project.Service
@@ -26,7 +26,7 @@ namespace Project.Service
             // AutoMapper Configuration
             Bind<IMapper>().ToMethod(ctx => 
                 new MapperConfiguration(cfg => {
-                    cfg.AddProfile<ServiceMappingProfile>();
+                    cfg.AddProfile<ServiceProfile>(); // Corrected reference
                 }).CreateMapper()
             ).InSingletonScope();
         }

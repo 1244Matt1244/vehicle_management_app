@@ -1,11 +1,15 @@
 using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 using Project.Service.Data.Context;
 using Project.Service.Data.DTOs;
 using Project.Service.Data.Helpers;
 using Project.Service.Interfaces;
 using Project.Service.Models;
+using System;
+using System.Linq; // Add this for LINQ methods
 using System.Threading.Tasks;
+using System.Collections.Generic; // Add this for KeyNotFoundException
 
 namespace Project.Service.Services
 {
@@ -16,32 +20,26 @@ namespace Project.Service.Services
 
         public VehicleService(ApplicationDbContext context, IMapper mapper)
         {
-            _context = context;
-            _mapper = mapper;
+            _context = context ?? throw new ArgumentNullException(nameof(context));
+            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
-
-        #region Makes
 
         public async Task<PaginatedList<VehicleMakeDTO>> GetMakesAsync(int page, int pageSize, string sortBy, string sortOrder, string search)
         {
+            if (page < 1) throw new ArgumentOutOfRangeException(nameof(page), "Page must be greater than 0.");
+            if (pageSize < 1) throw new ArgumentOutOfRangeException(nameof(pageSize), "Page size must be greater than 0.");
+            if (string.IsNullOrEmpty(sortBy)) throw new ArgumentException("SortBy cannot be null or empty.", nameof(sortBy));
+            if (sortOrder != "asc" && sortOrder != "desc") throw new ArgumentException("SortOrder must be either 'asc' or 'desc'.", nameof(sortOrder));
+
             var query = _context.VehicleMakes.AsNoTracking();
 
-            // Filtering
             if (!string.IsNullOrEmpty(search))
-            {
-                query = query.Where(m => m.Name.Contains(search) || m.Abrv.Contains(search));
-            }
+                query = query.Where(m => m.Name.Contains(search));
 
-            // Sorting
-            var property = typeof(VehicleMake).GetProperty(sortBy ?? "Name") ?? typeof(VehicleMake).GetProperty("Name");
-            if (property != null)
-            {
-                query = sortOrder == "desc"
-                    ? query.OrderByDescending(m => EF.Property<object>(m, property.Name))
-                    : query.OrderBy(m => EF.Property<object>(m, property.Name));
-            }
+            query = sortOrder == "desc" 
+                ? query.OrderByDescending(m => EF.Property<object>(m, sortBy))
+                : query.OrderBy(m => EF.Property<object>(m, sortBy));
 
-            // Pagination
             var totalCount = await query.CountAsync();
             var items = await query
                 .Skip((page - 1) * pageSize)
@@ -52,10 +50,10 @@ namespace Project.Service.Services
             return new PaginatedList<VehicleMakeDTO>(items, totalCount, page, pageSize);
         }
 
-        public async Task<VehicleMakeDTO?> GetMakeByIdAsync(int id)
+        public async Task<VehicleMakeDTO> GetMakeByIdAsync(int id)
         {
             var make = await _context.VehicleMakes.FindAsync(id);
-            return make == null ? null : _mapper.Map<VehicleMakeDTO>(make);
+            return _mapper.Map<VehicleMakeDTO>(make);
         }
 
         public async Task CreateMakeAsync(VehicleMakeDTO makeDto)
@@ -67,63 +65,41 @@ namespace Project.Service.Services
 
         public async Task UpdateMakeAsync(VehicleMakeDTO makeDto)
         {
-            var entity = await _context.VehicleMakes.FindAsync(makeDto.Id);
-            if (entity != null)
-            {
-                _mapper.Map(makeDto, entity);
-                await _context.SaveChangesAsync();
-            }
-            else
-            {
-                throw new KeyNotFoundException("Vehicle Make not found.");
-            }
+            var make = await _context.VehicleMakes.FindAsync(makeDto.Id);
+            if (make == null)
+                throw new KeyNotFoundException("Vehicle make not found.");
+
+            _mapper.Map(makeDto, make);
+            await _context.SaveChangesAsync();
         }
 
         public async Task DeleteMakeAsync(int id)
         {
-            var entity = await _context.VehicleMakes.FindAsync(id);
-            if (entity != null)
-            {
-                _context.VehicleMakes.Remove(entity);
-                await _context.SaveChangesAsync();
-            }
-            else
-            {
-                throw new KeyNotFoundException("Vehicle Make not found.");
-            }
+            var make = await _context.VehicleMakes.FindAsync(id);
+            if (make == null) throw new KeyNotFoundException("Vehicle make not found.");
+            _context.VehicleMakes.Remove(make);
+            await _context.SaveChangesAsync();
         }
-
-        #endregion
-
-        #region Models
 
         public async Task<PaginatedList<VehicleModelDTO>> GetModelsAsync(int page, int pageSize, string sortBy, string sortOrder, string search, int? makeId)
         {
-            var query = _context.VehicleModels
-                .Include(m => m.Make)
-                .AsNoTracking();
+            if (page < 1) throw new ArgumentOutOfRangeException(nameof(page), "Page must be greater than 0.");
+            if (pageSize < 1) throw new ArgumentOutOfRangeException(nameof(pageSize), "Page size must be greater than 0.");
+            if (string.IsNullOrEmpty(sortBy)) throw new ArgumentException("SortBy cannot be null or empty.", nameof(sortBy));
+            if (sortOrder != "asc" && sortOrder != "desc") throw new ArgumentException("SortOrder must be either 'asc' or 'desc'.", nameof(sortOrder));
 
-            // Filtering
+            var query = _context.VehicleModels.AsNoTracking();
+
             if (makeId.HasValue)
-            {
                 query = query.Where(m => m.MakeId == makeId.Value);
-            }
 
             if (!string.IsNullOrEmpty(search))
-            {
-                query = query.Where(m => m.Name.Contains(search) || m.Abrv.Contains(search));
-            }
+                query = query.Where(m => m.Name.Contains(search));
 
-            // Sorting
-            var property = typeof(VehicleModel).GetProperty(sortBy ?? "Name") ?? typeof(VehicleModel).GetProperty("Name");
-            if (property != null)
-            {
-                query = sortOrder == "desc"
-                    ? query.OrderByDescending(m => EF.Property<object>(m, property.Name))
-                    : query.OrderBy(m => EF.Property<object>(m, property.Name));
-            }
+            query = sortOrder == "desc" 
+                ? query.OrderByDescending(m => EF.Property<object>(m, sortBy))
+                : query.OrderBy(m => EF.Property<object>(m, sortBy));
 
-            // Pagination
             var totalCount = await query.CountAsync();
             var items = await query
                 .Skip((page - 1) * pageSize)
@@ -134,12 +110,10 @@ namespace Project.Service.Services
             return new PaginatedList<VehicleModelDTO>(items, totalCount, page, pageSize);
         }
 
-        public async Task<VehicleModelDTO?> GetModelByIdAsync(int id)
+        public async Task<VehicleModelDTO> GetModelByIdAsync(int id)
         {
-            var model = await _context.VehicleModels
-                .Include(m => m.Make)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            return model == null ? null : _mapper.Map<VehicleModelDTO>(model);
+            var model = await _context.VehicleModels.FindAsync(id);
+            return _mapper.Map<VehicleModelDTO>(model);
         }
 
         public async Task CreateModelAsync(VehicleModelDTO modelDto)
@@ -151,32 +125,20 @@ namespace Project.Service.Services
 
         public async Task UpdateModelAsync(VehicleModelDTO modelDto)
         {
-            var entity = await _context.VehicleModels.FindAsync(modelDto.Id);
-            if (entity != null)
-            {
-                _mapper.Map(modelDto, entity);
-                await _context.SaveChangesAsync();
-            }
-            else
-            {
-                throw new KeyNotFoundException("Vehicle Model not found.");
-            }
+            var model = await _context.VehicleModels.FindAsync(modelDto.Id);
+            if (model == null)
+                throw new KeyNotFoundException("Vehicle model not found.");
+
+            _mapper.Map(modelDto, model);
+            await _context.SaveChangesAsync();
         }
 
         public async Task DeleteModelAsync(int id)
         {
-            var entity = await _context.VehicleModels.FindAsync(id);
-            if (entity != null)
-            {
-                _context.VehicleModels.Remove(entity);
-                await _context.SaveChangesAsync();
-            }
-            else
-            {
-                throw new KeyNotFoundException("Vehicle Model not found.");
-            }
+            var model = await _context.VehicleModels.FindAsync(id);
+            if (model == null) throw new KeyNotFoundException("Vehicle model not found.");
+            _context.VehicleModels.Remove(model);
+            await _context.SaveChangesAsync();
         }
-
-        #endregion
     }
 }

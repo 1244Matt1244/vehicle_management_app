@@ -789,18 +789,18 @@
           }
         }
       },
-      "Ninject.Web.AspNetCore/9.0.0": {
+      "Ninject.Web.AspNetCore/3.0.3": {
         "type": "package",
         "dependencies": {
-          "Ninject": "3.3.6",
+          "Ninject": "3.3.4",
           "Ninject.Web.Common": "3.3.2",
           "Ninject.Web.Common.SelfHost": "3.3.2"
         },
         "compile": {
-          "lib/net8.0/Ninject.Web.AspNetCore.dll": {}
+          "lib/netcoreapp3.1/Ninject.Web.AspNetCore.dll": {}
         },
         "runtime": {
-          "lib/net8.0/Ninject.Web.AspNetCore.dll": {}
+          "lib/netcoreapp3.1/Ninject.Web.AspNetCore.dll": {}
         },
         "frameworkReferences": [
           "Microsoft.AspNetCore.App"
@@ -3078,16 +3078,16 @@
         "ninject.nuspec"
       ]
     },
-    "Ninject.Web.AspNetCore/9.0.0": {
-      "sha512": "TRE7NvfSc/vS5+7ftGvpsWTccQVTT/OkFRDPqsWfDNrTJ9J+Uz5sQ0Vh1Se4rkQ+9zrgXNTKDOGlRIdDFG4cGw==",
+    "Ninject.Web.AspNetCore/3.0.3": {
+      "sha512": "g2efospGY4PSwEpKJxv/rB/gAL78u/N+9ArMkGf2rcTOPH7xa++amjydcPrZRM5g/J7tcw3za1kesl7M2ARjcw==",
       "type": "package",
-      "path": "ninject.web.aspnetcore/9.0.0",
+      "path": "ninject.web.aspnetcore/3.0.3",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
-        "lib/net8.0/Ninject.Web.AspNetCore.dll",
-        "lib/net9.0/Ninject.Web.AspNetCore.dll",
-        "ninject.web.aspnetcore.9.0.0.nupkg.sha512",
+        "lib/netcoreapp3.0/Ninject.Web.AspNetCore.dll",
+        "lib/netcoreapp3.1/Ninject.Web.AspNetCore.dll",
+        "ninject.web.aspnetcore.3.0.3.nupkg.sha512",
         "ninject.web.aspnetcore.nuspec"
       ]
     },
@@ -4390,7 +4390,7 @@
       "Microsoft.EntityFrameworkCore.Sqlite >= 9.0.2",
       "Microsoft.Extensions.Logging.Abstractions >= 9.0.2",
       "Ninject >= 3.3.6",
-      "Ninject.Web.AspNetCore >= 9.0.0",
+      "Ninject.Web.AspNetCore >= 3.0.3",
       "Serilog >= 4.2.0",
       "Serilog.Extensions.Logging >= 9.0.0",
       "Serilog.Sinks.Console >= 6.0.0",
@@ -4475,7 +4475,7 @@
           },
           "Ninject.Web.AspNetCore": {
             "target": "Package",
-            "version": "[9.0.0, )"
+            "version": "[3.0.3, )"
           },
           "Serilog": {
             "target": "Package",
