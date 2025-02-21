@@ -1,5 +1,5 @@
-// Project.Service/Mapping/ServiceMappingProfile.cs
 using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Project.Service.Data.DTOs;
 using Project.Service.Models;
 
@@ -10,11 +10,9 @@ namespace Project.Service.Mapping
         public ServiceMappingProfile()
         {
             CreateMap<VehicleMake, VehicleMakeDTO>().ReverseMap();
-
             CreateMap<VehicleModel, VehicleModelDTO>()
                 .ForMember(dest => dest.MakeName, opt => opt.MapFrom(src => src.Make.Name))
-                .ReverseMap()
-                .ForMember(dest => dest.Make, opt => opt.Ignore()); // Prevent circular reference
+                .ReverseMap();
         }
     }
 }

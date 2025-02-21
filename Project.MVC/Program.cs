@@ -1,49 +1,20 @@
 using Microsoft.EntityFrameworkCore;
-using Ninject.Web.AspNetCore;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Project.Service.Data.Context;
 using Project.Service.Interfaces;
 using Project.Service.Services;
-using Ninject;
-using Ninject.Web.Common;
-using Ninject.Web.Mvc;
-using Project.MVC.NinjectModules;
+using AutoMapper;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// DbContext Configuration
+// Configure services
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Ninject Configuration
-builder.Host.UseServiceProviderFactory(new NinjectServiceProviderFactory());
-builder.Host.ConfigureContainer<NinjectServiceProviderBuilder>(services =>
-{
-    services.Bind<ApplicationDbContext>()
-        .ToSelf()
-        .InRequestScope()
-        .WithConstructorArgument("options",
-            new DbContextOptionsBuilder<ApplicationDbContext>()
-                .UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"))
-                .Options);
+builder.Services.AddScoped<IVehicleService, VehicleService>();
 
-    services.Bind<IVehicleService>().To<VehicleService>().InTransientScope();
-});
-
-// Add Controllers and Views
-builder.Host.UseNinject()
-    .ConfigureServices(services =>
-    {
-        services.AddControllersWithViews(options => {
-            options.Filters.Add<CustomExceptionFilter>();
-        });
-    })
-    .ConfigureContainer<StandardKernel>(kernel => 
-    {
-        kernel.Load<VehicleModule>();
-    });
-
-// AutoMapper Configuration
-builder.Services.AddAutoMapper(typeof(ServiceMappingProfile), typeof(MvcMappingProfile));
+builder.Services.AddAutoMapper(typeof(ServiceMappingProfile));
 
 var app = builder.Build();
 

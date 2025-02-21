@@ -200,6 +200,18 @@
               "target": "Package",
               "version": "[3.3.6, )"
             },
+            "Ninject.Web.AspNetCore": {
+              "target": "Package",
+              "version": "[9.0.0, )"
+            },
+            "Ninject.Web.Common": {
+              "target": "Package",
+              "version": "[3.3.2, )"
+            },
+            "Ninject.Web.Common.WebHost": {
+              "target": "Package",
+              "version": "[3.3.2, )"
+            },
             "Serilog": {
               "target": "Package",
               "version": "[4.2.0, )"

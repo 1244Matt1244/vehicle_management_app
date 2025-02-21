@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "LqbMSLP+BPQ=",
+  "dgSpecHash": "F1NJncFl74s=",
   "success": true,
   "projectFilePath": "C:\\Users\\korisnik\\Desktop\\vehicle_management_app\\Project.MVC\\Project.MVC.csproj",
   "expectedPackageFiles": [
@@ -41,12 +41,14 @@
     "C:\\Users\\korisnik\\.nuget\\packages\\microsoft.extensions.primitives\\9.0.2\\microsoft.extensions.primitives.9.0.2.nupkg.sha512",
     "C:\\Users\\korisnik\\.nuget\\packages\\microsoft.netcore.platforms\\1.1.0\\microsoft.netcore.platforms.1.1.0.nupkg.sha512",
     "C:\\Users\\korisnik\\.nuget\\packages\\microsoft.netcore.targets\\1.1.0\\microsoft.netcore.targets.1.1.0.nupkg.sha512",
+    "C:\\Users\\korisnik\\.nuget\\packages\\microsoft.web.infrastructure\\1.0.0\\microsoft.web.infrastructure.1.0.0.nupkg.sha512",
     "C:\\Users\\korisnik\\.nuget\\packages\\mono.texttemplating\\3.0.0\\mono.texttemplating.3.0.0.nupkg.sha512",
     "C:\\Users\\korisnik\\.nuget\\packages\\ninject\\3.3.6\\ninject.3.3.6.nupkg.sha512",
     "C:\\Users\\korisnik\\.nuget\\packages\\ninject.extensions.dependencyinjection\\1.0.2\\ninject.extensions.dependencyinjection.1.0.2.nupkg.sha512",
     "C:\\Users\\korisnik\\.nuget\\packages\\ninject.web.aspnetcore\\9.0.0\\ninject.web.aspnetcore.9.0.0.nupkg.sha512",
     "C:\\Users\\korisnik\\.nuget\\packages\\ninject.web.common\\3.3.2\\ninject.web.common.3.3.2.nupkg.sha512",
     "C:\\Users\\korisnik\\.nuget\\packages\\ninject.web.common.selfhost\\3.3.2\\ninject.web.common.selfhost.3.3.2.nupkg.sha512",
+    "C:\\Users\\korisnik\\.nuget\\packages\\ninject.web.common.webhost\\3.3.2\\ninject.web.common.webhost.3.3.2.nupkg.sha512",
     "C:\\Users\\korisnik\\.nuget\\packages\\serilog\\4.2.0\\serilog.4.2.0.nupkg.sha512",
     "C:\\Users\\korisnik\\.nuget\\packages\\serilog.aspnetcore\\9.0.0\\serilog.aspnetcore.9.0.0.nupkg.sha512",
     "C:\\Users\\korisnik\\.nuget\\packages\\serilog.extensions.hosting\\9.0.0\\serilog.extensions.hosting.9.0.0.nupkg.sha512",
@@ -84,7 +86,39 @@
     "C:\\Users\\korisnik\\.nuget\\packages\\system.text.encodings.web\\9.0.2\\system.text.encodings.web.9.0.2.nupkg.sha512",
     "C:\\Users\\korisnik\\.nuget\\packages\\system.text.json\\9.0.2\\system.text.json.9.0.2.nupkg.sha512",
     "C:\\Users\\korisnik\\.nuget\\packages\\system.threading.channels\\7.0.0\\system.threading.channels.7.0.0.nupkg.sha512",
-    "C:\\Users\\korisnik\\.nuget\\packages\\system.threading.tasks\\4.3.0\\system.threading.tasks.4.3.0.nupkg.sha512"
+    "C:\\Users\\korisnik\\.nuget\\packages\\system.threading.tasks\\4.3.0\\system.threading.tasks.4.3.0.nupkg.sha512",
+    "C:\\Users\\korisnik\\.nuget\\packages\\webactivatorex\\2.2.0\\webactivatorex.2.2.0.nupkg.sha512"
   ],
-  "logs": []
+  "logs": [
+    {
+      "code": "NU1701",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'Microsoft.Web.Infrastructure 1.0.0' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1' instead of the project target framework 'net8.0'. This package may not be fully compatible with your project.",
+      "libraryId": "Microsoft.Web.Infrastructure",
+      "targetGraphs": [
+        "net8.0"
+      ]
+    },
+    {
+      "code": "NU1701",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'Ninject.Web.Common.WebHost 3.3.2' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1' instead of the project target framework 'net8.0'. This package may not be fully compatible with your project.",
+      "libraryId": "Ninject.Web.Common.WebHost",
+      "targetGraphs": [
+        "net8.0"
+      ]
+    },
+    {
+      "code": "NU1701",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'WebActivatorEx 2.2.0' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1' instead of the project target framework 'net8.0'. This package may not be fully compatible with your project.",
+      "libraryId": "WebActivatorEx",
+      "targetGraphs": [
+        "net8.0"
+      ]
+    }
+  ]
 }
