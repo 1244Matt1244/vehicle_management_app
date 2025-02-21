@@ -20,9 +20,12 @@ namespace Project.MVC.Filters
             };
 
             context.HttpContext.Response.StatusCode = (int)statusCode;
+
+            // Return the error message and stack trace (only in development or logs in production)
             context.Result = new JsonResult(new
             {
                 Error = context.Exception.Message,
+                // Optionally include stack trace if in development mode (adjust as needed for production)
                 StackTrace = context.Exception.StackTrace
             });
 

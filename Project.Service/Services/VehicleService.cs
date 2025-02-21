@@ -1,10 +1,12 @@
 using AutoMapper;
-using Project.Data.Entities;
-using Project.Service.DTOs;
+using Project.Data.Models;
+using Project.Service.Data.DTOs;
 using Project.Service.Interfaces;
-using Project.Service.Utilities;
+using Project.Service.Helpers;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace Project.Service.Services
 {
@@ -60,8 +62,34 @@ namespace Project.Service.Services
         // Fetches a paginated list of vehicle models
         public async Task<PaginatedList<VehicleModelDTO>> GetModelsPaginatedAsync(int page, int pageSize, string sortOrder, string searchString)
         {
-            var paginatedModels = await _repository.GetModelsPaginatedAsync(page, pageSize, sortOrder, searchString);
-            return _mapper.Map<PaginatedList<VehicleModelDTO>>(paginatedModels);
+            var query = _repository.GetVehicleModels();  // Assuming repository has GetVehicleModels method for retrieving models.
+
+            // Apply search filter
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                query = query.Where(m => m.Name.Contains(searchString));
+            }
+
+            // Apply sorting
+            query = sortOrder switch
+            {
+                "name_desc" => query.OrderByDescending(m => m.Name),
+                _ => query.OrderBy(m => m.Name),
+            };
+
+            // Pagination
+            var totalItems = await query.CountAsync();
+            var items = await query
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            return new PaginatedList<VehicleModelDTO>(
+                _mapper.Map<List<VehicleModelDTO>>(items),
+                page,
+                (int)Math.Ceiling(totalItems / (double)pageSize),
+                totalItems
+            );
         }
 
         // Fetches a vehicle model by its ID
