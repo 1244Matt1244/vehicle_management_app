@@ -1,5 +1,6 @@
 @model Project.Service.Data.Helpers.PaginatedList<Project.MVC.ViewModels.VehicleModelVM>
 @using Project.MVC.ViewModels
+
 @{
     ViewData["Title"] = "Vehicle Models";
     var makes = ViewBag.Makes as IEnumerable<SelectListItem>;
@@ -9,18 +10,18 @@
     <h1>Vehicle Models</h1>
     
     <!-- Filter Section -->
-    <form asp-action="Index" method="get" class="mb-4">
-        <div class="row g-3 align-items-center">
-            <div class="col-auto">
+    <form method="get" class="mb-4">
+        <div class="row g-3">
+            <div class="col-md-4">
                 <select name="makeId" asp-items="makes" class="form-select">
                     <option value="">All Makes</option>
                 </select>
             </div>
-            <div class="col-auto">
+            <div class="col-md-4">
                 <input type="text" name="search" value="@ViewContext.HttpContext.Request.Query["search"]" 
-            class="form-control" placeholder="Search models...">
+                    class="form-control" placeholder="Search models...">
             </div>
-            <div class="col-auto">
+            <div class="col-md-4">
                 <button type="submit" class="btn btn-primary">Filter</button>
                 <a asp-action="Index" class="btn btn-secondary">Reset</a>
             </div>
@@ -34,9 +35,9 @@
                 <th>
                     <a asp-action="Index" 
                     asp-route-sortOrder="@ViewData["NameSort"]"
-                    asp-route-search="@ViewContext.HttpContext.Request.Query["search"]"
-                    asp-route-makeId="@ViewContext.HttpContext.Request.Query["makeId"]">
-                        Model Name @(ViewData["NameSort"]?.ToString() == "name_desc" ? "▼" : "▲")
+                    asp-route-search="@Context.Request.Query["search"]"
+                    asp-route-makeId="@Context.Request.Query["makeId"]">
+                        Model @(ViewData["NameSort"]?.ToString() == "desc" ? "▼" : "▲")
                     </a>
                 </th>
                 <th>Abbreviation</th>
@@ -48,9 +49,9 @@
             @foreach (var item in Model.Items)
             {
                 <tr>
-                    <td>@Html.DisplayFor(modelItem => item.Name)</td>
-                    <td>@Html.DisplayFor(modelItem => item.Abrv)</td>
-                    <td>@Html.DisplayFor(modelItem => item.MakeName)</td>
+                    <td>@item.Name</td>
+                    <td>@item.Abrv</td>
+                    <td>@item.MakeName</td>
                     <td>
                         <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning">Edit</a>
                         <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-info">Details</a>
