@@ -1,3 +1,5 @@
+using Project.Service.Data.Context;
+
 public class DatabaseTests : IAsyncLifetime
 {
     private readonly ApplicationDbContext _context;
