@@ -4874,11 +4874,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\korisnik\\Desktop\\vehicle_management_app\\src\\Project.MVC\\Project.MVC.csproj",
+      "projectUniqueName": "C:\\Users\\korisnik\\Desktop\\vehicle_management_app\\Project.MVC\\Project.MVC.csproj",
       "projectName": "Project.MVC",
-      "projectPath": "C:\\Users\\korisnik\\Desktop\\vehicle_management_app\\src\\Project.MVC\\Project.MVC.csproj",
+      "projectPath": "C:\\Users\\korisnik\\Desktop\\vehicle_management_app\\Project.MVC\\Project.MVC.csproj",
       "packagesPath": "C:\\Users\\korisnik\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\korisnik\\Desktop\\vehicle_management_app\\src\\Project.MVC\\obj\\",
+      "outputPath": "C:\\Users\\korisnik\\Desktop\\vehicle_management_app\\Project.MVC\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -4899,8 +4899,8 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "projectReferences": {
-            "C:\\Users\\korisnik\\Desktop\\vehicle_management_app\\src\\Project.Service\\Project.Service.csproj": {
-              "projectPath": "C:\\Users\\korisnik\\Desktop\\vehicle_management_app\\src\\Project.Service\\Project.Service.csproj"
+            "C:\\Users\\korisnik\\Desktop\\vehicle_management_app\\Project.Service\\Project.Service.csproj": {
+              "projectPath": "C:\\Users\\korisnik\\Desktop\\vehicle_management_app\\Project.Service\\Project.Service.csproj"
             }
           }
         }
