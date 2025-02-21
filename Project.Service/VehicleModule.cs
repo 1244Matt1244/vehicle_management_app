@@ -1,5 +1,6 @@
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Ninject.Modules;
 using Project.Service.Data.Context;
 using Project.Service.Interfaces;
@@ -9,6 +10,7 @@ using Project.Service.Services;
 namespace Project.Service
 {
     public class VehicleModule : NinjectModule
+
     {
         public override void Load()
         {

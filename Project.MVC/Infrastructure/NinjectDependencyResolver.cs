@@ -1,38 +1,22 @@
 using Ninject;
 using Ninject.Modules;
-using Ninject.Web.AspNetCore;
 using Project.Service.Data.Context;
 using Project.Service.Interfaces;
 using Project.Service.Services;
 
-
 namespace Project.MVC.Infrastructure
 {
-    public class NinjectDependencyResolver : IDependencyResolver
+    public class NinjectDependencyResolver : NinjectModule
     {
-        private readonly IKernel _kernel;
-
-        public NinjectDependencyResolver()
+        public override void Load()
         {
-            _kernel = new StandardKernel();
-            LoadModules();
-        }
+            Bind<ApplicationDbContext>()
+                .ToSelf()
+                .InTransientScope();
 
-        private void LoadModules()
-        {
-            _kernel.Bind<ApplicationDbContext>().ToSelf().InRequestScope();
-            _kernel.Bind<IVehicleService>().To<VehicleService>();
-            
-            // AutoMapper Configuration
-            var mapperConfig = new MapperConfiguration(cfg =>
-            {
-                cfg.AddProfile<Project.Service.Mapping.ServiceMappingProfile>();
-                cfg.AddProfile<Project.MVC.Mapping.MvcMappingProfile>();
-            });
-            _kernel.Bind<IMapper>().ToConstant(mapperConfig.CreateMapper());
+            Bind<IVehicleService>()
+                .To<VehicleService>()
+                .InSingletonScope();
         }
-
-        public object GetService(Type serviceType) => _kernel.TryGet(serviceType);
-        public IEnumerable<object> GetServices(Type serviceType) => _kernel.GetAll(serviceType);
     }
 }

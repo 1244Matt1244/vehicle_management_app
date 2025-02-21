@@ -1,19 +1,22 @@
+// Project.Service/Utilities/PaginatedList.cs
 using System.Collections.Generic;
 
 namespace Project.Service.Data.Helpers
 {
-    public class PaginatedList<T> : List<T>
+    public class PaginatedList<T>
     {
-        public int PageIndex { get; }
-        public int TotalPages { get; }
-        public int TotalCount { get; }
+        public List<T> Items { get; set; }
+        public int PageIndex { get; set; }
+        public int TotalPages { get; set; }
+        public int TotalCount { get; set; }
 
-        public PaginatedList(List<T> items, int count, int pageIndex, int pageSize)
+        // Add constructor
+        public PaginatedList(List<T> items, int pageIndex, int totalPages, int totalCount)
         {
+            Items = items;
             PageIndex = pageIndex;
-            TotalPages = (int)System.Math.Ceiling(count / (double)pageSize);
-            TotalCount = count;
-            AddRange(items);
+            TotalPages = totalPages;
+            TotalCount = totalCount;
         }
 
         public bool HasPreviousPage => PageIndex > 1;
