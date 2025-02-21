@@ -1,4 +1,4 @@
-// In Project.Service.Shared/DTOs/VehicleModelDTO.cs
+// In Project.Service/DTOs/VehicleModelDTO.cs
 public class VehicleModelDTO
 {
     public required int Id { get; set; }

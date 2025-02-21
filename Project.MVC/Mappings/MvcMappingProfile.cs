@@ -1,6 +1,6 @@
 using AutoMapper;
-using Project.Service.Shared.DTOs;
-using Project.Service.Shared.Helpers;
+using Project.Service.DTOs;
+using Project.Service.Helpers;
 using Project.MVC.ViewModels;
 
 public class WebMappings : Profile
