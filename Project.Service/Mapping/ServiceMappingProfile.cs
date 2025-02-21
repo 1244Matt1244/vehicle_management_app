@@ -1,6 +1,6 @@
 // Project.Service/Mapping/ServiceMappingProfile.cs
 using AutoMapper;
-using Project.Service.DTOs;
+using Project.Service.Data.DTOs;
 using Project.Service.Models;
 
 namespace Project.Service.Mapping

@@ -1,5 +1,5 @@
 // Project.Service/Interfaces/IVehicleService.cs
-using Project.Service.DTOs;
+using Project.Service.Data.DTOs;
 
 namespace Project.Service.Interfaces
 {
