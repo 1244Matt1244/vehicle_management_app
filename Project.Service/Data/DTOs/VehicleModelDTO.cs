@@ -1,4 +1,5 @@
-// In Project.Service/DTOs/VehicleModelDTO.cs
+namespace Project.Service.Data.DTOs
+{
 public class VehicleModelDTO
 {
     public required int Id { get; set; }
@@ -7,4 +8,5 @@ public class VehicleModelDTO
     // Change to match entity relationship
     public required int MakeId { get; set; }
     public required string MakeName { get; set; } // If you want to include Make name
+}
 }

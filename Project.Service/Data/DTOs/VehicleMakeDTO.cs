@@ -1,4 +1,4 @@
-namespace Project.Service.Shared.DTOs
+namespace Project.Service.Data.DTOs
 {
     public class VehicleMakeDTO
     {
