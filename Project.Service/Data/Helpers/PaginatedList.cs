@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Project.Service.Shared.Helpers
+namespace Project.Service.Helpers
 {
     public class PaginatedList<T> : List<T>
     {

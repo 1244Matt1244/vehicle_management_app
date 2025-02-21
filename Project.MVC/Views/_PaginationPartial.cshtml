@@ -1,5 +1,5 @@
 <!-- Views/Shared/_PaginationPartial.cshtml -->
-@model Project.Service.Shared.Helpers.PaginatedList<dynamic>
+@model Project.Servic.Helpers.PaginatedList<dynamic>
 
 @{
     var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
@@ -10,10 +10,10 @@
     <ul class="pagination">
         <li class="page-item @prevDisabled">
             <a asp-action="Index"
-              asp-route-pageIndex="@(Model.PageIndex - 1)"
-              asp-route-sortOrder="@ViewData["CurrentSort"]"
-              asp-route-search="@ViewData["CurrentFilter"]"
-              class="page-link">
+            asp-route-pageIndex="@(Model.PageIndex - 1)"
+            asp-route-sortOrder="@ViewData["CurrentSort"]"
+            asp-route-search="@ViewData["CurrentFilter"]"
+            class="page-link">
                 Previous
             </a>
         </li>
@@ -22,10 +22,10 @@
         {
             <li class="page-item @(i == Model.PageIndex ? "active" : "")">
                 <a asp-action="Index"
-                  asp-route-pageIndex="@i"
-                  asp-route-sortOrder="@ViewData["CurrentSort"]"
-                  asp-route-search="@ViewData["CurrentFilter"]"
-                  class="page-link">
+                asp-route-pageIndex="@i"
+                asp-route-sortOrder="@ViewData["CurrentSort"]"
+                asp-route-search="@ViewData["CurrentFilter"]"
+                class="page-link">
                     @i
                 </a>
             </li>
