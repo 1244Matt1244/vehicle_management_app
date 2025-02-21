@@ -3,9 +3,9 @@ using Project.Service.DTOs;
 using Project.Service.Helpers;
 using Project.MVC.ViewModels;
 
-public class WebMappings : Profile
+public class MvcMapping : Profile
 {
-    public WebMappings()
+    public MvcMapping()
     {
         // DTO <-> ViewModel conversions
         CreateMap<VehicleMakeDTO, VehicleMakeVM>()
