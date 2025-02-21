@@ -1,10 +1,14 @@
 // Project.Service/Services/VehicleService.cs
 using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 using Project.Service.Data.Context;
-using Project.Service.Data.DTOs;
+using Project.Service.DTOs;
 using Project.Service.Interfaces;
 using Project.Service.Models;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Project.Service.Services
 {
@@ -20,10 +24,30 @@ namespace Project.Service.Services
         }
 
         // Vehicle Make Methods
-        public async Task<IEnumerable<VehicleMakeDTO>> GetAllMakesAsync()
+        public async Task<PaginatedList<VehicleMakeDTO>> GetMakesAsync(QueryParams parameters)
         {
-            var makes = await _context.VehicleMakes.ToListAsync();
-            return _mapper.Map<IEnumerable<VehicleMakeDTO>>(makes);
+            var query = _context.VehicleMakes.AsQueryable();
+
+            // Filtering
+            if (!string.IsNullOrEmpty(parameters.Search))
+            {
+                query = query.Where(m => m.Name.Contains(parameters.Search) || m.Abrv.Contains(parameters.Search));
+            }
+
+            // Sorting
+            query = parameters.SortOrder == "desc"
+                ? query.OrderByDescending(e => EF.Property<object>(e, parameters.SortBy ?? "Name"))
+                : query.OrderBy(e => EF.Property<object>(e, parameters.SortBy ?? "Name"));
+
+            // Pagination
+            var totalCount = await query.CountAsync();
+            var items = await query
+                .Skip((parameters.Page - 1) * parameters.PageSize)
+                .Take(parameters.PageSize)
+                .ProjectTo<VehicleMakeDTO>(_mapper.ConfigurationProvider)
+                .ToListAsync();
+
+            return new PaginatedList<VehicleMakeDTO>(items, totalCount, parameters.Page, parameters.PageSize);
         }
 
         public async Task<VehicleMakeDTO> GetMakeByIdAsync(int id)
@@ -57,10 +81,35 @@ namespace Project.Service.Services
         }
 
         // Vehicle Model Methods
-        public async Task<IEnumerable<VehicleModelDTO>> GetAllModelsAsync()
+        public async Task<PaginatedList<VehicleModelDTO>> GetModelsAsync(QueryParams parameters)
         {
-            var models = await _context.VehicleModels.Include(m => m.Make).ToListAsync();
-            return _mapper.Map<IEnumerable<VehicleModelDTO>>(models);
+            var query = _context.VehicleModels.Include(m => m.Make).AsQueryable();
+
+            // Filtering
+            if (!string.IsNullOrEmpty(parameters.Search))
+            {
+                query = query.Where(m => m.Name.Contains(parameters.Search) || m.Abrv.Contains(parameters.Search));
+            }
+
+            if (parameters.MakeId.HasValue)
+            {
+                query = query.Where(m => m.VehicleMakeId == parameters.MakeId.Value);
+            }
+
+            // Sorting
+            query = parameters.SortOrder == "desc"
+                ? query.OrderByDescending(e => EF.Property<object>(e, parameters.SortBy ?? "Name"))
+                : query.OrderBy(e => EF.Property<object>(e, parameters.SortBy ?? "Name"));
+
+            // Pagination
+            var totalCount = await query.CountAsync();
+            var items = await query
+                .Skip((parameters.Page - 1) * parameters.PageSize)
+                .Take(parameters.PageSize)
+                .ProjectTo<VehicleModelDTO>(_mapper.ConfigurationProvider)
+                .ToListAsync();
+
+            return new PaginatedList<VehicleModelDTO>(items, totalCount, parameters.Page, parameters.PageSize);
         }
 
         public async Task<VehicleModelDTO> GetModelByIdAsync(int id)
@@ -92,5 +141,34 @@ namespace Project.Service.Services
                 await _context.SaveChangesAsync();
             }
         }
+    }
+
+    // Supporting Classes
+    public class QueryParams
+    {
+        public string Search { get; set; }
+        public int? MakeId { get; set; } // For filtering by Make
+        public string SortBy { get; set; } = "Name";
+        public string SortOrder { get; set; } = "asc";
+        public int Page { get; set; } = 1;
+        public int PageSize { get; set; } = 10;
+    }
+
+    public class PaginatedList<T>
+    {
+        public List<T> Items { get; }
+        public int TotalCount { get; }
+        public int PageIndex { get; }
+        public int PageSize { get; }
+
+        public PaginatedList(List<T> items, int count, int pageIndex, int pageSize)
+        {
+            Items = items;
+            TotalCount = count;
+            PageIndex = pageIndex;
+            PageSize = pageSize;
+        }
+
+        // Additional properties for pagination can be added here
     }
 }
