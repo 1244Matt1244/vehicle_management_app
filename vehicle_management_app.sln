@@ -3,13 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Project.Service", "src\Project.Service\Project.Service.csproj", "{C6D4BECE-DD35-46B6-B6E4-5D3C1F19FC03}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Project.Service", "Project.Service\Project.Service.csproj", "{C6D4BECE-DD35-46B6-B6E4-5D3C1F19FC03}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Project.MVC", "src\Project.MVC\Project.MVC.csproj", "{D8B77D8B-93B7-4414-A5D9-3AA797D01C96}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Project.MVC", "Project.MVC\Project.MVC.csproj","{D8B77D8B-93B7-4414-A5D9-3AA797D01C96}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Project.Service.Shared", "src\Project.Service.Shared\Project.Service.Shared.csproj", "{4B8A9E1A-2C3D-4E7F-A901-ABC123DEF456}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Project.Tests", "tests\Project.Tests\Project.Tests.csproj", "{35A3CFFC-E111-4F25-87B6-2DADD5E8FC04}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Project.Tests", "Project.Tests\Project.Tests csproj", "{35A3CFFC-E111-4F25-87B6-2DADD5E8FC04}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

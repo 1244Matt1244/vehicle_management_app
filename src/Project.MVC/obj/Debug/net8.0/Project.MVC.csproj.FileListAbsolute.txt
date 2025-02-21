@@ -1,9 +1,0 @@
-C:\Users\korisnik\Desktop\vehicle_management_app\src\Project.MVC\obj\Debug\net8.0\Project.MVC.csproj.AssemblyReference.cache
-C:\Users\korisnik\Desktop\vehicle_management_app\src\Project.MVC\obj\Debug\net8.0\Project.MVC.GeneratedMSBuildEditorConfig.editorconfig
-C:\Users\korisnik\Desktop\vehicle_management_app\src\Project.MVC\obj\Debug\net8.0\Project.MVC.AssemblyInfoInputs.cache
-C:\Users\korisnik\Desktop\vehicle_management_app\src\Project.MVC\obj\Debug\net8.0\Project.MVC.AssemblyInfo.cs
-C:\Users\korisnik\Desktop\vehicle_management_app\src\Project.MVC\obj\Debug\net8.0\Project.MVC.csproj.CoreCompileInputs.cache
-C:\Users\korisnik\Desktop\vehicle_management_app\src\Project.MVC\obj\Debug\net8.0\Project.MVC.MvcApplicationPartsAssemblyInfo.cache
-C:\Users\korisnik\Desktop\vehicle_management_app\src\Project.MVC\obj\Debug\net8.0\Project.MVC.RazorAssemblyInfo.cache
-C:\Users\korisnik\Desktop\vehicle_management_app\src\Project.MVC\obj\Debug\net8.0\Project.MVC.RazorAssemblyInfo.cs
-C:\Users\korisnik\Desktop\vehicle_management_app\src\Project.MVC\obj\Debug\net8.0\Project.MVC.sourcelink.json
