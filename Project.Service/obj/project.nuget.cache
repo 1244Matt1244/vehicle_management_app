@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "/zYd3BrlFEk=",
+  "dgSpecHash": "BAgjHYsnXFM=",
   "success": true,
   "projectFilePath": "C:\\Users\\korisnik\\Desktop\\vehicle_management_app\\Project.Service\\Project.Service.csproj",
   "expectedPackageFiles": [
@@ -39,7 +39,7 @@
     "C:\\Users\\korisnik\\.nuget\\packages\\microsoft.netcore.targets\\1.1.0\\microsoft.netcore.targets.1.1.0.nupkg.sha512",
     "C:\\Users\\korisnik\\.nuget\\packages\\mono.texttemplating\\3.0.0\\mono.texttemplating.3.0.0.nupkg.sha512",
     "C:\\Users\\korisnik\\.nuget\\packages\\ninject\\3.3.6\\ninject.3.3.6.nupkg.sha512",
-    "C:\\Users\\korisnik\\.nuget\\packages\\ninject.web.aspnetcore\\9.0.0\\ninject.web.aspnetcore.9.0.0.nupkg.sha512",
+    "C:\\Users\\korisnik\\.nuget\\packages\\ninject.web.aspnetcore\\3.0.3\\ninject.web.aspnetcore.3.0.3.nupkg.sha512",
     "C:\\Users\\korisnik\\.nuget\\packages\\ninject.web.common\\3.3.2\\ninject.web.common.3.3.2.nupkg.sha512",
     "C:\\Users\\korisnik\\.nuget\\packages\\ninject.web.common.selfhost\\3.3.2\\ninject.web.common.selfhost.3.3.2.nupkg.sha512",
     "C:\\Users\\korisnik\\.nuget\\packages\\serilog\\4.2.0\\serilog.4.2.0.nupkg.sha512",

@@ -1,10 +1,10 @@
 using Ninject;
 using Ninject.Modules;
-using Ninject.Web.Mvc;
+using Ninject.Web.AspNetCore;
 using Project.Service.Data.Context;
 using Project.Service.Interfaces;
 using Project.Service.Services;
-using System.Web.Mvc;
+
 
 namespace Project.MVC.Infrastructure
 {

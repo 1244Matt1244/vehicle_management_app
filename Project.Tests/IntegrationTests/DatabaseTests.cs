@@ -1,4 +1,8 @@
+using System.Threading.Tasks; // Add this line
+using Microsoft.EntityFrameworkCore;
 using Project.Service.Data.Context;
+using Project.Service.Services;
+using Project.Service.Interfaces;
 
 public class DatabaseTests : IAsyncLifetime
 {
