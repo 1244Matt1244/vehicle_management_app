@@ -1,29 +1,24 @@
 using AutoMapper;
-using AutoMapper.QueryableExtensions;
-using Project.Service.Data.DTOs;
-using Project.Service.Data.Helpers;
 using Project.MVC.ViewModels;
+using Project.Service.Data.DTOs;
 
-public class MvcMappingProfile : Profile
+namespace Project.MVC.Mappings
 {
-    public MvcMappingProfile()
+    public class MvcMappingProfile : Profile
     {
-        // DTO <-> ViewModel conversions
-        CreateMap<VehicleMakeDTO, VehicleMakeVM>()
-            .ForMember(dest => dest.ModelCount, 
-                    opt => opt.MapFrom(src => src.Models.Count))
-            .ReverseMap();
-        
-        CreateMap<VehicleModelDTO, VehicleModelVM>()
-            .ForMember(dest => dest.MakeName, 
-                    opt => opt.MapFrom(src => src.Make.Name))
-            .ReverseMap();
+        public MvcMappingProfile()
+        {
+            CreateMap<VehicleModelDTO, VehicleModelVM>()
+                .ForMember(dest => dest.MakeName, opt => opt.MapFrom(src => src.Make.Name));
 
-        // Paginated list support
-        CreateMap<PaginatedList<VehicleMakeDTO>, PaginatedList<VehicleMakeVM>>()
-            .ConvertUsing<PaginatedListConverter<VehicleMakeDTO, VehicleMakeVM>>();
-        
-        CreateMap<PaginatedList<VehicleModelDTO>, PaginatedList<VehicleModelVM>>()
-            .ConvertUsing<PaginatedListConverter<VehicleModelDTO, VehicleModelVM>>();
+            CreateMap<PaginatedList<VehicleModelDTO>, VehicleModelIndexVM>()
+                .ForMember(dest => dest.Items, opt => opt.MapFrom(src => src.Items))
+                .ForMember(dest => dest.Pagination, opt => opt.MapFrom(src => new PaginationVM
+                {
+                    Page = src.PageIndex,
+                    PageSize = src.Items.Count,
+                    TotalItems = src.TotalCount
+                }));
+        }
     }
 }

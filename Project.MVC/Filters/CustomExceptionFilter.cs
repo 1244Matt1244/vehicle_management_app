@@ -1,25 +1,32 @@
+using System;
+using System.Collections.Generic;
+using System.Net;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.EntityFrameworkCore;
 
-public class CustomExceptionFilter : IExceptionFilter
+namespace Project.MVC.Filters
 {
-    public void OnException(ExceptionContext context)
+    public class CustomExceptionFilter : IExceptionFilter
     {
-        var statusCode = context.Exception switch
+        public void OnException(ExceptionContext context)
         {
-            KeyNotFoundException => HttpStatusCode.NotFound,
-            ArgumentException => HttpStatusCode.BadRequest,
-            DbUpdateException => HttpStatusCode.Conflict,
-            _ => HttpStatusCode.InternalServerError
-        };
+            HttpStatusCode statusCode = context.Exception switch
+            {
+                KeyNotFoundException => HttpStatusCode.NotFound,  // 404 Not Found
+                ArgumentException => HttpStatusCode.BadRequest,   // 400 Bad Request
+                DbUpdateException => HttpStatusCode.Conflict,     // 409 Conflict
+                _ => HttpStatusCode.InternalServerError           // 500 Internal Server Error
+            };
 
-        context.HttpContext.Response.StatusCode = (int)statusCode;
-        context.Result = new JsonResult(new
-        {
-            Error = context.Exception.Message,
-            context.Exception.Source,
-            StackTrace = _env.IsDevelopment() ? context.Exception.StackTrace : null
-        });
+            context.HttpContext.Response.StatusCode = (int)statusCode;
+            context.Result = new JsonResult(new
+            {
+                Error = context.Exception.Message,
+                StackTrace = context.Exception.StackTrace
+            });
 
-        context.ExceptionHandled = true;
+            context.ExceptionHandled = true;
+        }
     }
 }
