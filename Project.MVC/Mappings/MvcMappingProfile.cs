@@ -1,7 +1,6 @@
 using AutoMapper;
-using Project.MVC.ViewModels;
 using Project.Service.Data.DTOs;
-using Project.Service.Data.Helpers; // Add this
+using Project.Service.Data.Helpers;
 
 namespace Project.MVC.Mappings
 {
@@ -9,22 +8,21 @@ namespace Project.MVC.Mappings
     {
         public MvcMappingProfile()
         {
-            // VehicleModel mappings
-            CreateMap<VehicleModelDTO, VehicleModelVM>()
-                .ForMember(dest => dest.MakeName, opt => opt.MapFrom(src => src.MakeName));
+            CreateMap<PaginatedList<VehicleModelDTO>, PaginatedList<VehicleModelDTO>>()
+                .ConvertUsing((src, dest) => new PaginatedList<VehicleModelDTO>(
+                    src.Items,
+                    src.TotalCount,
+                    src.PageIndex,
+                    src.PageSize
+                ));
 
-            // VehicleMake mappings
-            CreateMap<VehicleMakeDTO, VehicleMakeVM>();
-
-            // PaginatedList mappings
-            CreateMap<PaginatedList<VehicleModelDTO>, VehicleModelIndexVM>()
-                .ForMember(dest => dest.Items, opt => opt.MapFrom(src => src.Items))
-                .ForMember(dest => dest.Pagination, opt => opt.MapFrom(src => new PaginationVM
-                {
-                    Page = src.PageIndex,
-                    PageSize = src.Items.Count,
-                    TotalItems = src.TotalCount
-                }));
+            CreateMap<PaginatedList<VehicleMakeDTO>, PaginatedList<VehicleMakeDTO>>()
+                .ConvertUsing((src, dest) => new PaginatedList<VehicleMakeDTO>(
+                    src.Items,
+                    src.TotalCount,
+                    src.PageIndex,
+                    src.PageSize
+                ));
         }
     }
 }

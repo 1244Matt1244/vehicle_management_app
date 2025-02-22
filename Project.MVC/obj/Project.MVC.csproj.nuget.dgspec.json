@@ -79,6 +79,10 @@
               "target": "Package",
               "version": "[3.3.6, )"
             },
+            "Ninject.Extensions.Factory": {
+              "target": "Package",
+              "version": "[3.3.1, )"
+            },
             "Ninject.Web.AspNetCore": {
               "target": "Package",
               "version": "[9.0.0, )"

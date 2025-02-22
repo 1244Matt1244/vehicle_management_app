@@ -1,8 +1,8 @@
+using Microsoft.EntityFrameworkCore;
 using Project.Service.Data;
 using Project.Service.Data.Helpers;
 using Project.Service.Interfaces;
 using Project.Service.Models;
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,24 +20,21 @@ namespace Project.Service.Repositories
         }
 
         #region VehicleMake Implementation
-        public async Task<PaginatedList<VehicleMake>> GetMakesPaginatedAsync(
-            int page, int pageSize, string sortBy, string sortOrder, string searchString)
+        public async Task<PaginatedList<VehicleMake>> GetMakesPaginatedAsync(int page, int pageSize, string sortBy, string sortOrder, string searchString)
         {
             IQueryable<VehicleMake> query = _context.VehicleMakes;
 
             if (!string.IsNullOrEmpty(searchString))
-            {
                 query = query.Where(m => m.Name.Contains(searchString));
-            }
 
-            query = sortOrder.ToLower() == "desc" 
+            query = sortOrder.Equals("desc", StringComparison.OrdinalIgnoreCase) 
                 ? query.OrderByDescending(m => EF.Property<object>(m, sortBy))
                 : query.OrderBy(m => EF.Property<object>(m, sortBy));
 
             return await PaginatedList<VehicleMake>.CreateAsync(query, page, pageSize);
         }
 
-        public async Task<VehicleMake?> GetMakeByIdAsync(int id) => 
+        public async Task<VehicleMake> GetMakeByIdAsync(int id) => 
             await _context.VehicleMakes.FindAsync(id);
 
         public async Task AddMakeAsync(VehicleMake make)
@@ -60,30 +57,24 @@ namespace Project.Service.Repositories
         #endregion
 
         #region VehicleModel Implementation
-        public async Task<PaginatedList<VehicleModel>> GetModelsPaginatedAsync(
-            int page, int pageSize, string sortBy, string sortOrder, 
-            string searchString, int? makeId)
+        public async Task<PaginatedList<VehicleModel>> GetModelsPaginatedAsync(int page, int pageSize, string sortBy, string sortOrder, string searchString, int? makeId)
         {
             IQueryable<VehicleModel> query = _context.VehicleModels;
 
             if (makeId.HasValue)
-            {
                 query = query.Where(m => m.MakeId == makeId.Value);
-            }
 
             if (!string.IsNullOrEmpty(searchString))
-            {
                 query = query.Where(m => m.Name.Contains(searchString));
-            }
 
-            query = sortOrder.ToLower() == "desc" 
+            query = sortOrder.Equals("desc", StringComparison.OrdinalIgnoreCase) 
                 ? query.OrderByDescending(m => EF.Property<object>(m, sortBy))
                 : query.OrderBy(m => EF.Property<object>(m, sortBy));
 
             return await PaginatedList<VehicleModel>.CreateAsync(query, page, pageSize);
         }
 
-        public async Task<VehicleModel?> GetModelByIdAsync(int id) => 
+        public async Task<VehicleModel> GetModelByIdAsync(int id) => 
             await _context.VehicleModels.FindAsync(id);
 
         public async Task AddModelAsync(VehicleModel model)

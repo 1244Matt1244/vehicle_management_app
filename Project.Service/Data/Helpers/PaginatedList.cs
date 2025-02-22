@@ -1,17 +1,17 @@
-using System;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Project.Service.Helpers
+namespace Project.Service.Data
 {
     public class PaginatedList<T> : List<T>
     {
-        public int PageIndex { get; private set; }
-        public int PageSize { get; private set; }
-        public int TotalCount { get; private set; }
-        public int TotalPages { get; private set; }
+        public int PageIndex { get; }
+        public int PageSize { get; }
+        public int TotalPages { get; }
+        public int TotalCount { get; }
 
         public PaginatedList(List<T> items, int count, int pageIndex, int pageSize)
         {
