@@ -1,5 +1,6 @@
 using AutoMapper;
 using Project.Service.Data.DTOs;
+using Project.Service.Data.Helpers;
 using Project.Service.Models;
 
 namespace Project.Service.Mappings

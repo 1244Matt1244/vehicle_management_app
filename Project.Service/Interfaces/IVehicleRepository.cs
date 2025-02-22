@@ -10,7 +10,7 @@ namespace Project.Service.Interfaces
         // VehicleMake
         Task<PaginatedList<VehicleMake>> GetMakesPaginatedAsync(
             int page, int pageSize, string sortBy, string sortOrder, string searchString);
-        Task<VehicleMake> GetMakeByIdAsync(int id);
+        Task<VehicleMake?> GetMakeByIdAsync(int id);
         Task AddMakeAsync(VehicleMake make);
         Task UpdateMakeAsync(VehicleMake make);
         Task DeleteMakeAsync(VehicleMake make);
@@ -19,7 +19,7 @@ namespace Project.Service.Interfaces
         Task<PaginatedList<VehicleModel>> GetModelsPaginatedAsync(
             int page, int pageSize, string sortBy, string sortOrder, 
             string searchString, int? makeId);
-        Task<VehicleModel> GetModelByIdAsync(int id);
+        Task<VehicleModel?> GetModelByIdAsync(int id);
         Task AddModelAsync(VehicleModel model);
         Task UpdateModelAsync(VehicleModel model);
         Task DeleteModelAsync(VehicleModel model);
