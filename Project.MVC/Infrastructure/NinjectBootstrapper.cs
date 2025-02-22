@@ -1,4 +1,3 @@
-// Project.MVC/Infrastructure/NinjectBootstrapper.cs
 using Ninject.Modules;
 using Ninject.Web.Common;
 using Microsoft.EntityFrameworkCore;
@@ -7,7 +6,7 @@ using Project.Service.Interfaces;
 using Project.Service.Repositories;
 using Project.Service.Services;
 using AutoMapper;
-using Project.Service.Mapping;
+using Project.Service.Mappings; // Corrected from "Mapping"
 using Project.MVC.Mappings;
 
 namespace Project.MVC.Infrastructure
@@ -16,7 +15,7 @@ namespace Project.MVC.Infrastructure
     {
         public override void Load()
         {
-            // Database context (scoped per request)
+            // Database context
             Bind<ApplicationDbContext>()
                 .ToSelf()
                 .InRequestScope()
@@ -29,7 +28,7 @@ namespace Project.MVC.Infrastructure
             Bind<IVehicleRepository>().To<VehicleRepository>();
             Bind<IVehicleService>().To<VehicleService>();
 
-            // AutoMapper (Service + MVC mappings)
+            // AutoMapper
             var config = new MapperConfiguration(cfg =>
             {
                 cfg.AddProfile<ServiceMappingProfile>();

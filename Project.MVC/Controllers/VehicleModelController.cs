@@ -1,20 +1,24 @@
 using Microsoft.AspNetCore.Mvc;
-using Project.Service.Data.DTOs;
+using AutoMapper;
 using Project.Service.Interfaces;
+using Project.MVC.ViewModels;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Project.Service.Data.DTOs; 
 
 namespace Project.MVC.Controllers
 {
     public class VehicleModelController : Controller
     {
         private readonly IVehicleService _vehicleService;
+        private readonly IMapper _mapper;
 
-        public VehicleModelController(IVehicleService vehicleService)
+        public VehicleModelController(IVehicleService vehicleService, IMapper mapper)
         {
             _vehicleService = vehicleService;
+            _mapper = mapper;
         }
 
-        // GET: VehicleModel
         public async Task<IActionResult> Index(
             int? makeId,
             int page = 1,
@@ -23,7 +27,7 @@ namespace Project.MVC.Controllers
             string sortOrder = "asc",
             string searchString = "")
         {
-            var models = await _vehicleService.GetModelsAsync(
+            var modelsDto = await _vehicleService.GetModelsAsync(
                 page,
                 pageSize,
                 sortBy,
@@ -32,85 +36,77 @@ namespace Project.MVC.Controllers
                 makeId
             );
 
-            ViewBag.MakeId = makeId;
+            var modelsVm = _mapper.Map<PaginatedList<VehicleModelVM>>(modelsDto);
+            var makesDto = await _vehicleService.GetAllMakesAsync();
+
+            ViewBag.Makes = new SelectList(makesDto, "Id", "Name", makeId);
             ViewBag.PageSize = pageSize;
             ViewBag.SortBy = sortBy;
             ViewBag.SortOrder = sortOrder;
             ViewBag.SearchString = searchString;
 
-            return View(models);
+            return View(modelsVm);
         }
 
-        // GET: VehicleModel/Create
         public async Task<IActionResult> Create()
         {
-            var makes = await _vehicleService.GetAllMakesAsync();
-            ViewBag.Makes = makes;
+            var makesDto = await _vehicleService.GetAllMakesAsync();
+            ViewBag.Makes = new SelectList(makesDto, "Id", "Name");
             return View();
         }
 
-        // POST: VehicleModel/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(VehicleModelDTO modelDto)
+        public async Task<IActionResult> Create(VehicleModelVM modelVm)
         {
             if (ModelState.IsValid)
             {
+                var modelDto = _mapper.Map<VehicleModelDTO>(modelVm);
                 await _vehicleService.CreateModelAsync(modelDto);
                 return RedirectToAction(nameof(Index));
             }
-            return View(modelDto);
+            return View(modelVm);
         }
 
-        // GET: VehicleModel/Edit/5
         public async Task<IActionResult> Edit(int id)
         {
             var modelDto = await _vehicleService.GetModelByIdAsync(id);
-            if (modelDto == null)
-            {
-                return NotFound();
-            }
+            if (modelDto == null) return NotFound();
 
-            var makes = await _vehicleService.GetAllMakesAsync();
-            ViewBag.Makes = makes;
-            return View(modelDto);
+            var modelVm = _mapper.Map<VehicleModelVM>(modelDto);
+            var makesDto = await _vehicleService.GetAllMakesAsync();
+            ViewBag.Makes = new SelectList(makesDto, "Id", "Name");
+
+            return View(modelVm);
         }
 
-        // POST: VehicleModel/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, VehicleModelDTO modelDto)
+        public async Task<IActionResult> Edit(int id, VehicleModelVM modelVm)
         {
-            if (id != modelDto.Id)
-            {
-                return BadRequest();
-            }
+            if (id != modelVm.Id) return BadRequest();
 
             if (ModelState.IsValid)
             {
-                await _vehicleService.UpdateModelAsync(id, modelDto); // Pass both id and modelDto
+                var modelDto = _mapper.Map<VehicleModelDTO>(modelVm);
+                await _vehicleService.UpdateModelAsync(id, modelDto);
                 return RedirectToAction(nameof(Index));
             }
 
-            // If we got this far, something failed; redisplay the form.
-            var makes = await _vehicleService.GetAllMakesAsync();
-            ViewBag.Makes = makes;
-            return View(modelDto);
+            var makesDto = await _vehicleService.GetAllMakesAsync();
+            ViewBag.Makes = new SelectList(makesDto, "Id", "Name");
+            return View(modelVm);
         }
 
-        // GET: VehicleModel/Delete/5
         public async Task<IActionResult> Delete(int id)
         {
             var modelDto = await _vehicleService.GetModelByIdAsync(id);
-            if (modelDto == null)
-            {
-                return NotFound();
-            }
+            if (modelDto == null) return NotFound();
 
-            return View(modelDto);
+            var modelVm = _mapper.Map<VehicleModelVM>(modelDto);
+            return View(modelVm);
         }
 
-        // POST: VehicleModel/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
