@@ -8,7 +8,10 @@ namespace Project.Service.Mappings
     {
         public ServiceMappingProfile()
         {
+            // VehicleMake -> VehicleMakeDTO and vice versa
             CreateMap<VehicleMake, VehicleMakeDTO>().ReverseMap();
+            
+            // VehicleModel -> VehicleModelDTO and vice versa
             CreateMap<VehicleModel, VehicleModelDTO>().ReverseMap();
         }
     }
