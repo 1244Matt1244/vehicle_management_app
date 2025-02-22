@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
 using Project.Service.Data.DTOs;
-using Project.Service.Data.Helpers;
 using Project.Service.Interfaces;
 using System.Threading.Tasks;
 
@@ -73,7 +72,7 @@ namespace Project.MVC.Controllers
             }
 
             var makes = await _vehicleService.GetAllMakesAsync();
-                        ViewBag.Makes = makes;
+            ViewBag.Makes = makes;
             return View(modelDto);
         }
 
@@ -89,7 +88,7 @@ namespace Project.MVC.Controllers
 
             if (ModelState.IsValid)
             {
-                await _vehicleService.UpdateModelAsync(modelDto);
+                await _vehicleService.UpdateModelAsync(id, modelDto); // Pass both id and modelDto
                 return RedirectToAction(nameof(Index));
             }
 
