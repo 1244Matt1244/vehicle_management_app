@@ -1,7 +1,6 @@
 using AutoMapper;
-using Project.Service.Data.DTOs;
-using Project.Service.Data.Helpers;
 using Project.Service.Models;
+using Project.Service.Data.DTOs;
 
 namespace Project.Service.Mappings
 {
@@ -9,13 +8,8 @@ namespace Project.Service.Mappings
     {
         public ServiceMappingProfile()
         {
-            // Entity <-> DTO mappings
             CreateMap<VehicleMake, VehicleMakeDTO>().ReverseMap();
             CreateMap<VehicleModel, VehicleModelDTO>().ReverseMap();
-            
-            // PaginatedList conversion
-            CreateMap(typeof(PaginatedList<>), typeof(PaginatedList<>))
-                .ConvertUsing(typeof(PaginatedListConverter<,>));
         }
     }
 }
