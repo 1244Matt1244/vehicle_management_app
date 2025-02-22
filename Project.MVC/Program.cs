@@ -4,8 +4,6 @@ using Ninject;
 using Project.MVC.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
-
-// Ninject setup
 var kernel = new StandardKernel(new NinjectBootstrapper());
 builder.Host.UseServiceProviderFactory(new NinjectServiceProviderFactory(kernel));
 
