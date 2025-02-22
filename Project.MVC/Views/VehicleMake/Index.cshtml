@@ -1,9 +1,5 @@
 @model Project.MVC.ViewModels.VehicleMakeVM
 
-@{
-    ViewData["Title"] = "Vehicle Makes";
-}
-
 <h1>Vehicle Makes</h1>
 
 <!-- Search Box -->
@@ -19,14 +15,11 @@
             <th>
                 <a asp-action="Index" 
                 asp-route-sortBy="Name" 
-                asp-route-sortOrder="@(Model.CurrentSort == "Name" && Model.SortOrder == "asc" ? "desc" : "asc")"
-                asp-route-searchString="@Model.SearchString">
-                    Name @(Model.CurrentSort == "Name" ? (Model.SortOrder == "asc" ? "↑" : "↓") : "")
+                asp-route-sortOrder="@(Model.SortOrder == "asc" ? "desc" : "asc")">
+                    Name @(Model.SortOrder == "asc" ? "↑" : "↓")
                 </a>
             </th>
-            <th>
-                Abrv
-            </th>
+            <th>Abbreviation</th>
         </tr>
     </thead>
     <tbody>
@@ -35,36 +28,28 @@
             <tr>
                 <td>@item.Name</td>
                 <td>@item.Abrv</td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                </td>
             </tr>
         }
     </tbody>
 </table>
 
 <!-- Pagination -->
-@{
-    var prevDisabled = !Model.PaginatedList.HasPreviousPage ? "disabled" : "";
-    var nextDisabled = !Model.PaginatedList.HasNextPage ? "disabled" : "";
+@if (Model.PaginatedList.HasPreviousPage)
+{
+    <a asp-action="Index" 
+    asp-route-page="@(Model.PaginatedList.PageIndex - 1)"
+    asp-route-sortBy="@Model.CurrentSort"
+    asp-route-sortOrder="@Model.SortOrder"
+    asp-route-searchString="@Model.SearchString"
+    class="btn btn-primary">Previous</a>
 }
 
-<a asp-action="Index" 
-asp-route-page="@(Model.PaginatedList.PageIndex - 1)" 
-asp-route-sortBy="@Model.CurrentSort"
-asp-route-sortOrder="@Model.SortOrder"
-asp-route-searchString="@Model.SearchString"
-class="btn btn-default @prevDisabled">
-    Previous
-</a>
-
-<a asp-action="Index" 
-asp-route-page="@(Model.PaginatedList.PageIndex + 1)" 
-asp-route-sortBy="@Model.CurrentSort"
-asp-route-sortOrder="@Model.SortOrder"
-asp-route-searchString="@Model.SearchString"
-class="btn btn-default @nextDisabled">
-    Next
-</a>
+@if (Model.PaginatedList.HasNextPage)
+{
+    <a asp-action="Index" 
+    asp-route-page="@(Model.PaginatedList.PageIndex + 1)"
+    asp-route-sortBy="@Model.CurrentSort"
+    asp-route-sortOrder="@Model.SortOrder"
+    asp-route-searchString="@Model.SearchString"
+    class="btn btn-primary">Next</a>
+}

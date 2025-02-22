@@ -1,9 +1,12 @@
+// Project.MVC/Program.cs
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Hosting;
 using Ninject;
 using Project.MVC.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Ninject setup
 var kernel = new StandardKernel(new NinjectBootstrapper());
 builder.Host.UseServiceProviderFactory(new NinjectServiceProviderFactory(kernel));
 
