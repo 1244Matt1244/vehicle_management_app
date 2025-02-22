@@ -1540,6 +1540,7 @@
           "Microsoft.Extensions.DependencyInjection.Abstractions": "9.0.2",
           "Ninject": "3.3.6",
           "Ninject.Extensions.DependencyInjection": "1.0.2",
+          "Ninject.Web.AspNetCore": "9.0.0",
           "Ninject.Web.Common": "3.3.2",
           "Project.Service": "1.0.0",
           "Serilog.AspNetCore": "9.0.0",
