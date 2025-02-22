@@ -11,7 +11,17 @@ builder.Host.UseServiceProviderFactory(new NinjectServiceProviderFactory(kernel)
 
 var app = builder.Build();
 
-// Pipeline configuration
+// Configure HTTP pipeline
+if (app.Environment.IsDevelopment())
+{
+    app.UseDeveloperExceptionPage();
+}
+else
+{
+    app.UseExceptionHandler("/Home/Error");
+    app.UseHsts();
+}
+
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();

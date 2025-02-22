@@ -6,6 +6,7 @@ using Moq;
 using Project.MVC.Controllers;
 using Project.Service.Interfaces;
 using Project.Service.Data.DTOs;
+using Project.Service.Models;
 using Xunit;
 
 namespace Project.Tests.UnitTests.ControllerTests

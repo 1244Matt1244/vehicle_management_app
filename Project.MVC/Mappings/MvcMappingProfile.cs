@@ -1,7 +1,6 @@
 using AutoMapper;
 using Project.Service.Data.DTOs;
-using Project.Service.Data.Helpers;
-using System.Linq; // Ensure this is included
+using Project.MVC.ViewModels;
 
 namespace Project.MVC.Mappings
 {
@@ -9,17 +8,28 @@ namespace Project.MVC.Mappings
     {
         public MvcMappingProfile()
         {
-            CreateMap<PaginatedList<VehicleModelDTO>, PaginatedList<VehicleModelDTO>>()
-                .ConvertUsing((src, dest) => new PaginatedList<VehicleModelDTO>(
-                    src.Items.ToList(), // Use ToList() from LINQ
+            // VehicleMake
+            CreateMap<VehicleMakeDTO, VehicleMakeVM>()
+                .ForMember(dest => dest.PaginatedList, opt => opt.Ignore()) // Handled separately
+                .ReverseMap();
+
+            // VehicleModel
+            CreateMap<VehicleModelDTO, VehicleModelVM>()
+                .ForMember(dest => dest.PaginatedList, opt => opt.Ignore())
+                .ReverseMap();
+
+            // PaginatedList mappings
+            CreateMap<PaginatedList<VehicleMakeDTO>, PaginatedList<VehicleMakeVM>>()
+                .ConvertUsing((src, _, ctx) => new PaginatedList<VehicleMakeVM>(
+                    ctx.Mapper.Map<List<VehicleMakeVM>>(src.Items),
                     src.TotalCount,
                     src.PageIndex,
                     src.PageSize
                 ));
 
-            CreateMap<PaginatedList<VehicleMakeDTO>, PaginatedList<VehicleMakeDTO>>()
-                .ConvertUsing((src, dest) => new PaginatedList<VehicleMakeDTO>(
-                    src.Items.ToList(), // Use ToList() from LINQ
+            CreateMap<PaginatedList<VehicleModelDTO>, PaginatedList<VehicleModelVM>>()
+                .ConvertUsing((src, _, ctx) => new PaginatedList<VehicleModelVM>(
+                    ctx.Mapper.Map<List<VehicleModelVM>>(src.Items),
                     src.TotalCount,
                     src.PageIndex,
                     src.PageSize
