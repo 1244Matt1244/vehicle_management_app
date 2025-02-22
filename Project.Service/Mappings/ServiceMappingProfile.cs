@@ -1,6 +1,8 @@
+// ServiceMappingProfile.cs
 using AutoMapper;
-using Project.Service.Data.DTOs;
+using Project.Service.Data.Helpers;
 using Project.Service.Models;
+using Project.Service.Data.DTOs;
 
 namespace Project.Service.Mappings
 {
@@ -8,11 +10,15 @@ namespace Project.Service.Mappings
     {
         public ServiceMappingProfile()
         {
-            // VehicleMake -> VehicleMakeDTO and vice versa
+            // VehicleMake ↔ VehicleMakeDTO
             CreateMap<VehicleMake, VehicleMakeDTO>().ReverseMap();
             
-            // VehicleModel -> VehicleModelDTO and vice versa
+            // VehicleModel ↔ VehicleModelDTO
             CreateMap<VehicleModel, VehicleModelDTO>().ReverseMap();
+
+            // Generic PaginatedList mapping
+            CreateMap(typeof(PaginatedList<>), typeof(PaginatedList<>))
+                .ConvertUsing(typeof(PaginatedListConverter<,>));
         }
     }
 }
