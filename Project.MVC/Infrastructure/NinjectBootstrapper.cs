@@ -1,4 +1,6 @@
 using Ninject.Modules;
+using Ninject.Web.AspNetCore;
+using Ninject.Web.Common;
 using Project.Service.Data.Context;
 using Project.Service.Interfaces;
 using Project.Service.Repositories;
@@ -7,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using AutoMapper;
 using Project.Service.Mappings;
 using Project.MVC.Mappings;
+using System;
 
 namespace Project.MVC.Infrastructure
 {
@@ -24,14 +27,10 @@ namespace Project.MVC.Infrastructure
                         .Options);
 
             // Repository
-            Bind<IVehicleRepository>()
-                .To<VehicleRepository>()
-                .InTransientScope(); // Use transient or singleton based on your needs
+            Bind<IVehicleRepository>().To<VehicleRepository>();
 
             // Service
-            Bind<IVehicleService>()
-                .To<VehicleService>()
-                .InTransientScope(); // Use transient or singleton based on your needs
+            Bind<IVehicleService>().To<VehicleService>();
 
             // AutoMapper
             var config = new MapperConfiguration(cfg =>
@@ -39,9 +38,7 @@ namespace Project.MVC.Infrastructure
                 cfg.AddProfile<ServiceMappingProfile>();
                 cfg.AddProfile<MvcMappingProfile>();
             });
-            Bind<IMapper>()
-                .ToConstant(config.CreateMapper())
-                .InSingletonScope();
+            Bind<IMapper>().ToConstant(config.CreateMapper());
         }
     }
 }
