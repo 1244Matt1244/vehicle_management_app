@@ -1,8 +1,8 @@
 using AutoMapper;
 using Project.Service.Data.DTOs;
-using Project.Service.Data.Helpers;
 using Project.MVC.ViewModels;
 using System.Collections.Generic;
+using Project.Service.Data.Helpers;
 
 namespace Project.MVC.Mappings
 {
@@ -10,7 +10,7 @@ namespace Project.MVC.Mappings
     {
         public MvcMappingProfile()
         {
-            // VehicleMake mappings
+            // VehicleMake
             CreateMap<VehicleMakeDTO, VehicleMakeVM>().ReverseMap();
             CreateMap<PaginatedList<VehicleMakeDTO>, PaginatedList<VehicleMakeVM>>()
                 .ConvertUsing((src, _, ctx) => new PaginatedList<VehicleMakeVM>(
@@ -20,7 +20,7 @@ namespace Project.MVC.Mappings
                     src.PageSize
                 ));
 
-            // VehicleModel mappings
+            // VehicleModel
             CreateMap<VehicleModelDTO, VehicleModelVM>().ReverseMap();
             CreateMap<PaginatedList<VehicleModelDTO>, PaginatedList<VehicleModelVM>>()
                 .ConvertUsing((src, _, ctx) => new PaginatedList<VehicleModelVM>(

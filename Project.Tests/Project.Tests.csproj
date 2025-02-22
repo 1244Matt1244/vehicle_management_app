@@ -26,6 +26,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Project.Service\Project.Service.csproj" />
+    <ProjectReference Include="..\Project.MVC\Project.MVC.csproj" /> <!-- Add this line -->
   </ItemGroup>
 
 </Project>
