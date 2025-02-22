@@ -1,7 +1,7 @@
-// Project.MVC/Mappings/MvcMappingProfile.cs
 using AutoMapper;
 using Project.Service.Data.DTOs;
-using Project.MVC.ViewModels;
+using Project.Service.Data.Helpers;
+using System.Linq; // Ensure this is included
 
 namespace Project.MVC.Mappings
 {
@@ -9,19 +9,17 @@ namespace Project.MVC.Mappings
     {
         public MvcMappingProfile()
         {
-            // Map DTOs to ViewModels
-            CreateMap<VehicleMakeDTO, VehicleMakeVM>().ReverseMap();
-            CreateMap<VehicleModelDTO, VehicleModelVM>().ReverseMap();
+            CreateMap<PaginatedList<VehicleModelDTO>, PaginatedList<VehicleModelDTO>>()
+                .ConvertUsing((src, dest) => new PaginatedList<VehicleModelDTO>(
+                    src.Items.ToList(), // Use ToList() from LINQ
+                    src.TotalCount,
+                    src.PageIndex,
+                    src.PageSize
+                ));
 
-            // PaginatedList mapping
-            CreateMap<PaginatedList<VehicleMakeDTO>, PaginatedList<VehicleMakeVM>>()
-                .ConvertUsing((src, dest) => new PaginatedList<VehicleMakeVM>(
-                    src.Items.Select(dto => new VehicleMakeVM 
-                    { 
-                        Id = dto.Id, 
-                        Name = dto.Name, 
-                        Abrv = dto.Abrv 
-                    }).ToList(),
+            CreateMap<PaginatedList<VehicleMakeDTO>, PaginatedList<VehicleMakeDTO>>()
+                .ConvertUsing((src, dest) => new PaginatedList<VehicleMakeDTO>(
+                    src.Items.ToList(), // Use ToList() from LINQ
                     src.TotalCount,
                     src.PageIndex,
                     src.PageSize

@@ -9,12 +9,12 @@ namespace Project.MVC.ViewModels
 {
     public class VehicleMakeVM
     {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public string Abrv { get; set; }
-        public PaginatedList<VehicleMakeVM>? PaginatedList { get; set; }
-        public string CurrentSort { get; set; }
-        public string SortOrder { get; set; }
-        public string SearchString { get; set; }
+        public required int Id { get; set; }
+        public required string Name { get; set; }
+        public required string Abrv { get; set; }
+        public required PaginatedList<VehicleMakeVM>? PaginatedList { get; set; }
+        public required string CurrentSort { get; set; }
+        public required string SortOrder { get; set; }
+        public required string SearchString { get; set; }
     }
 }

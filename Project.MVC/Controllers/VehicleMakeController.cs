@@ -1,42 +1,34 @@
 using Microsoft.AspNetCore.Mvc;
-using Project.Service.Data.DTOs;
-using Project.Service.Interfaces;
-using Project.MVC.ViewModels;
-using AutoMapper;
 using System.Threading.Tasks;
+using Project.Service.Interfaces;
+using Project.Service.Data.DTOs;
+using Project.Service.Data.Helpers;
 
 namespace Project.MVC.Controllers
 {
     public class VehicleMakeController : Controller
     {
         private readonly IVehicleService _vehicleService;
-        private readonly IMapper _mapper;
 
-        public VehicleMakeController(IVehicleService vehicleService, IMapper mapper)
+        public VehicleMakeController(IVehicleService vehicleService)
         {
             _vehicleService = vehicleService;
-            _mapper = mapper;
         }
 
-        public async Task<IActionResult> Index(
-            int page = 1,
-            int pageSize = 10,
-            string sortBy = "Name",
-            string sortOrder = "asc",
-            string searchString = "")
+        public async Task<IActionResult> Index(int pageIndex = 1, int pageSize = 10, string sortBy = "Name", string sortOrder = "asc", string search = "")
         {
-            var makesDto = await _vehicleService.GetMakesAsync(page, pageSize, sortBy, sortOrder, searchString);
-            var makesVm = _mapper.Map<PaginatedList<VehicleMakeVM>>(makesDto);
+            var makes = await _vehicleService.GetMakesAsync(pageIndex, pageSize, sortBy, sortOrder, search);
+            return View(makes);
+        }
 
-            var viewModel = new VehicleMakeVM
+        public async Task<IActionResult> Details(int id)
+        {
+            var make = await _vehicleService.GetMakeByIdAsync(id);
+            if (make == null)
             {
-                PaginatedList = makesVm,
-                CurrentSort = sortBy,
-                SortOrder = sortOrder,
-                SearchString = searchString
-            };
-
-            return View(viewModel);
+                return NotFound();
+            }
+            return View(make);
         }
 
         public IActionResult Create()
@@ -46,55 +38,46 @@ namespace Project.MVC.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(VehicleMakeVM model)
+        public async Task<IActionResult> Create(VehicleMakeDTO make)
         {
             if (ModelState.IsValid)
             {
-                var makeDto = _mapper.Map<VehicleMakeDTO>(model);
-                await _vehicleService.AddMakeAsync(makeDto);
-                return RedirectToAction(nameof(Index));
+                await _vehicleService.CreateMakeAsync(make);
+                return RedirectToAction("Index");
             }
-            return View(model);
+            return View(make);
         }
 
         public async Task<IActionResult> Edit(int id)
         {
-            var makeDto = await _vehicleService.GetMakeByIdAsync(id);
-            if (makeDto == null)
+            var make = await _vehicleService.GetMakeByIdAsync(id);
+            if (make == null)
             {
                 return NotFound();
             }
-            var model = _mapper.Map<VehicleMakeVM>(makeDto);
-            return View(model);
+            return View(make);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, VehicleMakeVM model)
+        public async Task<IActionResult> Edit(VehicleMakeDTO make)
         {
-            if (id != model.Id)
-            {
-                return BadRequest();
-            }
-            
             if (ModelState.IsValid)
             {
-                var makeDto = _mapper.Map<VehicleMakeDTO>(model);
-                await _vehicleService.UpdateMakeAsync(makeDto);
-                return RedirectToAction(nameof(Index));
+                await _vehicleService.UpdateMakeAsync(make);
+                return RedirectToAction("Index");
             }
-            return View(model);
+            return View(make);
         }
 
         public async Task<IActionResult> Delete(int id)
         {
-            var makeDto = await _vehicleService.GetMakeByIdAsync(id);
-            if (makeDto == null)
+            var make = await _vehicleService.GetMakeByIdAsync(id);
+            if (make == null)
             {
                 return NotFound();
             }
-            var model = _mapper.Map<VehicleMakeVM>(makeDto);
-            return View(model);
+            return View(make);
         }
 
         [HttpPost, ActionName("Delete")]
@@ -102,7 +85,7 @@ namespace Project.MVC.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             await _vehicleService.DeleteMakeAsync(id);
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Index");
         }
     }
 }
