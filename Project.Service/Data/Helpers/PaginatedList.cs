@@ -12,6 +12,9 @@ namespace Project.Service.Data.Helpers
         public int PageSize { get; }
         public int TotalPages { get; }
         public int TotalCount { get; }
+        
+        // Add a property for Items
+        public IReadOnlyList<T> Items => this;
 
         public PaginatedList(List<T> items, int count, int pageIndex, int pageSize)
         {
@@ -30,8 +33,8 @@ namespace Project.Service.Data.Helpers
         {
             var count = await source.CountAsync();
             var items = await source.Skip((pageIndex - 1) * pageSize)
-                                .Take(pageSize)
-                                .ToListAsync();
+                                    .Take(pageSize)
+                                    .ToListAsync();
             return new PaginatedList<T>(items, count, pageIndex, pageSize);
         }
     }

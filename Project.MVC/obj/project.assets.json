@@ -1840,6 +1840,19 @@
           }
         }
       },
+      "Ninject.Extensions.DependencyInjection/1.0.2": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "7.0.0",
+          "Ninject": "3.3.6"
+        },
+        "compile": {
+          "lib/net7.0/Ninject.Extensions.DependencyInjection.dll": {}
+        },
+        "runtime": {
+          "lib/net7.0/Ninject.Extensions.DependencyInjection.dll": {}
+        }
+      },
       "Ninject.Extensions.Factory/3.3.1": {
         "type": "package",
         "dependencies": {
@@ -6571,6 +6584,21 @@
         "ninject.nuspec"
       ]
     },
+    "Ninject.Extensions.DependencyInjection/1.0.2": {
+      "sha512": "717tX5wJkIks8f4AIhJ+jE4hw+Qt0AIMV9Zm/8B16GgBNfYYj2H1Jn7J2/hyIcJ9c4CeXFjempn69NvxMEA92Q==",
+      "type": "package",
+      "path": "ninject.extensions.dependencyinjection/1.0.2",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "README.md",
+        "lib/net5.0/Ninject.Extensions.DependencyInjection.dll",
+        "lib/net6.0/Ninject.Extensions.DependencyInjection.dll",
+        "lib/net7.0/Ninject.Extensions.DependencyInjection.dll",
+        "ninject.extensions.dependencyinjection.1.0.2.nupkg.sha512",
+        "ninject.extensions.dependencyinjection.nuspec"
+      ]
+    },
     "Ninject.Extensions.Factory/3.3.1": {
       "sha512": "daxHt4OIeuJ7yngPvA0w/LyzCKfX5TOjH6d90hfHCA6BAwsatv266YvjHjReMAnrkRzs0HfGChDZcRGAjsWW5A==",
       "type": "package",
@@ -11288,6 +11316,7 @@
       "Microsoft.EntityFrameworkCore.Sqlite >= 9.0.2",
       "Microsoft.Extensions.DependencyInjection >= 9.0.2",
       "Ninject >= 3.3.6",
+      "Ninject.Extensions.DependencyInjection >= 1.0.2",
       "Ninject.Extensions.Factory >= 3.3.1",
       "Ninject.Web.AspNetCore >= 9.0.0",
       "Project.Service >= 1.0.0",
@@ -11378,6 +11407,10 @@
           "Ninject": {
             "target": "Package",
             "version": "[3.3.6, )"
+          },
+          "Ninject.Extensions.DependencyInjection": {
+            "target": "Package",
+            "version": "[1.0.2, )"
           },
           "Ninject.Extensions.Factory": {
             "target": "Package",

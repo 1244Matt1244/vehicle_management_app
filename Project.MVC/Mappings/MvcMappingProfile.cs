@@ -1,6 +1,7 @@
 using AutoMapper;
 using Project.Service.Data.DTOs;
 using Project.Service.Data.Helpers;
+using System.Linq; // Ensure this is included
 
 namespace Project.MVC.Mappings
 {
@@ -10,7 +11,7 @@ namespace Project.MVC.Mappings
         {
             CreateMap<PaginatedList<VehicleModelDTO>, PaginatedList<VehicleModelDTO>>()
                 .ConvertUsing((src, dest) => new PaginatedList<VehicleModelDTO>(
-                    src.Items,
+                    src.Items.ToList(), // Use ToList() from LINQ
                     src.TotalCount,
                     src.PageIndex,
                     src.PageSize
@@ -18,7 +19,7 @@ namespace Project.MVC.Mappings
 
             CreateMap<PaginatedList<VehicleMakeDTO>, PaginatedList<VehicleMakeDTO>>()
                 .ConvertUsing((src, dest) => new PaginatedList<VehicleMakeDTO>(
-                    src.Items,
+                    src.Items.ToList(), // Use ToList() from LINQ
                     src.TotalCount,
                     src.PageIndex,
                     src.PageSize

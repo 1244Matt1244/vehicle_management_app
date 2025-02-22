@@ -1,4 +1,3 @@
-using Ninject;
 using Ninject.Modules;
 using Project.Service.Data.Context;
 using Project.Service.Interfaces;
@@ -26,11 +25,13 @@ namespace Project.MVC.Infrastructure
 
             // Repository
             Bind<IVehicleRepository>()
-                .To<VehicleRepository>();
+                .To<VehicleRepository>()
+                .InTransientScope(); // Use transient or singleton based on your needs
 
             // Service
             Bind<IVehicleService>()
-                .To<VehicleService>();
+                .To<VehicleService>()
+                .InTransientScope(); // Use transient or singleton based on your needs
 
             // AutoMapper
             var config = new MapperConfiguration(cfg =>

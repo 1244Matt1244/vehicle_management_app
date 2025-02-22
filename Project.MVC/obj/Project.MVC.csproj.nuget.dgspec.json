@@ -83,6 +83,10 @@
               "target": "Package",
               "version": "[3.3.6, )"
             },
+            "Ninject.Extensions.DependencyInjection": {
+              "target": "Package",
+              "version": "[1.0.2, )"
+            },
             "Ninject.Extensions.Factory": {
               "target": "Package",
               "version": "[3.3.1, )"
