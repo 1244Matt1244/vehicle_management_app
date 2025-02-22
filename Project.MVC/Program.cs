@@ -1,8 +1,6 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
-using Ninject;
-using Project.Service.Mappings;
-using Project.MVC.Mappings;
+using Project.MVC.Infrastructure;
 
 public class Program
 {

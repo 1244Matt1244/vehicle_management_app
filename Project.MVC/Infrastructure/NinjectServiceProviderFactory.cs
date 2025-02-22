@@ -6,10 +6,25 @@ namespace Project.MVC.Infrastructure
 {
     public class NinjectServiceProviderFactory : IServiceProviderFactory<IKernel>
     {
-        public IKernel CreateBuilder(IServiceCollection services) => 
-            new NinjectBootstrapper().GetKernel(services);
+        private readonly NinjectSettings _settings;
+        
+        public NinjectServiceProviderFactory() : this(new NinjectSettings()) { }
+        
+        public NinjectServiceProviderFactory(NinjectSettings settings)
+        {
+            _settings = settings;
+        }
 
-        public IServiceProvider CreateServiceProvider(IKernel container) => 
-            container.Get<IServiceProvider>();
+        public IKernel CreateBuilder(IServiceCollection services)
+        {
+            var kernel = new StandardKernel(_settings);
+            kernel.Populate(services);
+            return kernel;
+        }
+
+        public IServiceProvider CreateServiceProvider(IKernel container)
+        {
+            return container.Get<IServiceProvider>();
+        }
     }
 }
