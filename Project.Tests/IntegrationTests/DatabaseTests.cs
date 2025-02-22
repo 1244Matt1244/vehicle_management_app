@@ -1,6 +1,6 @@
 using System;
-using System.Threading.Tasks;
-using System.Collections.Generic;
+using System.Collections.Generic; // Added
+using System.Threading.Tasks;     // Added
 using Microsoft.EntityFrameworkCore;
 using Project.Service.Data.Context;
 using Project.Service.Models;
@@ -21,14 +21,17 @@ namespace Project.Tests.IntegrationTests
             _context = new ApplicationDbContext(options);
         }
 
-        public async Task InitializeAsync()
+        // Implement IAsyncLifetime correctly
+        public async Task InitializeAsync() // Changed to Task
         {
-            // Initialize required DbSets
+            await _context.Database.EnsureCreatedAsync();
+            
+            // Seed test data
             _context.VehicleMakes.Add(new VehicleMake 
             { 
                 Id = 1, 
                 Name = "Honda", 
-                Abrv = "H", 
+                Abrv = "H",
                 VehicleModels = new List<VehicleModel>() 
             });
             await _context.SaveChangesAsync();
@@ -41,7 +44,7 @@ namespace Project.Tests.IntegrationTests
             { 
                 Id = 2, 
                 Name = "Tesla", 
-                Abrv = "T", 
+                Abrv = "T",
                 VehicleModels = new List<VehicleModel>() 
             };
 
@@ -52,7 +55,7 @@ namespace Project.Tests.IntegrationTests
             Assert.NotNull(savedMake);
         }
 
-        public async Task DisposeAsync()
+        public async Task DisposeAsync() // Changed to Task
         {
             await _context.Database.EnsureDeletedAsync();
             await _context.DisposeAsync();

@@ -16,12 +16,12 @@ namespace Project.Service.Data.Helpers
         // Add a property for Items
         public IReadOnlyList<T> Items => this;
 
-        public PaginatedList(List<T> items, int count, int pageIndex, int pageSize)
+        public PaginatedList(List<T> items, int totalCount, int pageIndex, int pageSize)
         {
             PageIndex = pageIndex;
             PageSize = pageSize;
-            TotalCount = count;
-            TotalPages = (int)Math.Ceiling(count / (double)pageSize);
+            TotalCount = totalCount;
+            TotalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
             AddRange(items);
         }
 
