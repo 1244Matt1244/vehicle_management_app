@@ -1,8 +1,9 @@
 using AutoMapper;
-using Project.Data.Models;
 using Project.Service.Data.DTOs;
+using Project.Service.Data.Helpers; // Add this
+using Project.Service.Models;
 
-namespace Project.Service.Mappings
+namespace Project.Service.Mapping
 {
     public class ServiceMappingProfile : Profile
     {
@@ -15,6 +16,10 @@ namespace Project.Service.Mappings
             CreateMap<VehicleModel, VehicleModelDTO>()
                 .ForMember(dest => dest.MakeName, opt => opt.MapFrom(src => src.Make.Name))
                 .ReverseMap();
+
+            // PaginatedList Mappings
+            CreateMap<PaginatedList<VehicleMake>, PaginatedList<VehicleMakeDTO>>();
+            CreateMap<PaginatedList<VehicleModel>, PaginatedList<VehicleModelDTO>>();
         }
     }
 }

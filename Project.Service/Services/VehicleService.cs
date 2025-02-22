@@ -1,12 +1,12 @@
+// Updated VehicleService.cs
 using AutoMapper;
-using Project.Data.Models;
 using Project.Service.Data.DTOs;
+using Project.Service.Data.Helpers;
 using Project.Service.Interfaces;
-using Project.Service.Helpers;
+using Project.Service.Models;
 using System;
-using System.Linq;
+using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 
 namespace Project.Service.Services
 {
@@ -15,108 +15,124 @@ namespace Project.Service.Services
         private readonly IVehicleRepository _repository;
         private readonly IMapper _mapper;
 
-        public VehicleService(IVehicleRepository repository, IMapper mapper)
+        public VehicleService(
+            IVehicleRepository repository, 
+            IMapper mapper)
         {
-            _repository = repository;
-            _mapper = mapper;
+            // Use proper null checks with nameof()
+            _repository = repository ?? 
+                throw new ArgumentNullException(nameof(repository));
+            _mapper = mapper ?? 
+                throw new ArgumentNullException(nameof(mapper));
         }
 
-        // VehicleMake Methods
-
-        // Fetches a paginated list of vehicle makes
-        public async Task<PaginatedList<VehicleMakeDTO>> GetMakesPaginatedAsync(int page, int pageSize, string sortOrder, string searchString)
+        // VehicleMake methods
+        public async Task<PaginatedList<VehicleMakeDTO>> GetMakesAsync(
+            int page = 1,
+            int pageSize = 10,
+            string sortBy = "Name",
+            string sortOrder = "asc",
+            string searchString = "")
         {
-            var paginatedMakes = await _repository.GetMakesPaginatedAsync(page, pageSize, sortOrder, searchString);
-            return _mapper.Map<PaginatedList<VehicleMakeDTO>>(paginatedMakes);
+            var result = await _repository.GetMakesPaginatedAsync(
+                page,
+                pageSize,
+                sortBy,
+                sortOrder,
+                searchString
+            );
+            return _mapper.Map<PaginatedList<VehicleMakeDTO>>(result);
         }
 
-        // Fetches a vehicle make by its ID
         public async Task<VehicleMakeDTO> GetMakeByIdAsync(int id)
         {
-            var make = await _repository.GetMakeByIdAsync(id);
+            var make = await _repository.GetMakeByIdAsync(id) ?? 
+                throw new KeyNotFoundException($"Make with ID {id} not found");
             return _mapper.Map<VehicleMakeDTO>(make);
         }
 
-        // Creates a new vehicle make
-        public async Task CreateMakeAsync(VehicleMakeDTO makeDto)
+        public async Task<VehicleMakeDTO> CreateMakeAsync(VehicleMakeDTO makeDto)
         {
             var make = _mapper.Map<VehicleMake>(makeDto);
             await _repository.AddMakeAsync(make);
+            return _mapper.Map<VehicleMakeDTO>(make);
         }
 
-        // Updates an existing vehicle make
-        public async Task UpdateMakeAsync(VehicleMakeDTO makeDto)
+        public async Task UpdateMakeAsync(int id, VehicleMakeDTO makeDto)
         {
-            var make = _mapper.Map<VehicleMake>(makeDto);
+            var make = await _repository.GetMakeByIdAsync(id) ?? 
+                throw new KeyNotFoundException($"Make with ID {id} not found");
+            _mapper.Map(makeDto, make);
             await _repository.UpdateMakeAsync(make);
         }
 
-        // Deletes a vehicle make by its ID
         public async Task DeleteMakeAsync(int id)
         {
-            await _repository.DeleteMakeAsync(id);
+            var make = await _repository.GetMakeByIdAsync(id) ?? 
+                throw new KeyNotFoundException($"Make with ID {id} not found");
+            await _repository.DeleteMakeAsync(make);
         }
 
-        // VehicleModel Methods
-
-        // Fetches a paginated list of vehicle models
-        public async Task<PaginatedList<VehicleModelDTO>> GetModelsPaginatedAsync(int page, int pageSize, string sortOrder, string searchString)
+        // VehicleModel methods
+        public async Task<PaginatedList<VehicleModelDTO>> GetModelsAsync(
+            int page = 1,
+            int pageSize = 10,
+            string sortBy = "Name",
+            string sortOrder = "asc",
+            string searchString = "",
+            int? makeId = null)
         {
-            var query = _repository.GetVehicleModels();  // Assuming repository has GetVehicleModels method for retrieving models.
-
-            // Apply search filter
-            if (!string.IsNullOrEmpty(searchString))
-            {
-                query = query.Where(m => m.Name.Contains(searchString));
-            }
-
-            // Apply sorting
-            query = sortOrder switch
-            {
-                "name_desc" => query.OrderByDescending(m => m.Name),
-                _ => query.OrderBy(m => m.Name),
-            };
-
-            // Pagination
-            var totalItems = await query.CountAsync();
-            var items = await query
-                .Skip((page - 1) * pageSize)
-                .Take(pageSize)
-                .ToListAsync();
-
-            return new PaginatedList<VehicleModelDTO>(
-                _mapper.Map<List<VehicleModelDTO>>(items),
+            var result = await _repository.GetModelsPaginatedAsync(
                 page,
-                (int)Math.Ceiling(totalItems / (double)pageSize),
-                totalItems
+                pageSize,
+                sortBy,
+                sortOrder,
+                searchString,
+                makeId
             );
+            return _mapper.Map<PaginatedList<VehicleModelDTO>>(result);
         }
 
-        // Fetches a vehicle model by its ID
         public async Task<VehicleModelDTO> GetModelByIdAsync(int id)
         {
-            var model = await _repository.GetModelByIdAsync(id);
+            var model = await _repository.GetModelByIdAsync(id) ?? 
+                throw new KeyNotFoundException($"Model with ID {id} not found");
             return _mapper.Map<VehicleModelDTO>(model);
         }
 
-        // Creates a new vehicle model
-        public async Task CreateModelAsync(VehicleModelDTO modelDto)
+        public async Task<VehicleModelDTO> CreateModelAsync(VehicleModelDTO modelDto)
         {
             var model = _mapper.Map<VehicleModel>(modelDto);
             await _repository.AddModelAsync(model);
+            return _mapper.Map<VehicleModelDTO>(model);
         }
 
-        // Updates an existing vehicle model
-        public async Task UpdateModelAsync(VehicleModelDTO modelDto)
+        public async Task UpdateModelAsync(int id, VehicleModelDTO modelDto)
         {
-            var model = _mapper.Map<VehicleModel>(modelDto);
+            var model = await _repository.GetModelByIdAsync(id) ?? 
+                throw new KeyNotFoundException($"Model with ID {id} not found");
+            _mapper.Map(modelDto, model);
             await _repository.UpdateModelAsync(model);
         }
 
-        // Deletes a vehicle model by its ID
         public async Task DeleteModelAsync(int id)
         {
-            await _repository.DeleteModelAsync(id);
+            var model = await _repository.GetModelByIdAsync(id) ?? 
+                throw new KeyNotFoundException($"Model with ID {id} not found");
+            await _repository.DeleteModelAsync(model);
+        }
+
+        // Common methods
+        public async Task<List<VehicleMakeDTO>> GetAllMakesAsync()
+        {
+            var makes = await _repository.GetAllMakesAsync();
+            return _mapper.Map<List<VehicleMakeDTO>>(makes);
+        }
+
+        public async Task<List<VehicleModelDTO>> GetAllModelsAsync()
+        {
+            var models = await _repository.GetAllModelsAsync();
+            return _mapper.Map<List<VehicleModelDTO>>(models);
         }
     }
 }

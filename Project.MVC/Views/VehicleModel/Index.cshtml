@@ -1,67 +1,24 @@
-@model Project.MVC.ViewModels.VehicleModelVM
-@using Project.MVC.ViewModels
+@model Project.MVC.ViewModels.VehicleModelIndexVM
 
-@{
-    ViewData["Title"] = "Vehicle Models";
-    var makes = ViewBag.Makes as IEnumerable<SelectListItem>;
-}
-
-<div class="container">
-    <h1>Vehicle Models</h1>
-    
-    <!-- Filter Section -->
-    <form method="get" class="mb-4">
-        <div class="row g-3">
-            <div class="col-md-4">
-                <select name="makeId" asp-items="makes" class="form-select">
-                    <option value="">All Makes</option>
-                </select>
-            </div>
-            <div class="col-md-4">
-                <input type="text" name="search" value="@ViewContext.HttpContext.Request.Query["search"]" 
-                    class="form-control" placeholder="Search models...">
-            </div>
-            <div class="col-md-4">
-                <button type="submit" class="btn btn-primary">Filter</button>
-                <a asp-action="Index" class="btn btn-secondary">Reset</a>
-            </div>
-        </div>
-    </form>
-
-    <!-- Model Table -->
-    <table class="table table-striped">
-        <thead>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Make</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Items)
+        {
             <tr>
-                <th>
-                    <a asp-action="Index" 
-                    asp-route-sortOrder="@ViewData["NameSort"]"
-                    asp-route-search="@Context.Request.Query["search"]"
-                    asp-route-makeId="@Context.Request.Query["makeId"]">
-                        Model @(ViewData["NameSort"]?.ToString() == "desc" ? "▼" : "▲")
-                    </a>
-                </th>
-                <th>Abbreviation</th>
-                <th>Make</th>
-                <th>Actions</th>
+                <td>@item.Name</td>
+                <td>@item.MakeName</td>
             </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model.Items)
-            {
-                <tr>
-                    <td>@item.Name</td>
-                    <td>@item.Abrv</td>
-                    <td>@item.MakeName</td>
-                    <td>
-                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning">Edit</a>
-                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-info">Details</a>
-                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger">Delete</a>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
+        }
+    </tbody>
+</table>
 
-    <!-- Pagination -->
-    @await Html.PartialAsync("_Pagination", Model)
+<!-- Simplified pagination -->
+<div class="pagination">
+    Page @Model.Pagination.Page of @Model.Pagination.TotalPages
 </div>

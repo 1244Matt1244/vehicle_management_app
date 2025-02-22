@@ -5,10 +5,10 @@ namespace Project.MVC.ViewModels
 {
     public class VehicleMakeIndexVM
     {
-        public List<VehicleMakeVM> Items { get; set; } = new List<VehicleMakeVM>();
-        public PaginationVM Pagination { get; set; }
-        public string CurrentSort { get; set; }
-        public string SortOrder { get; set; }
-        public string SearchString { get; set; }
+        public List<VehicleMakeVM> Items { get; set; } = new();
+        public PaginationVM Pagination { get; set; } = new();
+        public string CurrentSort { get; set; } = string.Empty;
+        public string SortOrder { get; set; } = string.Empty; // Added property
+        public string SearchString { get; set; } = string.Empty;
     }
 }

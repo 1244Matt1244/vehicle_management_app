@@ -1,7 +1,8 @@
-using Microsoft.EntityFrameworkCore;
-using Project.Data.Models;
+using Project.Service.Data;
+using Project.Service.Data.Helpers;
 using Project.Service.Interfaces;
-using Project.Service.Helpers;
+using Project.Service.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,47 +16,29 @@ namespace Project.Service.Repositories
 
         public VehicleRepository(ApplicationDbContext context)
         {
-            _context = context;
+            _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
-        // VehicleMake Methods
-        public async Task<PaginatedList<VehicleMake>> GetMakesPaginatedAsync(int page, int pageSize, string sortOrder, string searchString)
+        #region VehicleMake Implementation
+        public async Task<PaginatedList<VehicleMake>> GetMakesPaginatedAsync(
+            int page, int pageSize, string sortBy, string sortOrder, string searchString)
         {
-            var query = _context.VehicleMakes.AsQueryable();
+            IQueryable<VehicleMake> query = _context.VehicleMakes;
 
-            // Filtering
             if (!string.IsNullOrEmpty(searchString))
             {
                 query = query.Where(m => m.Name.Contains(searchString));
             }
 
-            // Sorting
-            query = sortOrder switch
-            {
-                "name_desc" => query.OrderByDescending(m => m.Name),
-                _ => query.OrderBy(m => m.Name),
-            };
+            query = sortOrder.ToLower() == "desc" 
+                ? query.OrderByDescending(m => EF.Property<object>(m, sortBy))
+                : query.OrderBy(m => EF.Property<object>(m, sortBy));
 
-            // Pagination
-            var totalCount = await query.CountAsync();
-            var items = await query
-                .Skip((page - 1) * pageSize)
-                .Take(pageSize)
-                .ToListAsync();
-
-            return new PaginatedList<VehicleMake>(
-                items,
-                page,
-                (int)Math.Ceiling(totalCount / (double)pageSize),
-                totalCount
-            );
+            return await PaginatedList<VehicleMake>.CreateAsync(query, page, pageSize);
         }
 
-        public async Task<VehicleMake> GetMakeByIdAsync(int id)
-        {
-            return await _context.VehicleMakes.FindAsync(id) 
-                ?? throw new KeyNotFoundException("VehicleMake not found.");
-        }
+        public async Task<VehicleMake?> GetMakeByIdAsync(int id) => 
+            await _context.VehicleMakes.FindAsync(id);
 
         public async Task AddMakeAsync(VehicleMake make)
         {
@@ -69,51 +52,39 @@ namespace Project.Service.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task DeleteMakeAsync(int id)
+        public async Task DeleteMakeAsync(VehicleMake make)
         {
-            var make = await GetMakeByIdAsync(id);
             _context.VehicleMakes.Remove(make);
             await _context.SaveChangesAsync();
         }
+        #endregion
 
-        // VehicleModel Methods
-        public async Task<PaginatedList<VehicleModel>> GetModelsPaginatedAsync(int page, int pageSize, string sortOrder, int? makeId)
+        #region VehicleModel Implementation
+        public async Task<PaginatedList<VehicleModel>> GetModelsPaginatedAsync(
+            int page, int pageSize, string sortBy, string sortOrder, 
+            string searchString, int? makeId)
         {
-            var query = _context.VehicleModels.AsQueryable();
+            IQueryable<VehicleModel> query = _context.VehicleModels;
 
-            // Filtering by MakeId
             if (makeId.HasValue)
             {
                 query = query.Where(m => m.MakeId == makeId.Value);
             }
 
-            // Sorting
-            query = sortOrder switch
+            if (!string.IsNullOrEmpty(searchString))
             {
-                "name_desc" => query.OrderByDescending(m => m.Name),
-                _ => query.OrderBy(m => m.Name),
-            };
+                query = query.Where(m => m.Name.Contains(searchString));
+            }
 
-            // Pagination
-            var totalCount = await query.CountAsync();
-            var items = await query
-                .Skip((page - 1) * pageSize)
-                .Take(pageSize)
-                .ToListAsync();
+            query = sortOrder.ToLower() == "desc" 
+                ? query.OrderByDescending(m => EF.Property<object>(m, sortBy))
+                : query.OrderBy(m => EF.Property<object>(m, sortBy));
 
-            return new PaginatedList<VehicleModel>(
-                items,
-                page,
-                (int)Math.Ceiling(totalCount / (double)pageSize),
-                totalCount
-            );
+            return await PaginatedList<VehicleModel>.CreateAsync(query, page, pageSize);
         }
 
-        public async Task<VehicleModel> GetModelByIdAsync(int id)
-        {
-            return await _context.VehicleModels.FindAsync(id) 
-                ?? throw new KeyNotFoundException("VehicleModel not found.");
-        }
+        public async Task<VehicleModel?> GetModelByIdAsync(int id) => 
+            await _context.VehicleModels.FindAsync(id);
 
         public async Task AddModelAsync(VehicleModel model)
         {
@@ -127,11 +98,19 @@ namespace Project.Service.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task DeleteModelAsync(int id)
+        public async Task DeleteModelAsync(VehicleModel model)
         {
-            var model = await GetModelByIdAsync(id);
             _context.VehicleModels.Remove(model);
             await _context.SaveChangesAsync();
         }
+        #endregion
+
+        #region Common Implementation
+        public async Task<List<VehicleMake>> GetAllMakesAsync() => 
+            await _context.VehicleMakes.ToListAsync();
+
+        public async Task<List<VehicleModel>> GetAllModelsAsync() => 
+            await _context.VehicleModels.ToListAsync();
+        #endregion
     }
 }
