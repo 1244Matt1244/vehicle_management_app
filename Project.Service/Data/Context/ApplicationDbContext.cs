@@ -1,7 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Project.Service.Models;
+using System.Collections.Generic;
 
-namespace Project.Service.Data // Not .Data.Context
+namespace Project.Service.Data.Context // Not .Data.Context
 {
     public class ApplicationDbContext : DbContext
     {

@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using Project.Service.Data;
 using Project.Service.Data.Helpers;
 using Project.Service.Interfaces;
 using Project.Service.Models;
@@ -7,6 +6,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Project.Service.Data.Context;
+
 
 namespace Project.Service.Repositories
 {
@@ -34,7 +35,7 @@ namespace Project.Service.Repositories
             return await PaginatedList<VehicleMake>.CreateAsync(query, page, pageSize);
         }
 
-        public async Task<VehicleMake> GetMakeByIdAsync(int id) => 
+        public async Task<VehicleMake?> GetMakeByIdAsync(int id) => 
             await _context.VehicleMakes.FindAsync(id);
 
         public async Task AddMakeAsync(VehicleMake make)
@@ -74,7 +75,7 @@ namespace Project.Service.Repositories
             return await PaginatedList<VehicleModel>.CreateAsync(query, page, pageSize);
         }
 
-        public async Task<VehicleModel> GetModelByIdAsync(int id) => 
+        public async Task<VehicleModel?> GetModelByIdAsync(int id) => 
             await _context.VehicleModels.FindAsync(id);
 
         public async Task AddModelAsync(VehicleModel model)

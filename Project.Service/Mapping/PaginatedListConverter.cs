@@ -1,5 +1,5 @@
 using AutoMapper;
-using Project.Service.Data;
+using Project.Service.Data.Helpers;
 using System.Collections.Generic;
 
 namespace Project.Service.Mappings
