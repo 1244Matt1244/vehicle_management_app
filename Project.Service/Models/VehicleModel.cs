@@ -8,6 +8,6 @@ namespace Project.Service.Models
         public required string Name { get; set; }
         public required string Abrv { get; set; }
         public required int MakeId { get; set; }          // Foreign key
-        public required VehicleMake VehicleMake { get; set; } // Navigation property
+        public VehicleMake? VehicleMake { get; set; } // Navigation property (nullable)
     }
 }

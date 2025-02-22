@@ -4,7 +4,7 @@ using Moq;
 using Project.Service.Data.DTOs;
 using Project.Service.Data.Helpers;
 using Project.Service.Interfaces;
-using Project.Service.Mappings;
+using Project.Service.Mapping;
 using Project.Service.Models;
 using Project.Service.Services;
 using Xunit;
