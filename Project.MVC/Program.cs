@@ -1,30 +1,34 @@
-using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.DependencyInjection; // Add this
-using Microsoft.EntityFrameworkCore; // Add if using EF Core
-using Project.Service.Data.Context; // Update with your DbContext namespace
+using Microsoft.EntityFrameworkCore;
+using Project.Service.Data;
+using Project.Service.Interfaces;
+using Project.Service.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-builder.Services.AddControllersWithViews(); // Fixes CS1061
-
-// Install NuGet: Ninject, Ninject.Web.AspNetCore
-builder.Host.UseNinject();
-
-// In NinjectModule:
+// Add services to the container
+builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<IVehicleRepository, VehicleRepository>();
 builder.Services.AddScoped<IVehicleService, VehicleService>();
+builder.Services.AddAutoMapper(typeof(Program));
 
-// Example DbContext registration (adjust as needed)
+// SQLite configuration
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 var app = builder.Build();
 
-// Middleware setup here...
+// Configure the HTTP request pipeline
+if (!app.Environment.IsDevelopment())
+{
+    app.UseExceptionHandler("/Home/Error");
+    app.UseHsts();
+}
+
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
+app.UseAuthorization();
+
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");

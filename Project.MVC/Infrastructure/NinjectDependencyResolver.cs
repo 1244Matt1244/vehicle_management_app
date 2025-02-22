@@ -1,8 +1,9 @@
-using Ninject;
-using Ninject.Modules;
-using Project.Service.Data.Context;
+// In NinjectDependencyResolver.cs
+using Project.Service.Data; // Changed from Project.Service.Data.Context
 using Project.Service.Interfaces;
 using Project.Service.Services;
+using Ninject;
+using Ninject.Modules;
 
 namespace Project.MVC.Infrastructure
 {

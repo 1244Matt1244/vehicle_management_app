@@ -20,7 +20,7 @@ namespace Project.MVC.Controllers
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
-        // Index - Displays a paginated list of vehicle makes
+        // Displays a paginated, sorted, and searchable list of vehicle makes
         public async Task<IActionResult> Index(int page = 1, int pageSize = 10, string sortBy = "Name", string sortOrder = "asc", string search = "")
         {
             var result = await _vehicleService.GetMakesAsync(page, pageSize, sortBy, sortOrder, search);
@@ -38,47 +38,39 @@ namespace Project.MVC.Controllers
                 SortOrder = sortOrder,
                 SearchString = search
             };
-            
+
             return View(viewModel);
         }
 
-        // Create - Displays the create form and handles the post request
+        // Creates a new vehicle make
         [HttpPost]
         public async Task<IActionResult> Create(VehicleMakeVM viewModel)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
+            if (!ModelState.IsValid) return BadRequest(ModelState);
 
-            var dto = _mapper.Map<VehicleMakeDTO>(viewModel);
-            await _vehicleService.CreateMakeAsync(dto);
+            await _vehicleService.CreateMakeAsync(_mapper.Map<VehicleMakeDTO>(viewModel));
             return RedirectToAction(nameof(Index));
         }
 
-        // Edit (GET) - Retrieves a specific vehicle make for editing
+        // Retrieves a vehicle make for editing
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
             var makeDto = await _vehicleService.GetMakeByIdAsync(id);
-            if (makeDto == null)
-                return NotFound();
-
-            var viewModel = _mapper.Map<VehicleMakeVM>(makeDto);
-            return View(viewModel);
+            return makeDto == null ? NotFound() : View(_mapper.Map<VehicleMakeVM>(makeDto));
         }
 
-        // Edit (POST) - Updates the vehicle make
+        // Updates the vehicle make
         [HttpPost]
         public async Task<IActionResult> Edit(VehicleMakeVM viewModel)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
+            if (!ModelState.IsValid) return BadRequest(ModelState);
 
-            var dto = _mapper.Map<VehicleMakeDTO>(viewModel);
-            await _vehicleService.UpdateMakeAsync(dto);
+            await _vehicleService.UpdateMakeAsync(_mapper.Map<VehicleMakeDTO>(viewModel));
             return RedirectToAction(nameof(Index));
         }
 
-        // Delete - Handles the deletion of a vehicle make
+        // Deletes a vehicle make
         [HttpPost]
         public async Task<IActionResult> Delete(int id)
         {
@@ -86,16 +78,12 @@ namespace Project.MVC.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // Details - Displays detailed information about a specific vehicle make
+        // Displays detailed information about a specific vehicle make
         [HttpGet]
         public async Task<IActionResult> Details(int id)
         {
             var makeDto = await _vehicleService.GetMakeByIdAsync(id);
-            if (makeDto == null)
-                return NotFound();
-
-            var viewModel = _mapper.Map<VehicleMakeVM>(makeDto);
-            return View(viewModel);
+            return makeDto == null ? NotFound() : View(_mapper.Map<VehicleMakeVM>(makeDto));
         }
     }
 }
