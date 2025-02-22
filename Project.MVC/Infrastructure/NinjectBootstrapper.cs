@@ -1,15 +1,13 @@
 using Ninject.Modules;
-using Ninject.Web.AspNetCore;
 using Ninject.Web.Common;
+using Microsoft.EntityFrameworkCore;
 using Project.Service.Data.Context;
 using Project.Service.Interfaces;
 using Project.Service.Repositories;
 using Project.Service.Services;
-using Microsoft.EntityFrameworkCore;
 using AutoMapper;
 using Project.Service.Mappings;
 using Project.MVC.Mappings;
-using System;
 
 namespace Project.MVC.Infrastructure
 {
@@ -20,16 +18,14 @@ namespace Project.MVC.Infrastructure
             // Database context
             Bind<ApplicationDbContext>()
                 .ToSelf()
-                .InSingletonScope()
+                .InRequestScope()
                 .WithConstructorArgument("options", 
                     new DbContextOptionsBuilder<ApplicationDbContext>()
                         .UseSqlite("Data Source=vehicles.db")
                         .Options);
 
-            // Repository
+            // Repository and service
             Bind<IVehicleRepository>().To<VehicleRepository>();
-
-            // Service
             Bind<IVehicleService>().To<VehicleService>();
 
             // AutoMapper
