@@ -1,9 +1,11 @@
 using Ninject;
 using Ninject.Modules;
 using Project.Service.Data;
+using Project.Service.Data.Context;
 using Project.Service.Interfaces;
 using Project.Service.Services;
 using Microsoft.EntityFrameworkCore;
+using AutoMapper;
 
 namespace Project.MVC.Infrastructure
 {
@@ -15,7 +17,7 @@ namespace Project.MVC.Infrastructure
             Bind<ApplicationDbContext>()
                 .ToSelf()
                 .InTransientScope()
-                .WithConstructorArgument("options", 
+                .WithConstructorArgument("options",
                     new DbContextOptionsBuilder<ApplicationDbContext>()
                         .UseSqlite("Data Source=vehicles.db")
                         .Options);
