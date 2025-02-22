@@ -8,20 +8,22 @@ using Project.Service.Data.DTOs;
 using Project.Service.Data.Helpers;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Project.Service.Mappings;
 
 namespace Project.Tests.UnitTests.ControllerTests
 {
     public class VehicleMakeControllerTests
     {
         private readonly Mock<IVehicleService> _serviceMock;
-        private readonly Mock<IMapper> _mapperMock;
+        private readonly IMapper _mapper;
         private readonly VehicleMakeController _controller;
 
         public VehicleMakeControllerTests()
         {
             _serviceMock = new Mock<IVehicleService>();
-            _mapperMock = new Mock<IMapper>();
-            _controller = new VehicleMakeController(_serviceMock.Object, _mapperMock.Object);
+            var config = new MapperConfiguration(cfg => cfg.AddProfile<ServiceMappingProfile>());
+            _mapper = config.CreateMapper();
+            _controller = new VehicleMakeController(_serviceMock.Object, _mapper);
         }
 
         [Fact]
@@ -29,7 +31,10 @@ namespace Project.Tests.UnitTests.ControllerTests
         {
             // Arrange
             var makes = new PaginatedList<VehicleMakeDTO>(
-                new List<VehicleMakeDTO> { new VehicleMakeDTO { Name = "Test", Abrv = "T" } },
+                new List<VehicleMakeDTO> 
+                { 
+                    new VehicleMakeDTO { Id = 1, Name = "TestMake", Abrv = "TM" } 
+                },
                 totalCount: 1,
                 pageIndex: 1,
                 pageSize: 10
