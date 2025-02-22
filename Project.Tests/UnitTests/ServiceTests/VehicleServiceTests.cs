@@ -1,12 +1,15 @@
-using System.Threading.Tasks; // Add this line
-using AutoMapper;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using Moq;
 using Project.Service.Data.Context;
 using Project.Service.Data.DTOs;
-using Project.Service.Services;
-using Project.Service.Mapping;
+using Project.Service.Data.Helpers;
+using Project.Service.Interfaces;
+using Project.Service.Mappings;
 using Project.Service.Models;
+using Project.Service.Services;
 using Xunit;
 
 namespace Project.Tests
@@ -18,7 +21,7 @@ namespace Project.Tests
 
         public VehicleServiceTests()
         {
-            var config = new MapperConfiguration(cfg => cfg.AddProfile<ServiceProfile>());
+            var config = new MapperConfiguration(cfg => cfg.AddProfile<ServiceMappingProfile>());
             _mapper = config.CreateMapper();
             _options = new DbContextOptionsBuilder<ApplicationDbContext>()
                 .UseInMemoryDatabase(databaseName: "TestDB")

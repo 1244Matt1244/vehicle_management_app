@@ -6,6 +6,6 @@ namespace Project.Service.Models
     {
         public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
-        public ICollection<VehicleModel> Models { get; set; } = new List<VehicleModel>(); // Initialize
+        public string Abrv { get; set; }
     }
 }
