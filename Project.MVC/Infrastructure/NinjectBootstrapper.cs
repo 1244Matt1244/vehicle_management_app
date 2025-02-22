@@ -6,7 +6,7 @@ using Project.Service.Interfaces;
 using Project.Service.Repositories;
 using Project.Service.Services;
 using AutoMapper;
-using Project.Service.Mappings; // Corrected from "Mapping"
+using Project.Service.Mappings;
 using Project.MVC.Mappings;
 
 namespace Project.MVC.Infrastructure
@@ -15,7 +15,7 @@ namespace Project.MVC.Infrastructure
     {
         public override void Load()
         {
-            // Database context
+            // Database context (scoped per request)
             Bind<ApplicationDbContext>()
                 .ToSelf()
                 .InRequestScope()
