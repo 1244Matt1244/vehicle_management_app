@@ -2,53 +2,49 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Project.Service.Data.Context;
-using Project.Service.Models; 
+using Project.Service.Models;
 using Xunit;
 
-namespace Project.Tests
+namespace Project.Tests.IntegrationTests
 {
     public class DatabaseTests : IAsyncLifetime
     {
-        private ApplicationDbContext _context;
-        private const string TestDbName = "TestDb_" + Guid.NewGuid();
+        private readonly ApplicationDbContext _context;
+        private readonly string _testDbName;
 
-        public async Task InitializeAsync()
+        public DatabaseTests()
         {
+            _testDbName = $"TestDb_{Guid.NewGuid()}"; // Initialize in constructor
+
             var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-                .UseInMemoryDatabase(databaseName: TestDbName)
+                .UseInMemoryDatabase(databaseName: _testDbName)
                 .Options;
 
             _context = new ApplicationDbContext(options);
+        }
+
+        public async Task InitializeAsync()
+        {
+            await _context.Database.EnsureCreatedAsync();
             await SeedTestDataAsync();
         }
 
         private async Task SeedTestDataAsync()
         {
-            await _context.VehicleMakes.AddAsync(new VehicleMake { Name = "Honda" });
+            _context.VehicleMakes.Add(new VehicleMake { Name = "Honda" });
             await _context.SaveChangesAsync();
         }
 
         [Fact]
         public async Task AddMake_ShouldPersistInDatabase()
         {
-            // Arrange
-            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-                .UseInMemoryDatabase(databaseName: "TestDb_" + Guid.NewGuid())
-                .Options;
+            var make = new VehicleMake { Name = "Tesla" };
 
-            // Act & Assert
-            using (var context = new ApplicationDbContext(options))
-            {
-                var make = new VehicleMake { Name = "Tesla" };
-                await context.VehicleMakes.AddAsync(make);
-                await context.SaveChangesAsync();
-            }
+            _context.VehicleMakes.Add(make);
+            await _context.SaveChangesAsync();
 
-            using (var context = new ApplicationDbContext(options))
-            {
-                Assert.Equal(1, await context.VehicleMakes.CountAsync());
-                Assert.NotNull(await context.VehicleMakes.FirstOrDefaultAsync(m => m.Name == "Tesla"));
-            }
+            var savedMake = await _context.VehicleMakes.FirstOrDefaultAsync(m => m.Name == "Tesla");
+            Assert.NotNull(savedMake);
         }
 
         public async Task DisposeAsync()

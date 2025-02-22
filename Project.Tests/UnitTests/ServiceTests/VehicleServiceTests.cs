@@ -1,13 +1,13 @@
-using System.Threading.Tasks;
-using AutoMapper;
+using Xunit;
 using Moq;
+using AutoMapper;
+using Project.Service.Services;
+using Project.Service.Interfaces;
 using Project.Service.Data.DTOs;
 using Project.Service.Data.Helpers;
-using Project.Service.Interfaces;
-using Project.Service.Mapping;
-using Project.Service.Models;
-using Project.Service.Services;
-using Xunit;
+using Project.Service.Mappings;
+using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace Project.Tests.UnitTests.ServiceTests
 {
@@ -19,8 +19,6 @@ namespace Project.Tests.UnitTests.ServiceTests
         public VehicleServiceTests()
         {
             _repositoryMock = new Mock<IVehicleRepository>();
-            
-            // AutoMapper setup
             var config = new MapperConfiguration(cfg => cfg.AddProfile<ServiceMappingProfile>());
             _mapper = config.CreateMapper();
         }
