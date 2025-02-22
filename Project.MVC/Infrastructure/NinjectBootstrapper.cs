@@ -1,4 +1,3 @@
-// Project.MVC/Infrastructure/NinjectBootstrapper.cs
 using Ninject.Modules;
 using Ninject.Web.Common;
 using Microsoft.EntityFrameworkCore;
@@ -7,7 +6,7 @@ using Project.Service.Interfaces;
 using Project.Service.Repositories;
 using Project.Service.Services;
 using AutoMapper;
-using Project.Service.Mappings;
+using Project.Service.Mapping;
 using Project.MVC.Mappings;
 
 namespace Project.MVC.Infrastructure
@@ -16,11 +15,11 @@ namespace Project.MVC.Infrastructure
     {
         public override void Load()
         {
-            // Database context (scoped per request)
+            // Database context (per request)
             Bind<ApplicationDbContext>()
                 .ToSelf()
                 .InRequestScope()
-                .WithConstructorArgument("options", 
+                .WithConstructorArgument("options",
                     new DbContextOptionsBuilder<ApplicationDbContext>()
                         .UseSqlite("Data Source=vehicles.db")
                         .Options);
@@ -29,11 +28,11 @@ namespace Project.MVC.Infrastructure
             Bind<IVehicleRepository>().To<VehicleRepository>();
             Bind<IVehicleService>().To<VehicleService>();
 
-            // AutoMapper (Service + MVC mappings)
+            // AutoMapper
             var config = new MapperConfiguration(cfg =>
             {
-                cfg.AddProfile<ServiceMappingProfile>();
-                cfg.AddProfile<MvcMappingProfile>(); // Maps DTOs → VM
+                cfg.AddProfile<ServiceMappingProfile>(); // Service layer mappings
+                cfg.AddProfile<MvcMappingProfile>();     // MVC ViewModel mappings
             });
             Bind<IMapper>().ToConstant(config.CreateMapper());
         }
