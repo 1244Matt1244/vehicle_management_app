@@ -1,8 +1,11 @@
-using System.Threading.Tasks; // Add this line
+using AutoMapper;
+using System; // Add this line
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Project.Service.Data.Context;
-using Project.Service.Services;
-using Project.Service.Interfaces;
+using Project.Service.Models; 
+using Xunit;
 
 public class DatabaseTests : IAsyncLifetime
 {
@@ -13,7 +16,7 @@ public class DatabaseTests : IAsyncLifetime
         var options = new DbContextOptionsBuilder<ApplicationDbContext>()
             .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
             .Options;
-        
+
         _context = new ApplicationDbContext(options);
     }
 
@@ -32,14 +35,11 @@ public class DatabaseTests : IAsyncLifetime
     [Fact]
     public async Task AddMake_ShouldPersistInDatabase()
     {
-        // Arrange
         var make = new VehicleMake { Name = "Tesla" };
 
-        // Act
         _context.VehicleMakes.Add(make);
         await _context.SaveChangesAsync();
 
-        // Assert
         var savedMake = await _context.VehicleMakes.FirstOrDefaultAsync(m => m.Name == "Tesla");
         Assert.NotNull(savedMake);
     }

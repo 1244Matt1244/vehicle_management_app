@@ -1,9 +1,12 @@
 using System.Threading.Tasks; // Add this line
 using AutoMapper;
+using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Project.Service.Data.Context;
 using Project.Service.Data.DTOs;
 using Project.Service.Services;
+using Project.Service.Mapping;
+using Project.Service.Models;
 using Xunit;
 
 namespace Project.Tests
