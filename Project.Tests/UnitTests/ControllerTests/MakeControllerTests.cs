@@ -1,4 +1,5 @@
-using System.Threading.Tasks; // Add this line
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -23,16 +24,13 @@ namespace Project.Tests.UnitTests.ControllerTests
         [Fact]
         public async Task Index_ReturnsViewResult()
         {
-            // Arrange
             var makes = new PaginatedList<VehicleMakeDTO>(new List<VehicleMakeDTO> { new VehicleMakeDTO { Name = "TestMake", Abrv = "TM" } }, 1, 10, 1);
             _serviceMock.Setup(s => s.GetMakesAsync(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(makes);
 
             var controller = new VehicleMakeController(_serviceMock.Object);
 
-            // Act
             var result = await controller.Index(1, 10, "", "", "") as ViewResult;
 
-            // Assert
             Assert.NotNull(result);
         }
     }
