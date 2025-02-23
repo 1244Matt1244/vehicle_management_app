@@ -3,6 +3,7 @@ using Moq;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Project.MVC.Controllers;
+using Project.Service.Models;
 using Project.Service.Interfaces;
 using Project.Service.Data.DTOs;
 using Project.Service.Data.Helpers;
@@ -21,7 +22,15 @@ namespace Project.Tests.UnitTests.ControllerTests
         public VehicleMakeControllerTests()
         {
             _serviceMock = new Mock<IVehicleService>();
-            var config = new MapperConfiguration(cfg => cfg.AddProfile<ServiceMappingProfile>());
+
+            // Update the MapperConfiguration to ensure that PaginatedList mappings are included
+            var config = new MapperConfiguration(cfg =>
+            {
+                cfg.AddProfile<ServiceMappingProfile>(); // Ensure this profile is added for correct mapping
+                cfg.CreateMap<PaginatedList<VehicleMake>, PaginatedList<VehicleMakeDTO>>()
+                    .ConvertUsing<PaginatedListConverter<VehicleMake, VehicleMakeDTO>>(); // Register the converter
+            });
+
             _mapper = config.CreateMapper();
             _controller = new VehicleMakeController(_serviceMock.Object, _mapper);
         }
@@ -31,7 +40,7 @@ namespace Project.Tests.UnitTests.ControllerTests
         {
             // Arrange
             var makes = new PaginatedList<VehicleMakeDTO>(
-                new List<VehicleMakeDTO> 
+                new List<VehicleMakeDTO>
                 { 
                     new VehicleMakeDTO { Id = 1, Name = "TestMake", Abrv = "TM" } 
                 },
@@ -48,7 +57,11 @@ namespace Project.Tests.UnitTests.ControllerTests
 
             // Assert
             var viewResult = Assert.IsType<ViewResult>(result);
-            Assert.Equal(makes, viewResult.Model);
+            var model = Assert.IsAssignableFrom<PaginatedList<VehicleMakeDTO>>(viewResult.Model); // Ensure the model is the correct type
+            Assert.Equal(makes.Items.Count, model.Items.Count); // Ensure the number of items matches
+            Assert.Equal(makes.TotalCount, model.TotalCount); // Ensure the total count matches
+            Assert.Equal(makes.PageIndex, model.PageIndex); // Ensure page index matches
+            Assert.Equal(makes.PageSize, model.PageSize); // Ensure page size matches
         }
     }
 }
