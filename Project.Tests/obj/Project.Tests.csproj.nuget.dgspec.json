@@ -298,11 +298,6 @@
             }
           }
         },
-        "warningProperties": {
-          "warnAsError": [
-            "NU1605"
-          ]
-        },
         "restoreAuditProperties": {
           "enableAudit": "true",
           "auditLevel": "low",
@@ -318,13 +313,13 @@
               "target": "Package",
               "version": "[12.0.1, )"
             },
-            "MSTest.TestAdapter": {
+            "AutoMapper.Extensions.Microsoft.DependencyInjection": {
               "target": "Package",
-              "version": "[3.2.0, )"
+              "version": "[12.0.1, )"
             },
-            "MSTest.TestFramework": {
+            "Microsoft.EntityFrameworkCore": {
               "target": "Package",
-              "version": "[3.2.0, )"
+              "version": "[9.0.2, )"
             },
             "Microsoft.EntityFrameworkCore.InMemory": {
               "target": "Package",
@@ -332,11 +327,31 @@
             },
             "Microsoft.NET.Test.Sdk": {
               "target": "Package",
-              "version": "[17.8.0, )"
+              "version": "[17.13.0, )"
             },
             "Moq": {
               "target": "Package",
-              "version": "[4.20.70, )"
+              "version": "[4.20.72, )"
+            },
+            "Ninject": {
+              "target": "Package",
+              "version": "[3.3.6, )"
+            },
+            "Ninject.Extensions.DependencyInjection": {
+              "target": "Package",
+              "version": "[1.0.2, )"
+            },
+            "coverlet.collector": {
+              "target": "Package",
+              "version": "[6.0.2, )"
+            },
+            "xunit": {
+              "target": "Package",
+              "version": "[2.9.2, )"
+            },
+            "xunit.runner.visualstudio": {
+              "target": "Package",
+              "version": "[2.8.2, )"
             }
           },
           "imports": [
