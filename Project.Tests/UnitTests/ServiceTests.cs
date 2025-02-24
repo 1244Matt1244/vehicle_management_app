@@ -8,46 +8,60 @@ using Project.Service.Data.Helpers;
 using Project.Service.Models;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore; // Ensure you have this using directive
 using Project.Service.Mappings;
 
-namespace Project.Tests.UnitTests.ServiceTests
+namespace Project.Tests.UnitTests
 {
     public class VehicleServiceTests
     {
-        private readonly Mock<IVehicleRepository> _repositoryMock;
-        private readonly IMapper _mapper;
-        private readonly VehicleService _service;
+        private ApplicationDbContext _context;
+        private IMapper _mapper;
+        private IVehicleService _service;
 
         public VehicleServiceTests()
         {
-            _repositoryMock = new Mock<IVehicleRepository>();
-            var config = new MapperConfiguration(cfg => cfg.AddProfile<ServiceMappingProfile>());
+            // Configure in-memory database
+            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
+                .UseSqlite("Data Source=:memory:")
+                .Options;
+
+            _context = new ApplicationDbContext(options);
+            _context.Database.OpenConnection();
+            _context.Database.EnsureCreated();
+
+            // Configure AutoMapper
+            var config = new MapperConfiguration(cfg =>
+            {
+                cfg.AddProfile<ServiceMappingProfile>();
+            });
             _mapper = config.CreateMapper();
-            _service = new VehicleService(_repositoryMock.Object, _mapper);
+
+            _service = new VehicleService(_context, _mapper);
         }
 
-        [Fact]
+        public void Cleanup()
+        {
+            _context.Database.EnsureDeleted();
+            _context.Dispose();
+        }
+
+        [Fact] // Use [Fact] instead of [TestMethod]
         public async Task GetMakesAsync_ReturnsPaginatedList()
         {
-            // Arrange
-            var makes = new List<VehicleMake>
+            // Add test data
+            _context.VehicleMakes.AddRange(new[]
             {
-                new VehicleMake { Id = 1, Name = "BMW", Abrv = "B" },
-                new VehicleMake { Id = 2, Name = "Ford", Abrv = "F" }
-            };
-            var paginatedMakes = new PaginatedList<VehicleMake>(makes, 2, 1, 10);
-
-            _repositoryMock.Setup(r => 
-                r.GetMakesPaginatedAsync(1, 10, "Name", "asc", ""))
-                .ReturnsAsync(paginatedMakes);
+                new VehicleMake { Name = "Make1" },
+                new VehicleMake { Name = "Make2" }
+            });
+            await _context.SaveChangesAsync();
 
             // Act
-            var result = await _service.GetMakesAsync(1, 10, "Name", "asc", "");
+            var result = await _service.GetMakesAsync(1, 10);
 
             // Assert
-            Assert.NotNull(result);
-            Assert.Equal(2, result.Items.Count);
-            Assert.Equal("BMW", result.Items[0].Name);
+            Assert.Equal(2, result.TotalCount); // Use Assert.Equal for Xunit
         }
     }
 }

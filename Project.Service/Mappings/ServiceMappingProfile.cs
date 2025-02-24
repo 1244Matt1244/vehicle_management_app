@@ -9,18 +9,13 @@ namespace Project.Service.Mappings
     {
         public ServiceMappingProfile()
         {
-            // Explicit mapping from VehicleMake to VehicleMakeDTO
-            CreateMap<VehicleMake, VehicleMakeDTO>()
-                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
-                .ForMember(dest => dest.Abrv, opt => opt.MapFrom(src => src.Abrv)) // Add this line if Abrv exists
-                .ReverseMap(); // Allow reverse mapping
+            // VehicleMake ↔ VehicleMakeDTO
+            CreateMap<VehicleMake, VehicleMakeDTO>().ReverseMap();
+            CreateMap<VehicleModel, VehicleModelDTO>().ReverseMap();
 
-            // Register the PaginatedListConverter
-            CreateMap<PaginatedList<VehicleMake>, PaginatedList<VehicleMakeDTO>>()
-                .ConvertUsing<PaginatedListConverter<VehicleMake, VehicleMakeDTO>>();
-
-            // Add similar mappings for VehicleModel if needed
-            // CreateMap<VehicleModel, VehicleModelDTO>().ReverseMap(); // Example
+            // Configure PaginatedList mapping
+            CreateMap(typeof(PaginatedList<>), typeof(PaginatedList<>))
+                .ConvertUsing(typeof(PaginatedListConverter<,>));
         }
     }
 }
