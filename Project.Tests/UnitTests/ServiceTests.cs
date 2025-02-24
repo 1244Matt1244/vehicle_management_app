@@ -1,56 +1,46 @@
-using Xunit;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using AutoMapper;
 using Project.Service.Services;
 using Project.Service.Interfaces;
-using Project.Service.Data.DTOs;
-using Project.Service.Data.Helpers;
-using Project.Service.Models;
-using System.Threading.Tasks;
+using Project.Service.Data;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Project.Tests.UnitTests
 {
-    public class VehicleServiceTests
+    [TestClass]
+    public class ServiceTests
     {
-        private readonly IVehicleService _service;
-        private readonly IMapper _mapper;
+        private Mock<IVehicleRepository> _mockRepo = null!;
+        private VehicleService _service = null!;
 
-        public VehicleServiceTests()
+        [TestInitialize]
+        public void Setup()
         {
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.AddProfile<ServiceMappingProfile>();
-            });
-            _mapper = config.CreateMapper();
-
-            var mockRepository = new Mock<IVehicleRepository>();
-            // Setup mock repository methods as needed
-
-            _service = new VehicleService(mockRepository.Object, _mapper);
+            _mockRepo = new Mock<IVehicleRepository>();
+            _service = new VehicleService(_mockRepo.Object);
         }
 
-        [Fact]
-        public async Task GetMakesAsync_ReturnsPaginatedList()
+        [TestMethod]
+        public async Task GetMakesAsync_ReturnsPagedList()
         {
-            // Add test data to mock repository
+            // Arrange
             var makes = new List<VehicleMake>
             {
-                new VehicleMake { Id = 1, Abrv = "VM1", Name = "Make1" },
-                new VehicleMake { Id = 2, Abrv = "VM2", Name = "Make2" }
+                new VehicleMake { Id = 1, Name = "TestMake1", Abrv = "TM1" },
+                new VehicleMake { Id = 2, Name = "TestMake2", Abrv = "TM2" }
             };
 
-            // Mock repository behavior
-            mockRepository.Setup(repo => repo.GetMakesAsync(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
-                .ReturnsAsync(new PaginatedList<VehicleMakeDTO>(
-                    makes.Select(m => new VehicleMakeDTO { Id = m.Id, Abrv = m.Abrv, Name = m.Name }).ToList(),
-                    makes.Count, 1, 10));
+            _mockRepo.Setup(repo => repo.GetMakesAsync(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>(),
+                It.IsAny<string>(), It.IsAny<string>()))
+                .ReturnsAsync(makes);
 
             // Act
-            var result = await _service.GetMakesAsync(1, 10, "name", null, null);
+            var result = await _service.GetMakesAsync(1, 10, "Name", "asc", "");
 
             // Assert
-            Assert.Equal(2, result.TotalCount);
+            Assert.IsNotNull(result);
+            Assert.AreEqual(2, result.Count);
         }
     }
 }
