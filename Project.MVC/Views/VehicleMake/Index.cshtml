@@ -12,7 +12,7 @@
     <input type="submit" value="Search" class="btn btn-primary" />
 </form>
 
-@if (Model?.PaginatedList == null || !Model.PaginatedList.Items.Any())
+@if (Model?.PaginatedList == null || !Model.PaginatedList.Any())
 {
     <p>No makes found.</p>
 }
@@ -32,7 +32,7 @@ else
             </tr>
         </thead>
         <tbody>
-            @foreach (var item in Model.PaginatedList.Items)
+            @foreach (var item in Model.PaginatedList)
             {
                 <tr>
                     <td>@item.Name</td>

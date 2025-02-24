@@ -1,4 +1,3 @@
-// Project.Service/Data/Context/ApplicationDbContext.cs
 using Microsoft.EntityFrameworkCore;
 using Project.Service.Models;
 

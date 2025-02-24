@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks; // Critical addition
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
 namespace Project.Service.Data.Helpers
@@ -11,6 +11,8 @@ namespace Project.Service.Data.Helpers
         public int PageSize { get; }
         public int TotalPages { get; }
         public int TotalCount { get; }
+        public bool HasPreviousPage => PageIndex > 1;
+        public bool HasNextPage => PageIndex < TotalPages;
 
         public PaginatedList(List<T> items, int totalCount, int pageIndex, int pageSize)
         {
@@ -26,8 +28,8 @@ namespace Project.Service.Data.Helpers
         {
             var count = await source.CountAsync();
             var items = await source.Skip((pageIndex - 1) * pageSize)
-                                    .Take(pageSize)
-                                    .ToListAsync();
+                                .Take(pageSize)
+                                .ToListAsync();
             return new PaginatedList<T>(items, count, pageIndex, pageSize);
         }
     }

@@ -1,4 +1,3 @@
-// PaginatedListConverter.cs
 using AutoMapper;
 using System.Collections.Generic;
 
@@ -12,10 +11,7 @@ namespace Project.Service.Data.Helpers
             PaginatedList<TDestination> destination,
             ResolutionContext context)
         {
-            // Map the list of items
-            var mappedItems = context.Mapper.Map<List<TDestination>>(source.Items);
-
-            // Reconstruct the PaginatedList<TDestination>
+            var mappedItems = context.Mapper.Map<List<TDestination>>((List<TSource>)source);
             return new PaginatedList<TDestination>(
                 mappedItems,
                 source.TotalCount,
