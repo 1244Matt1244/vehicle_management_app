@@ -1,5 +1,3 @@
-C:\Users\korisnik\Desktop\vehicle_management_app\Project.Tests\bin\Debug\net8.0\.msCoverageSourceRootsMapping_Project.Tests
-C:\Users\korisnik\Desktop\vehicle_management_app\Project.Tests\bin\Debug\net8.0\CoverletSourceRootsMapping_Project.Tests
 C:\Users\korisnik\Desktop\vehicle_management_app\Project.Tests\obj\Debug\net8.0\Project.Tests.csproj.AssemblyReference.cache
 C:\Users\korisnik\Desktop\vehicle_management_app\Project.Tests\obj\Debug\net8.0\Project.Tests.GeneratedMSBuildEditorConfig.editorconfig
 C:\Users\korisnik\Desktop\vehicle_management_app\Project.Tests\obj\Debug\net8.0\Project.Tests.AssemblyInfoInputs.cache

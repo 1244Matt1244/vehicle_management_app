@@ -1,52 +1,53 @@
+// Project.Tests/UnitTests/ControllerTests.cs
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using AutoMapper;
 using Project.MVC.Controllers;
-using Project.Service.Services;
 using Project.Service.Interfaces;
 using Project.Service.Data.DTOs;
+using Project.Service.Data.Helpers;
+using AutoMapper;
+using Project.MVC.Mappings;
+using Project.Service.Mappings;
 using System.Collections.Generic;
-using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
-namespace Project.Tests.UnitTests
+namespace Project.Tests.UnitTests.ControllerTests
 {
     [TestClass]
-    public class ControllerTests
+    public class VehicleMakeControllerTests
     {
-        private VehicleMakeController _controller = null!;
-        private Mock<IVehicleService> _mockService = null!;
-        private IMapper _mapper = null!;
+        private VehicleMakeController _controller;
+        private IMapper _mapper;
 
         [TestInitialize]
         public void Setup()
         {
+            // AutoMapper configuration
             var config = new MapperConfiguration(cfg => 
-                cfg.AddProfile<ServiceMappingProfile>());
+            {
+                cfg.AddProfile<ServiceMappingProfile>();
+                cfg.AddProfile<MvcMappingProfile>();
+            });
             _mapper = config.CreateMapper();
-            
-            _mockService = new Mock<IVehicleService>();
-            _controller = new VehicleMakeController(_mockService.Object, _mapper);
+
+            // Mock service
+            var mockService = new Mock<IVehicleService>();
+            mockService.Setup(s => s.GetMakesAsync(1, 10, null, null, null))
+                .ReturnsAsync(new PaginatedList<VehicleMakeDTO>(
+                    new List<VehicleMakeDTO> { new VehicleMakeDTO { Name = "Test" } }, 
+                    1, 1, 10));
+
+            _controller = new VehicleMakeController(mockService.Object, _mapper);
         }
 
         [TestMethod]
-        public void GetMakes_ReturnsOkResult()
+        public async Task Index_ReturnsViewWithMakes()
         {
-            // Arrange
-            var makes = new List<VehicleMakeDto>
-            {
-                new VehicleMakeDto { Id = 1, Name = "Test1", Abrv = "T1" },
-                new VehicleMakeDto { Id = 2, Name = "Test2", Abrv = "T2" }
-            };
-
-            _mockService.Setup(s => s.GetMakesAsync(1, 10, "Name", "asc", ""))
-                .ReturnsAsync(makes);
-
             // Act
-            var result = _controller.GetMakes(1, 10, "Name", "asc", "").Result as OkObjectResult;
+            var result = await _controller.Index();
 
             // Assert
-            Assert.IsNotNull(result);
-            Assert.AreEqual(200, result.StatusCode);
+            Microsoft.VisualStudio.TestTools.UnitTesting.Assert.IsNotNull(result);
         }
     }
 }

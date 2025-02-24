@@ -1,29 +1,26 @@
 using System;
-using System.Collections.Generic; // Added
-using System.Threading.Tasks;     // Added
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Project.Service.Data.Context;
 using Project.Service.Models;
-using Xunit;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Project.Tests.IntegrationTests
 {
-    public class DatabaseTests : IAsyncLifetime
+    [TestClass]
+    public class DatabaseTests
     {
-        private readonly ApplicationDbContext _context;
+        private ApplicationDbContext _context;
 
-        public DatabaseTests()
+        [TestInitialize]
+        public async Task InitializeAsync()
         {
             var options = new DbContextOptionsBuilder<ApplicationDbContext>()
                 .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
                 .Options;
 
             _context = new ApplicationDbContext(options);
-        }
-
-        // Implement IAsyncLifetime correctly
-        public async Task InitializeAsync() // Changed to Task
-        {
             await _context.Database.EnsureCreatedAsync();
             
             // Seed test data
@@ -37,7 +34,7 @@ namespace Project.Tests.IntegrationTests
             await _context.SaveChangesAsync();
         }
 
-        [Fact]
+        [TestMethod]
         public async Task AddMake_ShouldPersist()
         {
             var make = new VehicleMake 
@@ -52,10 +49,11 @@ namespace Project.Tests.IntegrationTests
             await _context.SaveChangesAsync();
 
             var savedMake = await _context.VehicleMakes.FindAsync(2);
-            Assert.NotNull(savedMake);
+            Assert.IsNotNull(savedMake);
         }
 
-        public async Task DisposeAsync() // Changed to Task
+        [TestCleanup]
+        public async Task CleanupAsync()
         {
             await _context.Database.EnsureDeletedAsync();
             await _context.DisposeAsync();
