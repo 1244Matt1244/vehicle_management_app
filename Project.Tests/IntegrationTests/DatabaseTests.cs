@@ -5,6 +5,11 @@ using Microsoft.EntityFrameworkCore;
 using Project.Service.Data.Context;
 using Project.Service.Models;
 using Xunit;
+using Assert = Xunit.Assert; // Resolve the ambiguity
+using Microsoft.AspNetCore.Mvc;  // For ViewResult
+using Project.Service.Mappings;  // For ServiceMappingProfile
+using Project.Service.Data.Helpers;    // For PaginatedList<>
+using Project.MVC.ViewModels;    // For VehicleMakeVM
 
 namespace Project.Tests.IntegrationTests
 {

@@ -1,3 +1,4 @@
+// In Project.Service/Interfaces/IVehicleRepository.cs
 using Project.Service.Data.Helpers; // Must include this
 using Project.Service.Models;
 using System.Collections.Generic;
@@ -18,6 +19,9 @@ namespace Project.Service.Interfaces
         
         // New method
         IQueryable<VehicleMake> GetMakesQueryable(); // Ensure this is present
+        
+        // New method to get all makes
+        Task<IEnumerable<VehicleMake>> GetAllMakesAsync(); // Add this method
         
         // VehicleModel
         Task<PaginatedList<VehicleModel>> GetModelsPaginatedAsync(

@@ -1,6 +1,6 @@
+// In Project.Service/Profiles/ServiceMappingProfile.cs
 using AutoMapper;
-using Project.Service.Data.Helpers;
-using Project.Service.Data.DTOs;
+using Project.MVC.ViewModels;
 using Project.Service.Models;
 
 namespace Project.Service.Mappings
@@ -9,13 +9,9 @@ namespace Project.Service.Mappings
     {
         public ServiceMappingProfile()
         {
-            // Map EF models to DTOs (two-way mapping)
-            CreateMap<VehicleMake, VehicleMakeDTO>().ReverseMap();
-            CreateMap<VehicleModel, VehicleModelDTO>().ReverseMap();
-
-            // Map PaginatedList<VehicleMake> to PaginatedList<VehicleMakeDTO> using the custom converter
-            CreateMap<PaginatedList<VehicleMake>, PaginatedList<VehicleMakeDTO>>()
-                .ConvertUsing<PaginatedListConverter<VehicleMake, VehicleMakeDTO>>();
+            CreateMap<VehicleMake, VehicleMakeVM>()
+                .ForMember(dest => dest.Abbreviation, opt => opt.MapFrom(src => src.Abrv))
+                .ReverseMap();
         }
     }
 }
