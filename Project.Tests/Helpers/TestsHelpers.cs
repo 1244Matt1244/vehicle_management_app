@@ -1,5 +1,5 @@
-// Project.Tests/Helpers/TestHelpers.cs
-using AutoMapper;
+using AutoMapper; // Critical addition
+using Project.Service.Mappings;
 
 namespace Project.Tests.Helpers
 {
@@ -8,7 +8,7 @@ namespace Project.Tests.Helpers
         public static IMapper CreateTestMapper()
         {
             var config = new MapperConfiguration(cfg => 
-                cfg.AddProfile<Project.Service.Mappings.ServiceMappingProfile>());
+                cfg.AddProfile<ServiceMappingProfile>());
             return config.CreateMapper();
         }
     }
