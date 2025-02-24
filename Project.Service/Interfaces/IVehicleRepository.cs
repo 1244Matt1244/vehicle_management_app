@@ -1,6 +1,7 @@
 using Project.Service.Data.Helpers; // Must include this
 using Project.Service.Models;
 using System.Collections.Generic;
+using System.Linq; // Add this line
 using System.Threading.Tasks;
 
 namespace Project.Service.Interfaces
@@ -14,6 +15,9 @@ namespace Project.Service.Interfaces
         Task AddMakeAsync(VehicleMake make);
         Task UpdateMakeAsync(VehicleMake make);
         Task DeleteMakeAsync(VehicleMake make);
+        
+        // New method
+        IQueryable<VehicleMake> GetMakesQueryable(); // Ensure this is present
         
         // VehicleModel
         Task<PaginatedList<VehicleModel>> GetModelsPaginatedAsync(
