@@ -9,16 +9,26 @@ using Project.Service.Mappings;
 
 namespace Project.Service
 {
-    public class ServiceModule : NinjectModule
+    public class VehicleModule : NinjectModule
     {
         public override void Load()
         {
-            Bind<IVehicleRepository>()
-                .To<VehicleRepository>()
-                .InSingletonScope();
+            // Database context (1 per request)
+            Bind<ApplicationDbContext>().ToSelf().InRequestScope();
 
-            Bind<IVehicleService>()
-                .To<VehicleService>()
+            // Repository pattern
+            Bind<IVehicleRepository>().To<VehicleRepository>();
+
+            // Service layer
+            Bind<IVehicleService>().To<VehicleService>();
+
+            // AutoMapper configuration
+            var config = new MapperConfiguration(cfg =>
+            {
+                cfg.AddProfile<ServiceMappingProfile>();
+            });
+            
+            Bind<IMapper>().ToConstant(config.CreateMapper())
                 .InSingletonScope();
         }
     }

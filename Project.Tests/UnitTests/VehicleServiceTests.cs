@@ -1,47 +1,38 @@
+// Project.Tests/UnitTests/VehicleServiceTests.cs
 using AutoMapper;
 using Moq;
+using Project.Service.Data.DTOs;
 using Project.Service.Interfaces;
 using Project.Service.Models;
 using Project.Service.Services;
+using Project.Tests.Helpers;
 using Xunit;
-using Microsoft.AspNetCore.Mvc;  // For ViewResult
-using Project.Service.Mappings;  // For ServiceMappingProfile
-using Project.Service.Data.Helpers;    // For PaginatedList<>
-using Project.MVC.ViewModels;  
 
 namespace Project.Tests.UnitTests
 {
     public class VehicleServiceTests
     {
-        private readonly Mock<IVehicleRepository> _repositoryMock = null!;
-        private readonly IMapper _mapper;
-        private readonly VehicleService _service;
-
-        public VehicleServiceTests()
-        {
-            _repositoryMock = new Mock<IVehicleRepository>();
-            
-            var config = new MapperConfiguration(cfg => 
-                cfg.AddProfile<ServiceMappingProfile>());
-            
-            _mapper = config.CreateMapper();
-            _service = new VehicleService(_repositoryMock.Object, _mapper);
-        }
+        private readonly Mock<IVehicleRepository> _repoMock = new();
+        private readonly IMapper _mapper = TestHelpers.CreateTestMapper();
 
         [Fact]
         public async Task GetMakesAsync_ReturnsPaginatedList()
         {
             // Arrange
-            var testData = TestHelpers.GetTestVehicleMakes();
-            _repositoryMock.Setup(r => r.GetMakesAsync())
+            var service = new VehicleService(_repoMock.Object, _mapper);
+            var testData = await PaginatedList<VehicleMake>.CreateAsync(
+                TestHelpers.GetTestMakes().AsQueryable(), 1, 10);
+            
+            _repoMock.Setup(r => r.GetMakesPaginatedAsync(It.IsAny<int>(), It.IsAny<int>(), 
+                It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
                 .ReturnsAsync(testData);
 
             // Act
-            var result = await _service.GetMakesAsync(1, 10, "Name", "", "");
+            var result = await service.GetMakesAsync(1, 10, "Name", "asc", "");
 
             // Assert
-            Assert.IsType<PaginatedList<VehicleMakeVM>>(result);
-            Assert.Equal(2, result.Count);
+            Assert.IsType<PaginatedList<VehicleMakeDTO>>(result);
+            Assert.Equal(2, result.Items.Count);
         }
     }
 }
