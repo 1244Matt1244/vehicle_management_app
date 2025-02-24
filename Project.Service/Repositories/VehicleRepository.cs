@@ -1,13 +1,12 @@
-using Microsoft.EntityFrameworkCore;
-using Project.Service.Data.Helpers;
-using Project.Service.Interfaces;
-using Project.Service.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Project.Service.Data.Context;
-
+using Project.Service.Data.Helpers;
+using Project.Service.Interfaces;
+using Project.Service.Models;
 
 namespace Project.Service.Repositories
 {
@@ -21,6 +20,7 @@ namespace Project.Service.Repositories
         }
 
         #region VehicleMake Implementation
+
         public async Task<PaginatedList<VehicleMake>> GetMakesPaginatedAsync(int page, int pageSize, string sortBy, string sortOrder, string searchString)
         {
             IQueryable<VehicleMake> query = _context.VehicleMakes;
@@ -55,9 +55,11 @@ namespace Project.Service.Repositories
             _context.VehicleMakes.Remove(make);
             await _context.SaveChangesAsync();
         }
+
         #endregion
 
         #region VehicleModel Implementation
+
         public async Task<PaginatedList<VehicleModel>> GetModelsPaginatedAsync(int page, int pageSize, string sortBy, string sortOrder, string searchString, int? makeId)
         {
             IQueryable<VehicleModel> query = _context.VehicleModels;
@@ -95,14 +97,17 @@ namespace Project.Service.Repositories
             _context.VehicleModels.Remove(model);
             await _context.SaveChangesAsync();
         }
+
         #endregion
 
         #region Common Implementation
+
         public async Task<List<VehicleMake>> GetAllMakesAsync() => 
             await _context.VehicleMakes.ToListAsync();
 
         public async Task<List<VehicleModel>> GetAllModelsAsync() => 
             await _context.VehicleModels.ToListAsync();
+
         #endregion
     }
 }
