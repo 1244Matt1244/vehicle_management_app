@@ -1,65 +1,46 @@
-// Project.Tests/UnitTests/ServiceTests.cs
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using Project.Service.Data.Context;
-using Project.Service.Interfaces;
-using Project.Service.Models;
 using Project.Service.Services;
+using Project.Service.Interfaces;
+using Project.Service.Data;
+using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using AutoMapper;
-using Project.Service.Mappings;
 
-namespace Project.Tests.UnitTests.ServiceTests
+namespace Project.Tests.UnitTests
 {
     [TestClass]
-    public class VehicleServiceTests
+    public class ServiceTests
     {
-        private ApplicationDbContext _context;
-        private IVehicleService _service;
-        private IMapper _mapper;
+        private Mock<IVehicleRepository> _mockRepo = null!;
+        private VehicleService _service = null!;
 
         [TestInitialize]
         public void Setup()
         {
-            // Configure in-memory database
-            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-                .UseInMemoryDatabase(databaseName: "TestDb")
-                .Options;
-
-            _context = new ApplicationDbContext(options);
-            
-            // Configure AutoMapper
-            var config = new MapperConfiguration(cfg => cfg.AddProfile<ServiceMappingProfile>());
-            _mapper = config.CreateMapper();
-
-            var repository = new VehicleRepository(_context);
-            _service = new VehicleService(repository, _mapper);
+            _mockRepo = new Mock<IVehicleRepository>();
+            _service = new VehicleService(_mockRepo.Object);
         }
 
         [TestMethod]
-        public async Task GetMakesAsync_ReturnsPaginatedList()
+        public async Task GetMakesAsync_ReturnsPagedList()
         {
             // Arrange
-            _context.VehicleMakes.AddRange(new[]
+            var makes = new List<VehicleMake>
             {
-                new VehicleMake { Name = "BMW", Abrv = "B" },
-                new VehicleMake { Name = "Ford", Abrv = "F" }
-            });
-            await _context.SaveChangesAsync();
+                new VehicleMake { Id = 1, Name = "TestMake1", Abrv = "TM1" },
+                new VehicleMake { Id = 2, Name = "TestMake2", Abrv = "TM2" }
+            };
+
+            _mockRepo.Setup(repo => repo.GetMakesAsync(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>(),
+                It.IsAny<string>(), It.IsAny<string>()))
+                .ReturnsAsync(makes);
 
             // Act
-            var result = await _service.GetMakesAsync(1, 10);
+            var result = await _service.GetMakesAsync(1, 10, "Name", "asc", "");
 
             // Assert
-            Microsoft.VisualStudio.TestTools.UnitTesting.Assert.AreEqual(2, result.TotalCount);
-        }
-
-        [TestCleanup]
-        public void Cleanup()
-        {
-            _context.Database.EnsureDeleted();
-            _context.Dispose();
+            Assert.IsNotNull(result);
+            Assert.AreEqual(2, result.Count);
         }
     }
 }
