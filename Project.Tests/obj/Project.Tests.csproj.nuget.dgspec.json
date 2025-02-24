@@ -317,6 +317,10 @@
               "target": "Package",
               "version": "[12.0.1, )"
             },
+            "MSTest.TestAdapter": {
+              "target": "Package",
+              "version": "[3.1.1, )"
+            },
             "Microsoft.EntityFrameworkCore": {
               "target": "Package",
               "version": "[9.0.2, )"
