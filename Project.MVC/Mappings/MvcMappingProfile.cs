@@ -1,3 +1,4 @@
+// Project.MVC/Mappings/MvcMappingProfile.cs
 using AutoMapper;
 using Project.Service.Data.DTOs;
 using Project.MVC.ViewModels;
@@ -8,14 +9,8 @@ namespace Project.MVC.Mappings
     {
         public MvcMappingProfile()
         {
-            // Mapping from VehicleMakeDTO to VehicleMakeVM
-            CreateMap<VehicleMakeDTO, VehicleMakeVM>()
-                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
-                .ForMember(dest => dest.Abrv, opt => opt.MapFrom(src => src.Abrv)) // Include Abrv if applicable
-                .ReverseMap(); // Allow reverse mapping
-
-            // Additional mappings can be added here as needed
-            // Example: CreateMap<VehicleModelDTO, VehicleModelVM>().ReverseMap();
+            // VehicleMakeDTO ↔ VehicleMakeVM
+            CreateMap<VehicleMakeDTO, VehicleMakeVM>().ReverseMap();
         }
     }
 }

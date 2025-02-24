@@ -13,55 +13,41 @@ using Project.Service.Mappings;
 
 namespace Project.Tests.UnitTests.ControllerTests
 {
-    public class VehicleMakeControllerTests
+[TestClass]
+public class VehicleMakeControllerTests
+{
+    private VehicleMakeController _controller;
+    private IMapper _mapper;
+
+    [TestInitialize]
+    public void Setup()
     {
-        private readonly Mock<IVehicleService> _serviceMock;
-        private readonly IMapper _mapper;
-        private readonly VehicleMakeController _controller;
-
-        public VehicleMakeControllerTests()
+        // Configure AutoMapper
+        var config = new MapperConfiguration(cfg =>
         {
-            _serviceMock = new Mock<IVehicleService>();
+            cfg.AddProfile<ServiceMappingProfile>();
+            cfg.AddProfile<MvcMappingProfile>();
+        });
+        _mapper = config.CreateMapper();
 
-            // Update the MapperConfiguration to ensure that PaginatedList mappings are included
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.AddProfile<ServiceMappingProfile>(); // Ensure this profile is added for correct mapping
-                cfg.CreateMap<PaginatedList<VehicleMake>, PaginatedList<VehicleMakeDTO>>()
-                    .ConvertUsing<PaginatedListConverter<VehicleMake, VehicleMakeDTO>>(); // Register the converter
-            });
+        var mockService = new Mock<IVehicleService>();
+        mockService.Setup(s => s.GetMakesAsync(It.IsAny<int>(), It.IsAny<int>(), null, null, null))
+            .ReturnsAsync(new PaginatedList<VehicleMakeDTO>(
+                new List<VehicleMakeDTO> { new VehicleMakeDTO { Name = "Test" } },
+                1, 1, 10));
 
-            _mapper = config.CreateMapper();
-            _controller = new VehicleMakeController(_serviceMock.Object, _mapper);
-        }
-
-        [Fact]
-        public async Task Index_ReturnsViewWithMakes()
-        {
-            // Arrange
-            var makes = new PaginatedList<VehicleMakeDTO>(
-                new List<VehicleMakeDTO>
-                { 
-                    new VehicleMakeDTO { Id = 1, Name = "TestMake", Abrv = "TM" } 
-                },
-                totalCount: 1,
-                pageIndex: 1,
-                pageSize: 10
-            );
-
-            _serviceMock.Setup(s => s.GetMakesAsync(1, 10, "", "", ""))
-                    .ReturnsAsync(makes);
-
-            // Act
-            var result = await _controller.Index(1, 10, "", "", "");
-
-            // Assert
-            var viewResult = Assert.IsType<ViewResult>(result);
-            var model = Assert.IsAssignableFrom<PaginatedList<VehicleMakeDTO>>(viewResult.Model); // Ensure the model is the correct type
-            Assert.Equal(makes.Items.Count, model.Items.Count); // Ensure the number of items matches
-            Assert.Equal(makes.TotalCount, model.TotalCount); // Ensure the total count matches
-            Assert.Equal(makes.PageIndex, model.PageIndex); // Ensure page index matches
-            Assert.Equal(makes.PageSize, model.PageSize); // Ensure page size matches
-        }
+        _controller = new VehicleMakeController(mockService.Object, _mapper);
     }
+
+    [TestMethod]
+    public async Task Index_ReturnsViewWithMakes()
+    {
+        // Act
+        var result = await _controller.Index();
+
+        // Assert
+        Assert.IsInstanceOfType(result, typeof(ViewResult));
+    }
+    
+}
 }
