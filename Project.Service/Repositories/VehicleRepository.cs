@@ -8,6 +8,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Project.Service.Data.Context;
 
+
 namespace Project.Service.Repositories
 {
     public class VehicleRepository : IVehicleRepository
@@ -20,7 +21,6 @@ namespace Project.Service.Repositories
         }
 
         #region VehicleMake Implementation
-
         public async Task<PaginatedList<VehicleMake>> GetMakesPaginatedAsync(int page, int pageSize, string sortBy, string sortOrder, string searchString)
         {
             IQueryable<VehicleMake> query = _context.VehicleMakes;
@@ -55,17 +55,9 @@ namespace Project.Service.Repositories
             _context.VehicleMakes.Remove(make);
             await _context.SaveChangesAsync();
         }
-
-        // New method to return IQueryable for makes
-        public IQueryable<VehicleMake> GetMakesQueryable()
-        {
-            return _context.VehicleMakes; // Return IQueryable for further querying
-        }
-
         #endregion
 
         #region VehicleModel Implementation
-
         public async Task<PaginatedList<VehicleModel>> GetModelsPaginatedAsync(int page, int pageSize, string sortBy, string sortOrder, string searchString, int? makeId)
         {
             IQueryable<VehicleModel> query = _context.VehicleModels;
@@ -103,17 +95,14 @@ namespace Project.Service.Repositories
             _context.VehicleModels.Remove(model);
             await _context.SaveChangesAsync();
         }
-
         #endregion
 
         #region Common Implementation
-
         public async Task<List<VehicleMake>> GetAllMakesAsync() => 
             await _context.VehicleMakes.ToListAsync();
 
         public async Task<List<VehicleModel>> GetAllModelsAsync() => 
             await _context.VehicleModels.ToListAsync();
-
         #endregion
     }
 }

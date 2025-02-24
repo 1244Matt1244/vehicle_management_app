@@ -9,16 +9,14 @@ namespace Project.Service.Data.Helpers
     // PaginatedList for pagination in the application
     public class PaginatedList<T> : List<T>
     {
-        public int PageIndex { get; set; }
-        public int PageSize { get; set; }
-        public int TotalPages { get; set; }
-        public int TotalCount { get; set; }
+        // Properties to store pagination info
+        public int PageIndex { get; }
+        public int PageSize { get; }
+        public int TotalPages { get; }
+        public int TotalCount { get; }
         
         // A read-only list of items on the current page
         public IReadOnlyList<T> Items => this;
-
-        // Parameterless constructor for AutoMapper
-        public PaginatedList() { }
 
         // Constructor to initialize the pagination parameters
         public PaginatedList(List<T> items, int totalCount, int pageIndex, int pageSize)
@@ -26,8 +24,8 @@ namespace Project.Service.Data.Helpers
             PageIndex = pageIndex;
             PageSize = pageSize;
             TotalCount = totalCount;
-            TotalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
-            AddRange(items);
+            TotalPages = (int)Math.Ceiling(totalCount / (double)pageSize);  // Calculate total pages
+            AddRange(items);  // Add items to the list
         }
 
         // Determines if there is a previous page
@@ -40,10 +38,15 @@ namespace Project.Service.Data.Helpers
         public static async Task<PaginatedList<T>> CreateAsync(
             IQueryable<T> source, int pageIndex, int pageSize)
         {
+            // Get the total number of records in the source
             var count = await source.CountAsync();
+
+            // Fetch the items for the current page
             var items = await source.Skip((pageIndex - 1) * pageSize)
                                     .Take(pageSize)
                                     .ToListAsync();
+
+            // Return a new PaginatedList with the items and pagination info
             return new PaginatedList<T>(items, count, pageIndex, pageSize);
         }
     }
