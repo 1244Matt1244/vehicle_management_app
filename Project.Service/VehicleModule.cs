@@ -13,23 +13,14 @@ namespace Project.Service
     {
         public override void Load()
         {
-            // Database context (1 per request)
             Bind<ApplicationDbContext>().ToSelf().InRequestScope();
-
-            // Repository pattern
             Bind<IVehicleRepository>().To<VehicleRepository>();
-
-            // Service layer
             Bind<IVehicleService>().To<VehicleService>();
 
-            // AutoMapper configuration
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.AddProfile<ServiceMappingProfile>();
-            });
+            var config = new MapperConfiguration(cfg => 
+                cfg.AddProfile<ServiceMappingProfile>());
             
-            Bind<IMapper>().ToConstant(config.CreateMapper())
-                .InSingletonScope();
+            Bind<IMapper>().ToConstant(config.CreateMapper()).InSingletonScope();
         }
     }
 }
