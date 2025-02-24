@@ -1,7 +1,9 @@
+using System.Collections.Generic;
 using Ninject.Modules;
 using Microsoft.EntityFrameworkCore;
 using Project.Service.Data.Context;
 using Project.Service.Interfaces;
+using Project.Service.Data.Helpers;
 using Project.Service.Repositories;
 using Project.Service.Services;
 using AutoMapper;
@@ -23,16 +25,19 @@ namespace Project.MVC.Infrastructure
                         .UseSqlite("Data Source=vehicles.db")
                         .Options);
 
-            // Repository and service
+            // Repository and service bindings
             Bind<IVehicleRepository>().To<VehicleRepository>();
             Bind<IVehicleService>().To<VehicleService>();
 
-            // AutoMapper
+            // AutoMapper configuration
             var config = new MapperConfiguration(cfg =>
             {
                 cfg.AddProfile<ServiceMappingProfile>();
                 cfg.AddProfile<MvcMappingProfile>();
+                cfg.CreateMap(typeof(PaginatedList<>), typeof(PaginatedList<>))
+                    .ConvertUsing(typeof(PaginatedListConverter<,>));
             });
+            
             Bind<IMapper>().ToConstant(config.CreateMapper());
         }
     }

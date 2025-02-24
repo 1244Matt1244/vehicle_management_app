@@ -1,4 +1,3 @@
-// MvcMappingProfile.cs
 using AutoMapper;
 using Project.Service.Data.DTOs;
 using Project.MVC.ViewModels;
@@ -9,13 +8,14 @@ namespace Project.MVC.Mappings
     {
         public MvcMappingProfile()
         {
-            // VehicleMakeDTO ↔ VehicleMakeVM
-            CreateMap<VehicleMakeDTO, VehicleMakeVM>().ReverseMap();
-            
-            // VehicleModelDTO ↔ VehicleModelVM
-            CreateMap<VehicleModelDTO, VehicleModelVM>().ReverseMap();
+            // Mapping from VehicleMakeDTO to VehicleMakeVM
+            CreateMap<VehicleMakeDTO, VehicleMakeVM>()
+                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
+                .ForMember(dest => dest.Abrv, opt => opt.MapFrom(src => src.Abrv)) // Include Abrv if applicable
+                .ReverseMap(); // Allow reverse mapping
 
-            // No explicit PaginatedList mapping needed - handled by ServiceMappingProfile
+            // Additional mappings can be added here as needed
+            // Example: CreateMap<VehicleModelDTO, VehicleModelVM>().ReverseMap();
         }
     }
 }
