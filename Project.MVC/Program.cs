@@ -1,19 +1,22 @@
 using AutoMapper;
-using AutoMapper.Extensions.Microsoft.DependencyInjection;
+using AutoMapper.Extensions.Microsoft.DependencyInjection; // This now works
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Hosting;
-using Ninject;
 using Ninject.Web.AspNetCore.Hosting;
-using Project.MVC.Mappings;
+using Project.MVC.Infrastructure;
 using Project.Service.Mappings;
+using Project.MVC.Mappings;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Configure AutoMapper by adding both profiles
-builder.Services.AddAutoMapper(typeof(ServiceMappingProfile), typeof(MvcMappingProfile));
+// Configure AutoMapper
+builder.Services.AddAutoMapper(
+    typeof(ServiceMappingProfile),
+    typeof(MvcMappingProfile)
+);
 
 // Configure Ninject
-var kernel = new StandardKernel(new NinjectBootstrapper());
+var kernel = new AspNetCoreKernel(new NinjectBootstrapper());
 builder.Host.UseServiceProviderFactory(new NinjectServiceProviderFactory(kernel));
 
 var app = builder.Build();
