@@ -1,12 +1,10 @@
 using AutoMapper;
-using Microsoft.EntityFrameworkCore; // Required for EF
 using Project.Service.Data.DTOs;
 using Project.Service.Data.Helpers;
 using Project.Service.Interfaces;
 using Project.Service.Models;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Project.Service.Services
@@ -23,29 +21,10 @@ namespace Project.Service.Services
         }
 
         #region VehicleMake
-
-        public async Task<PaginatedList<VehicleMakeVM>> GetMakesAsync(
-            int pageIndex, 
-            int pageSize, 
-            string sortBy, 
-            string searchString, 
-            string sortOrder)
+        public async Task<PaginatedList<VehicleMakeDTO>> GetMakesAsync(int page, int pageSize, string sortBy, string sortOrder, string searchString)
         {
-            var query = _repository.GetMakesQueryable();
-
-            // Apply filtering based on searchString if provided
-            if (!string.IsNullOrEmpty(searchString))
-            {
-                query = query.Where(vm => vm.Name.Contains(searchString));
-            }
-
-            // Sorting logic
-            query = sortOrder.ToLower() == "desc" 
-                ? query.OrderByDescending(vm => EF.Property<object>(vm, sortBy)) 
-                : query.OrderBy(vm => EF.Property<object>(vm, sortBy));
-
-            var pagedList = await PaginatedList<VehicleMake>.CreateAsync(query, pageIndex, pageSize);
-            return _mapper.Map<PaginatedList<VehicleMakeVM>>(pagedList);
+            var result = await _repository.GetMakesPaginatedAsync(page, pageSize, sortBy, sortOrder, searchString);
+            return _mapper.Map<PaginatedList<VehicleMakeDTO>>(result);
         }
 
         public async Task<VehicleMakeDTO> GetMakeByIdAsync(int id)
@@ -73,17 +52,9 @@ namespace Project.Service.Services
             var make = await _repository.GetMakeByIdAsync(id) ?? throw new KeyNotFoundException();
             await _repository.DeleteMakeAsync(make);
         }
-
-        public async Task<List<VehicleMakeDTO>> GetAllMakesAsync()
-        {
-            var makes = await _repository.GetAllMakesAsync();
-            return _mapper.Map<List<VehicleMakeDTO>>(makes);
-        }
-
         #endregion
 
         #region VehicleModel
-
         public async Task<PaginatedList<VehicleModelDTO>> GetModelsAsync(int page, int pageSize, string sortBy, string sortOrder, string searchString, int? makeId)
         {
             var result = await _repository.GetModelsPaginatedAsync(page, pageSize, sortBy, sortOrder, searchString, makeId);
@@ -115,13 +86,20 @@ namespace Project.Service.Services
             var model = await _repository.GetModelByIdAsync(id) ?? throw new KeyNotFoundException();
             await _repository.DeleteModelAsync(model);
         }
+        #endregion
+
+        #region Common
+        public async Task<List<VehicleMakeDTO>> GetAllMakesAsync()
+        {
+            var makes = await _repository.GetAllMakesAsync();
+            return _mapper.Map<List<VehicleMakeDTO>>(makes);
+        }
 
         public async Task<List<VehicleModelDTO>> GetAllModelsAsync()
         {
             var models = await _repository.GetAllModelsAsync();
             return _mapper.Map<List<VehicleModelDTO>>(models);
         }
-
         #endregion
     }
 }
