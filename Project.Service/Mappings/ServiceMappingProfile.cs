@@ -9,13 +9,13 @@ namespace Project.Service.Mappings
     {
         public ServiceMappingProfile()
         {
-            // VehicleMake ↔ VehicleMakeDTO
+            // Map EF models to DTOs (two-way mapping)
             CreateMap<VehicleMake, VehicleMakeDTO>().ReverseMap();
             CreateMap<VehicleModel, VehicleModelDTO>().ReverseMap();
 
-            // Configure PaginatedList mapping
-            CreateMap(typeof(PaginatedList<>), typeof(PaginatedList<>))
-                .ConvertUsing(typeof(PaginatedListConverter<,>));
+            // Map PaginatedList<VehicleMake> to PaginatedList<VehicleMakeDTO> using the custom converter
+            CreateMap<PaginatedList<VehicleMake>, PaginatedList<VehicleMakeDTO>>()
+                .ConvertUsing<PaginatedListConverter<VehicleMake, VehicleMakeDTO>>();
         }
     }
 }
