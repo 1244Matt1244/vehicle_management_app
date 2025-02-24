@@ -1,56 +1,28 @@
-// Project.Tests/Helpers/TestHelpers.cs
-using AutoMapper;
-using Microsoft.EntityFrameworkCore;
-using Project.Service.Data.Context;
+// In Project.Tests/Helpers/TestHelpers.cs
+using Project.MVC.ViewModels;
 using Project.Service.Models;
-using Project.Service.Mappings;
-using System.Collection.Generic;
-
+using Microsoft.AspNetCore.Mvc;  // For ViewResult
+using Project.Service.Mappings;  // For ServiceMappingProfile
+using Project.Service.Data.Helpers;    // For PaginatedList<>
 
 namespace Project.Tests.Helpers
 {
     public static class TestHelpers
     {
-        public static ApplicationDbContext CreateTestDbContext()
+        public static List<VehicleMake> GetTestVehicleMakes()
         {
-            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-                .UseSqlite("Data Source=:memory:;Cache=Shared")
-                .Options;
-
-            var context = new ApplicationDbContext(options);
-            context.Database.OpenConnection();
-            context.Database.EnsureCreated();
-
-            // Add test data
-            context.VehicleMakes.AddRange(TestData.GetVehicleMakes());
-            context.VehicleModels.AddRange(TestData.GetVehicleModels());
-            context.SaveChanges();
-
-            return context;
+            return new List<VehicleMake>
+            {
+                new VehicleMake { Id = 1, Name = "Make1", Abrv = "M1" },
+                new VehicleMake { Id = 2, Name = "Make2", Abrv = "M2" }
+            };
         }
 
         public static IMapper CreateTestMapper()
         {
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.AddProfile<ServiceMappingProfile>();
-            });
-            return config.CreateMapper();
+            var configuration = new MapperConfiguration(cfg => 
+                cfg.AddProfile<Project.Service.Mappings.ServiceMappingProfile>());
+            return configuration.CreateMapper();
         }
-    }
-
-    public static class TestData
-    {
-        public static List<VehicleMake> GetVehicleMakes() => new()
-        {
-            new VehicleMake { Id = 1, Name = "Ford", Abrv = "F" },
-            new VehicleMake { Id = 2, Name = "BMW", Abrv = "B" }
-        };
-
-        public static List<VehicleModel> GetVehicleModels() => new()
-        {
-            new VehicleModel { Id = 1, Name = "Focus", Abrv = "F", MakeId = 1 },
-            new VehicleModel { Id = 2, Name = "X5", Abrv = "X5", MakeId = 2 }
-        };
     }
 }

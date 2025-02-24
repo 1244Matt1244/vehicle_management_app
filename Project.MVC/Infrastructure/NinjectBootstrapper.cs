@@ -1,12 +1,12 @@
 using Ninject.Modules;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Project.Service.Data.Context;
 using Project.Service.Interfaces;
 using Project.Service.Repositories;
 using Project.Service.Services;
-using AutoMapper;
 using Project.Service.Mappings;
-using Project.MVC.Mappings;
+using Project.MVC.Mappings; // Add this namespace
 
 namespace Project.MVC.Infrastructure
 {
@@ -14,11 +14,9 @@ namespace Project.MVC.Infrastructure
     {
         public override void Load()
         {
-            // Database context (scoped per request)
-            Bind<ApplicationDbContext>()
-                .ToSelf()
-                .InTransientScope() // Use Transient for EF Core
-                .WithConstructorArgument("options",
+            // Database context (using InSingletonScope for .NET Core compatibility)
+            Bind<ApplicationDbContext>().ToSelf().InSingletonScope()
+                .WithConstructorArgument("options", 
                     new DbContextOptionsBuilder<ApplicationDbContext>()
                         .UseSqlite("Data Source=vehicles.db")
                         .Options);
@@ -27,11 +25,11 @@ namespace Project.MVC.Infrastructure
             Bind<IVehicleRepository>().To<VehicleRepository>();
             Bind<IVehicleService>().To<VehicleService>();
 
-            // AutoMapper
+            // AutoMapper configuration
             var config = new MapperConfiguration(cfg =>
             {
                 cfg.AddProfile<ServiceMappingProfile>();
-                cfg.AddProfile<MvcMappingProfile>();
+                cfg.AddProfile<MvcMappingProfile>(); // Now resolves
             });
             Bind<IMapper>().ToConstant(config.CreateMapper());
         }

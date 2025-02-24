@@ -24,7 +24,12 @@ namespace Project.Service.Services
 
         #region VehicleMake
 
-        public async Task<PaginatedList<VehicleMakeDTO>> GetMakesAsync(int page, int pageSize, string sortBy, string sortOrder, string searchString)
+        public async Task<PaginatedList<VehicleMakeVM>> GetMakesAsync(
+            int pageIndex, 
+            int pageSize, 
+            string sortBy, 
+            string searchString, 
+            string sortOrder)
         {
             var query = _repository.GetMakesQueryable();
 
@@ -39,8 +44,8 @@ namespace Project.Service.Services
                 ? query.OrderByDescending(vm => EF.Property<object>(vm, sortBy)) 
                 : query.OrderBy(vm => EF.Property<object>(vm, sortBy));
 
-            var pagedList = await PaginatedList<VehicleMake>.CreateAsync(query, page, pageSize);
-            return _mapper.Map<PaginatedList<VehicleMakeDTO>>(pagedList);
+            var pagedList = await PaginatedList<VehicleMake>.CreateAsync(query, pageIndex, pageSize);
+            return _mapper.Map<PaginatedList<VehicleMakeVM>>(pagedList);
         }
 
         public async Task<VehicleMakeDTO> GetMakeByIdAsync(int id)
