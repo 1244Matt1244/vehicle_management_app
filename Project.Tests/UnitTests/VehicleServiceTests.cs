@@ -1,4 +1,4 @@
-// UnitTests/ServiceTests.cs
+// Project.UnitTests/ServiceTests.cs
 using Moq;
 using Project.Data.Repositories;
 using Project.Service.Services;
@@ -7,17 +7,17 @@ using Xunit;
 public class VehicleServiceTests
 {
     [Fact]
-    public async Task GetAllMakesAsync_ReturnsPagedResults()
+    public async Task GetMakesAsync_ReturnsPaginatedList()
     {
         // Arrange
-        var mockRepo = new Mock<IVehicleMakeRepository>();
-        mockRepo.Setup(repo => repo.GetAllMakesPagedAsync(1, 10))
+        var mockRepo = new Mock<IVehicleRepository>();
+        mockRepo.Setup(repo => repo.GetMakesPaginatedAsync(1, 10, "Name", "asc", ""))
                 .ReturnsAsync((new List<VehicleMake>(), 0));
 
         var service = new VehicleService(mockRepo.Object, AutoMapperConfig.Configure());
 
         // Act
-        var result = await service.GetAllMakesAsync();
+        var result = await service.GetMakesAsync(1, 10, "Name", "asc", "");
 
         // Assert
         Assert.NotNull(result);
