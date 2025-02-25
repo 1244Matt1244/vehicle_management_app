@@ -4,9 +4,9 @@ using Project.Service.Data.Helpers;
 using Project.Service.Interfaces;
 using Project.Service.Models;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace Project.Service.Repositories
 {
@@ -22,7 +22,7 @@ namespace Project.Service.Repositories
         #region VehicleMake Implementation
         public async Task<PaginatedList<VehicleMake>> GetMakesPaginatedAsync(int page, int pageSize, string sortBy, string sortOrder, string searchString)
         {
-            IQueryable<VehicleMake> query = _context.VehicleMakes;
+            var query = _context.VehicleMakes.AsQueryable();
 
             if (!string.IsNullOrEmpty(searchString))
                 query = query.Where(m => m.Name.Contains(searchString));
@@ -58,8 +58,9 @@ namespace Project.Service.Repositories
             int page, int pageSize, string sortBy, string sortOrder, 
             string searchString, int? makeId)
         {
-            IQueryable<VehicleModel> query = _context.VehicleModels
-                .Include(m => m.VehicleMake);
+            var query = _context.VehicleModels
+                .Include(m => m.VehicleMake)
+                .AsQueryable();
 
             if (makeId.HasValue)
                 query = query.Where(m => m.MakeId == makeId.Value);
