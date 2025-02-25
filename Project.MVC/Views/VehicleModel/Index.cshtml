@@ -1,34 +1,53 @@
-@model Project.MVC.Helpers.PagedResult<Project.MVC.ViewModels.VehicleModelVM>
+@model Project.MVC.ViewModels.VehicleModelIndexVM
 
 @{
     ViewData["Title"] = "Vehicle Models";
 }
 
-<h1>Vehicle Makes</h1>
-
-<table class="table">
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>Abbreviation</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model.Items)
-        {
+<div class="container mt-4">
+    <h2>Vehicle Models</h2>
+    
+    <table class="table table-striped">
+        <thead>
             <tr>
-                <td>@item.Name</td>
-                <td>@item.Abbreviation</td>
+                <th>@Html.ActionLink("Name", "Index", new { sortBy = "Name", sortOrder = ViewBag.SortOrder == "asc" ? "desc" : "asc" })</th>
+                <th>Abbreviation</th>
+                <th>Make</th>
+                <th>Actions</th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.PagedResults.Items)
+            {
+                <tr>
+                    <td>@item.Name</td>
+                    <td>@item.Abbreviation</td>
+                    <td>@item.MakeName</td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-primary">Edit</a>
+                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-info">Details</a>
+                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
 
-<!-- Pagination -->
-<div class="pagination">
-    @for (int i = 1; i <= Model.TotalPages; i++)
-    {
-        <a href="@Url.Action("Index", new { pageIndex = i, pageSize = Model.PageSize })" 
-    class="@(i == Model.PageIndex ? "active" : "")">@i</a>
-    }
+    <div class="pagination">
+        @if (Model.PagedResults.HasPreviousPage)
+        {
+            <a href="@Url.Action("Index", new { pageNumber = Model.PagedResults.PageNumber - 1 })" class="btn btn-outline-primary">&laquo;</a>
+        }
+
+        @for (int i = 1; i <= Model.PagedResults.TotalPages; i++)
+        {
+            <a href="@Url.Action("Index", new { pageNumber = i })" 
+            class="@(i == Model.PagedResults.PageNumber ? "btn btn-primary" : "btn btn-outline-primary")">@i</a>
+        }
+
+        @if (Model.PagedResults.HasNextPage)
+        {
+            <a href="@Url.Action("Index", new { pageNumber = Model.PagedResults.PageNumber + 1 })" class="btn btn-outline-primary">&raquo;</a>
+        }
+    </div>
 </div>

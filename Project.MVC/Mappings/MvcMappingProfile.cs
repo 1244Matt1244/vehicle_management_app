@@ -1,7 +1,6 @@
-// Project.MVC/Mappings/MvcMappingProfile.cs
 using AutoMapper;
-using Project.Service.Data.DTOs;
 using Project.MVC.ViewModels;
+using Project.Service.Data.DTOs;
 
 namespace Project.MVC.Mappings
 {
@@ -9,8 +8,10 @@ namespace Project.MVC.Mappings
     {
         public MvcMappingProfile()
         {
-            CreateMap<VehicleMakeDTO, VehicleMakeVM>().ReverseMap();
-            CreateMap<VehicleModelDTO, VehicleModelVM>().ReverseMap();
+            // VehicleModel mapping
+            CreateMap<VehicleModelDTO, VehicleModelVM>()
+                .ForMember(dest => dest.MakeId, opt => opt.MapFrom(src => src.MakeId))  // Correct mapping
+                .ReverseMap();
         }
     }
 }
