@@ -26,20 +26,22 @@ namespace Project.Service.Repositories
         {
             var query = _context.VehicleMakes.AsQueryable();
 
-            // Apply search filter if search string is provided
             if (!string.IsNullOrEmpty(searchString))
             {
-                query = query.Where(m => m.Name.Contains(searchString) || m.Abrv.Contains(searchString));
+                query = query.Where(m => 
+                    EF.Functions.Like(m.Name, $"%{searchString}%") ||
+                    EF.Functions.Like(m.Abrv, $"%{searchString}%"));
             }
 
-            // Get total count of the filtered results
             var totalCount = await query.CountAsync();
+            
+            var orderedQuery = string.IsNullOrEmpty(sortBy) 
+                ? query 
+                : query.OrderByProperty(sortBy, sortOrder);
 
-            // Apply sorting and pagination
-            var items = await query
-                .OrderByProperty(sortBy, sortOrder)  // Custom sorting logic
-                .Skip((page - 1) * pageSize)         // Skip records for pagination
-                .Take(pageSize)                      // Take records for the current page
+            var items = await orderedQuery
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
                 .ToListAsync();
 
             return (items, totalCount);
@@ -81,11 +83,15 @@ namespace Project.Service.Repositories
                 query = query.Where(m => m.MakeId == makeId.Value);
 
             if (!string.IsNullOrEmpty(searchString))
-                query = query.Where(m => m.Name.Contains(searchString));
+                query = query.Where(m => EF.Functions.Like(m.Name, $"%{searchString}%"));
 
             var totalCount = await query.CountAsync();
-            var items = await query
-                .OrderByProperty(sortBy, sortOrder)
+            
+            var orderedQuery = string.IsNullOrEmpty(sortBy) 
+                ? query 
+                : query.OrderByProperty(sortBy, sortOrder);
+
+            var items = await orderedQuery
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();
@@ -94,7 +100,9 @@ namespace Project.Service.Repositories
         }
 
         public async Task<VehicleModel?> GetModelByIdAsync(int id) => 
-            await _context.VehicleModels.FindAsync(id);
+            await _context.VehicleModels
+                .Include(m => m.VehicleMake)
+                .FirstOrDefaultAsync(m => m.Id == id);
 
         public async Task CreateModelAsync(VehicleModel model)
         {
@@ -125,14 +133,5 @@ namespace Project.Service.Repositories
             await _context.VehicleModels.ToListAsync();
 
         #endregion
-
-        private IQueryable<T> ApplySorting<T>(IQueryable<T> query, string sortBy, string sortOrder)
-        {
-            if (string.IsNullOrWhiteSpace(sortBy)) return query;
-            
-            return sortOrder.Equals("desc", StringComparison.OrdinalIgnoreCase)
-                ? query.OrderByDescending(e => EF.Property<object>(e!, sortBy!))
-                : query.OrderBy(e => EF.Property<object>(e!, sortBy!));
-        }
     }
 }

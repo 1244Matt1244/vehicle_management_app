@@ -1,19 +1,21 @@
 using AutoMapper;
 using Project.Service.Data.DTOs;
-using Project.Service.Data.Helpers;
 using Project.Service.Models;
 
-namespace Project.Service.Mapping
+namespace Project.Service.Mappings
 {
     public class ServiceMappingProfile : Profile
     {
         public ServiceMappingProfile()
         {
-            CreateMap<VehicleMake, VehicleMakeDTO>().ReverseMap();
-            CreateMap<VehicleModel, VehicleModelDTO>().ReverseMap();
+            // VehicleMake mappings
+            CreateMap<VehicleMake, VehicleMakeDTO>()
+                .ReverseMap();
             
-            CreateMap(typeof(PaginatedList<>), typeof(PaginatedList<>))
-                .ConvertUsing(typeof(PaginatedListConverter<,>));
+            // VehicleModel mappings
+            CreateMap<VehicleModel, VehicleModelDTO>()
+                .ForMember(dest => dest.MakeName, opt => opt.MapFrom(src => src.VehicleMake.Name))
+                .ReverseMap();
         }
     }
 }
