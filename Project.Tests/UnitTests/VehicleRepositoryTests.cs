@@ -1,11 +1,7 @@
-using Microsoft.EntityFrameworkCore;
-using Moq;
 using Project.Service.Data.Context;
-using Project.Service.Data.Helpers;
 using Project.Service.Models;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Project.Service.Repositories;
+using Microsoft.EntityFrameworkCore;
 using Xunit;
 
 namespace Project.Tests.UnitTests
@@ -17,30 +13,30 @@ namespace Project.Tests.UnitTests
         public VehicleRepositoryTests()
         {
             _options = new DbContextOptionsBuilder<ApplicationDbContext>()
-                .UseInMemoryDatabase(databaseName: "TestDatabase")
+                .UseInMemoryDatabase(databaseName: "TestDb")
                 .Options;
         }
 
         [Fact]
-        public async Task GetMakesPaginatedAsync_ReturnsCorrectResults()
+        public async Task CreateMake_AddsNewVehicleMake()
         {
             // Arrange
-            using var context = new ApplicationDbContext(_options);
-            context.VehicleMakes.AddRange(new[]
+            var testMake = new VehicleMake { Id = 1, Name = "TestMake", Abbreviation = "TM" };
+            
+            using (var context = new ApplicationDbContext(_options))
             {
-                new VehicleMake { Name = "Test1", Abbreviation = "T1" },
-                new VehicleMake { Name = "Test2", Abbreviation = "T2" }
-            });
-            await context.SaveChangesAsync();
+                var repository = new VehicleRepository(context);
 
-            var repository = new VehicleRepository(context);
-
-            // Act
-            var result = await repository.GetMakesPaginatedAsync(1, 10, "Name", "asc", "");
+                // Act
+                await repository.CreateMakeAsync(testMake);
+                await context.SaveChangesAsync();
+            }
 
             // Assert
-            Assert.Equal(2, result.Makes.Count);
-            Assert.Equal("Test1", result.Makes.First().Name);
+            using (var context = new ApplicationDbContext(_options))
+            {
+                Assert.Equal(1, await context.VehicleMakes.CountAsync());
+            }
         }
     }
 }
