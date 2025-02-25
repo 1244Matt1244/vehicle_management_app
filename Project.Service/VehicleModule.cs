@@ -1,6 +1,6 @@
-// Project.Service/VehicleModule.cs
-using Project.Service.Mappings; 
 using Microsoft.Extensions.DependencyInjection;
+using Project.Service.Mappings;
+using AutoMapper;
 
 namespace Project.Service
 {
@@ -8,7 +8,11 @@ namespace Project.Service
     {
         public static IServiceCollection AddVehicleServices(this IServiceCollection services)
         {
-            // Configuration
+            // AutoMapper Configuration
+            services.AddAutoMapper(typeof(ServiceMappingProfile));
+
+            // Add other service configurations here
+            
             return services;
         }
     }

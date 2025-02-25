@@ -27,19 +27,19 @@
         <tr>
             <th>
                 <a asp-action="Index" 
-                   asp-route-sortBy="Name"
-                   asp-route-sortOrder="@(currentOrder == "asc" ? "desc" : "asc")"
-                   asp-route-makeId="@currentMake"
-                   asp-route-searchString="@searchString">
+                asp-route-sortBy="Name"
+                asp-route-sortOrder="@(currentOrder == "asc" ? "desc" : "asc")"
+                asp-route-makeId="@currentMake"
+                asp-route-searchString="@searchString">
                     Name @(currentSort == "Name" ? (currentOrder == "asc" ? "↑" : "↓") : "")
                 </a>
             </th>
             <th>
                 <a asp-action="Index" 
-                   asp-route-sortBy="MakeName"
-                   asp-route-sortOrder="@(currentOrder == "asc" ? "desc" : "asc")"
-                   asp-route-makeId="@currentMake"
-                   asp-route-searchString="@searchString">
+                asp-route-sortBy="MakeName"
+                asp-route-sortOrder="@(currentOrder == "asc" ? "desc" : "asc")"
+                asp-route-makeId="@currentMake"
+                asp-route-searchString="@searchString">
                     Make @(currentSort == "MakeName" ? (currentOrder == "asc" ? "↑" : "↓") : "")
                 </a>
             </th>
@@ -67,12 +67,12 @@
     @if (Model.HasPreviousPage)
     {
         <a asp-action="Index"
-           asp-route-page="@(Model.PageIndex - 1)"
-           asp-route-makeId="@currentMake"
-           asp-route-sortBy="@currentSort"
-           asp-route-sortOrder="@currentOrder"
-           asp-route-searchString="@searchString"
-           class="btn btn-primary">
+        asp-route-page="@(Model.PageIndex - 1)"
+        asp-route-makeId="@currentMake"
+        asp-route-sortBy="@currentSort"
+        asp-route-sortOrder="@currentOrder"
+        asp-route-searchString="@searchString"
+        class="btn btn-primary">
             Previous
         </a>
     }
