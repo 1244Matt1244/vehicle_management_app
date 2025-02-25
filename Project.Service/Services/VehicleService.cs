@@ -1,3 +1,4 @@
+// Project.Service/Services/VehicleService.cs
 using AutoMapper;
 using Project.Service.Data.DTOs;
 using Project.Service.Data.Helpers;
@@ -20,7 +21,8 @@ namespace Project.Service.Services
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
-        // Get paginated vehicle makes
+        // VehicleMake Methods
+
         public async Task<PaginatedList<VehicleMakeDTO>> GetMakesAsync(int page, int pageSize, string sortBy, string sortOrder, string searchString)
         {
             var (makes, totalCount) = await _repository.GetMakesPaginatedAsync(page, pageSize, sortBy, sortOrder, searchString);
@@ -32,44 +34,34 @@ namespace Project.Service.Services
             );
         }
 
-        // Get a specific make by ID
         public async Task<VehicleMakeDTO> GetMakeByIdAsync(int id)
         {
-            var make = await _repository.GetMakeByIdAsync(id);
-            if (make == null) throw new KeyNotFoundException("Vehicle make not found");
+            var make = await _repository.GetMakeByIdAsync(id) ?? throw new KeyNotFoundException("Vehicle make not found.");
             return _mapper.Map<VehicleMakeDTO>(make);
         }
 
-        // Create a new make
         public async Task<VehicleMakeDTO> CreateMakeAsync(VehicleMakeDTO makeDto)
         {
             var make = _mapper.Map<VehicleMake>(makeDto);
-            await _repository.CreateMakeAsync(make);
+            await _repository.AddMakeAsync(make);
             return _mapper.Map<VehicleMakeDTO>(make);
         }
 
-        // Update an existing make
-        public async Task<bool> UpdateMakeAsync(int id, VehicleMakeDTO makeDto)
+        public async Task UpdateMakeAsync(int id, VehicleMakeDTO makeDto)
         {
-            var existingMake = await _repository.GetMakeByIdAsync(id);
-            if (existingMake == null) return false;
-            
-            _mapper.Map(makeDto, existingMake);
-            await _repository.UpdateMakeAsync(existingMake);
-            return true;
+            var make = await _repository.GetMakeByIdAsync(id) ?? throw new KeyNotFoundException("Vehicle make not found.");
+            _mapper.Map(makeDto, make);
+            await _repository.UpdateMakeAsync(make);
         }
 
-        // Delete a make by ID
-        public async Task<bool> DeleteMakeAsync(int id)
+        public async Task DeleteMakeAsync(int id)
         {
-            var make = await _repository.GetMakeByIdAsync(id);
-            if (make == null) return false;
-            
+            var make = await _repository.GetMakeByIdAsync(id) ?? throw new KeyNotFoundException("Vehicle make not found.");
             await _repository.DeleteMakeAsync(make);
-            return true;
         }
 
-        // Get paginated vehicle models
+        // VehicleModel Methods
+
         public async Task<PaginatedList<VehicleModelDTO>> GetModelsAsync(int page, int pageSize, string sortBy, string sortOrder, string searchString, int? makeId)
         {
             var (models, totalCount) = await _repository.GetModelsPaginatedAsync(page, pageSize, sortBy, sortOrder, searchString, makeId);
@@ -81,15 +73,12 @@ namespace Project.Service.Services
             );
         }
 
-        // Get a specific model by ID
         public async Task<VehicleModelDTO> GetModelByIdAsync(int id)
         {
-            var model = await _repository.GetModelByIdAsync(id);
-            if (model == null) throw new KeyNotFoundException("Vehicle model not found");
+            var model = await _repository.GetModelByIdAsync(id) ?? throw new KeyNotFoundException("Vehicle model not found.");
             return _mapper.Map<VehicleModelDTO>(model);
         }
 
-        // Create a new model
         public async Task<VehicleModelDTO> CreateModelAsync(VehicleModelDTO modelDto)
         {
             var model = _mapper.Map<VehicleModel>(modelDto);
@@ -97,25 +86,31 @@ namespace Project.Service.Services
             return _mapper.Map<VehicleModelDTO>(model);
         }
 
-        // Update an existing model
-        public async Task<bool> UpdateModelAsync(int id, VehicleModelDTO modelDto)
+        public async Task UpdateModelAsync(int id, VehicleModelDTO modelDto)
         {
-            var existingModel = await _repository.GetModelByIdAsync(id);
-            if (existingModel == null) return false;
-            
-            _mapper.Map(modelDto, existingModel);
-            await _repository.UpdateModelAsync(existingModel);
-            return true;
+            var model = await _repository.GetModelByIdAsync(id) ?? throw new KeyNotFoundException("Vehicle model not found.");
+            _mapper.Map(modelDto, model);
+            await _repository.UpdateModelAsync(model);
         }
 
-        // Delete a model by ID
-        public async Task<bool> DeleteModelAsync(int id)
+        public async Task DeleteModelAsync(int id)
         {
-            var model = await _repository.GetModelByIdAsync(id);
-            if (model == null) return false;
-            
+            var model = await _repository.GetModelByIdAsync(id) ?? throw new KeyNotFoundException("Vehicle model not found.");
             await _repository.DeleteModelAsync(model);
-            return true;
+        }
+
+        // Implement missing methods
+
+        public async Task<List<VehicleMakeDTO>> GetAllMakesAsync()
+        {
+            var makes = await _repository.GetAllMakesAsync();
+            return _mapper.Map<List<VehicleMakeDTO>>(makes);
+        }
+
+        public async Task<List<VehicleModelDTO>> GetAllModelsAsync()
+        {
+            var models = await _repository.GetAllModelsAsync();
+            return _mapper.Map<List<VehicleModelDTO>>(models);
         }
     }
 }
