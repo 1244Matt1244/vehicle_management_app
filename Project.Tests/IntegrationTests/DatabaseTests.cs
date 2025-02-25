@@ -36,7 +36,7 @@ namespace Project.Tests.IntegrationTests
             { 
                 Id = 1, 
                 Name = "Honda", 
-                Abrv = "H",
+                Abbreviation = "H",
                 VehicleModels = new List<VehicleModel>() 
             });
             await _context.SaveChangesAsync();
@@ -49,7 +49,7 @@ namespace Project.Tests.IntegrationTests
             { 
                 Id = 2, 
                 Name = "Tesla", 
-                Abrv = "T",
+                Abbreviation = "T",
                 VehicleModels = new List<VehicleModel>() 
             };
 

@@ -19,9 +19,14 @@ namespace Project.MVC.Controllers
             _mapper = mapper;
         }
 
-        public async Task<IActionResult> Index(int pageIndex = 1, int pageSize = 10, 
-            string sortBy = "Name", string sortOrder = "asc", string searchString = "", 
-            int? makeId = null)
+        public async Task<IActionResult> Index(
+            int pageIndex = 1, 
+            int pageSize = 10, 
+            string sortBy = "Name", 
+            string sortOrder = "asc", 
+            string searchString = "", 
+            int? makeId = null
+        )
         {
             var modelResult = await _vehicleService.GetModelsAsync(pageIndex, pageSize, sortBy, sortOrder, searchString, makeId);
             var makes = await _vehicleService.GetAllMakesAsync();

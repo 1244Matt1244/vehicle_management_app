@@ -30,7 +30,7 @@ namespace Project.Service.Repositories
             {
                 query = query.Where(m => 
                     EF.Functions.Like(m.Name, $"%{searchString}%") ||
-                    EF.Functions.Like(m.Abrv, $"%{searchString}%"));
+                    EF.Functions.Like(m.Abbreviation, $"%{searchString}%"));
             }
 
             var totalCount = await query.CountAsync();

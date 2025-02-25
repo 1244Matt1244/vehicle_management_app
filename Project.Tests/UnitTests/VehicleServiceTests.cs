@@ -1,6 +1,6 @@
 // Project.UnitTests/ServiceTests.cs
 using Moq;
-using Project.Data.Repositories;
+using Project.Service.Repositories;
 using Project.Service.Services;
 using Xunit;
 

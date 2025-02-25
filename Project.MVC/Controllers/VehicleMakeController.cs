@@ -3,8 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using Project.MVC.Helpers;
 using Project.MVC.ViewModels;
 using Project.Service.Interfaces;
-using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace Project.MVC.Controllers
 {
@@ -19,8 +19,13 @@ namespace Project.MVC.Controllers
             _mapper = mapper;
         }
 
-        public async Task<IActionResult> Index(int pageIndex = 1, int pageSize = 10, 
-            string sortBy = "Name", string sortOrder = "asc", string searchString = "")
+        public async Task<IActionResult> Index(
+            int pageIndex = 1, 
+            int pageSize = 10, 
+            string sortBy = "Name", 
+            string sortOrder = "asc", 
+            string searchString = ""
+        )
         {
             var serviceResult = await _vehicleService.GetMakesAsync(pageIndex, pageSize, sortBy, sortOrder, searchString);
             
