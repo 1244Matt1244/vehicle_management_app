@@ -8,9 +8,13 @@ namespace Project.MVC.Mappings
     {
         public MvcMappingProfile()
         {
-            // VehicleModel mapping
+            // VehicleMake mappings
+            CreateMap<VehicleMakeDTO, VehicleMakeVM>()
+                .ReverseMap();
+
+            // VehicleModel mappings
             CreateMap<VehicleModelDTO, VehicleModelVM>()
-                .ForMember(dest => dest.MakeId, opt => opt.MapFrom(src => src.MakeId))  // Correct mapping
+                .ForMember(dest => dest.MakeName, opt => opt.MapFrom(src => src.MakeName))
                 .ReverseMap();
         }
     }
