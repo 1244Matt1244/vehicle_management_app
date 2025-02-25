@@ -11,7 +11,7 @@ namespace Project.Service.Data.Helpers
             PaginatedList<TDestination> destination,
             ResolutionContext context)
         {
-            var mappedItems = context.Mapper.Map<List<TDestination>>((List<TSource>)source);
+            var mappedItems = context.Mapper.Map<List<TDestination>>(source.Items);
             return new PaginatedList<TDestination>(
                 mappedItems,
                 source.TotalCount,

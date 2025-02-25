@@ -10,7 +10,7 @@ namespace Project.Service.Interfaces
         // Vehicle Make Methods
         Task<(List<VehicleMake> Makes, int TotalCount)> GetMakesPaginatedAsync(int page, int pageSize, string sortBy, string sortOrder, string searchString);
         Task<VehicleMake?> GetMakeByIdAsync(int id);
-        Task AddMakeAsync(VehicleMake make);
+        Task CreateMakeAsync(VehicleMake make);
         Task UpdateMakeAsync(VehicleMake make);
         Task DeleteMakeAsync(VehicleMake make);
         Task<List<VehicleMake>> GetAllMakesAsync();
@@ -18,7 +18,7 @@ namespace Project.Service.Interfaces
         // Vehicle Model Methods
         Task<(List<VehicleModel> Models, int TotalCount)> GetModelsPaginatedAsync(int page, int pageSize, string sortBy, string sortOrder, string searchString, int? makeId);
         Task<VehicleModel?> GetModelByIdAsync(int id);
-        Task AddModelAsync(VehicleModel model);
+        Task CreateModelAsync(VehicleModel model);
         Task UpdateModelAsync(VehicleModel model);
         Task DeleteModelAsync(VehicleModel model);
         Task<List<VehicleModel>> GetAllModelsAsync();
