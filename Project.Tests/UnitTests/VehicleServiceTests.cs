@@ -1,26 +1,37 @@
-// Project.UnitTests/ServiceTests.cs
-using Moq;
-using Project.Service.Repositories;
-using Project.Service.Services;
 using Xunit;
+using Moq;
+using Project.Service.Interfaces;
+using Project.Service.Models;
+using Project.Service.Services;
+using Project.Tests;
+using System.Threading.Tasks;
 
-public class VehicleServiceTests
+namespace Project.Tests.UnitTests
 {
-    [Fact]
-    public async Task GetMakesAsync_ReturnsPaginatedList()
+    public class VehicleServiceTests
     {
-        // Arrange
-        var mockRepo = new Mock<IVehicleRepository>();
-        mockRepo.Setup(repo => repo.GetMakesPaginatedAsync(1, 10, "Name", "asc", ""))
-                .ReturnsAsync((new List<VehicleMake>(), 0));
+        private readonly Mock<IVehicleRepository> _mockRepo;
+        private readonly VehicleService _service;
 
-        var service = new VehicleService(mockRepo.Object, AutoMapperConfig.Configure());
+        public VehicleServiceTests()
+        {
+            _mockRepo = new Mock<IVehicleRepository>();
+            _service = new VehicleService(_mockRepo.Object, TestHelpers.CreateTestMapper());
+        }
 
-        // Act
-        var result = await service.GetMakesAsync(1, 10, "Name", "asc", "");
+        [Fact]
+        public async Task GetMakeById_ReturnsMake()
+        {
+            // Arrange
+            var testMake = TestHelpers.CreateTestMake();
+            _mockRepo.Setup(r => r.GetMakeByIdAsync(1)).ReturnsAsync(testMake);
 
-        // Assert
-        Assert.NotNull(result);
-        Assert.Equal(0, result.TotalCount);
+            // Act
+            var result = await _service.GetMakeByIdAsync(1);
+
+            // Assert
+            Assert.Equal("Make1", result.Name);
+            Assert.Equal("M1", result.Abbreviation);
+        }
     }
 }
