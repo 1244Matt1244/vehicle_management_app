@@ -1,19 +1,16 @@
-// Project.Service/Mappings/ServiceMappingProfile.cs
+// Project.MVC/Mapping/ServiceMappingProfile.cs
 using AutoMapper;
+using Project.MVC.ViewModels;
 using Project.Service.Data.DTOs;
-using Project.Service.Models;
 
-namespace Project.Service.Mappings
+public class ServiceMappingProfile : Profile
 {
-    public class ServiceMappingProfile : Profile
+    public ServiceMappingProfile()
     {
-        public ServiceMappingProfile()
-        {
-            // Add mapping for MakeName
-            CreateMap<VehicleModel, VehicleModelDTO>()
-                .ForMember(dest => dest.MakeName, 
-                    opt => opt.MapFrom(src => src.VehicleMake.Name)) // Assuming navigation property
-                .ReverseMap();
-        }
+        // VehicleMake
+        CreateMap<VehicleMakeDTO, VehicleMakeVM>().ReverseMap();
+        
+        // VehicleModel
+        CreateMap<VehicleModelDTO, VehicleModelVM>().ReverseMap();
     }
 }
