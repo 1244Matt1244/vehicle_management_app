@@ -7,7 +7,7 @@ namespace Project.Service.Models
     {
         public int Id { get; set; }
         public required string Name { get; set; }
-        public required string Abrv { get; set; }
+        public required string Abbreviation { get; set; }
         public required int MakeId { get; set; }
         public VehicleMake VehicleMake { get; set; } = null!; // Navigation property
     }

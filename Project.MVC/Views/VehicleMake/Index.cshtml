@@ -29,6 +29,6 @@
     @for (int i = 1; i <= Model.TotalPages; i++)
     {
         <a href="@Url.Action("Index", new { pageIndex = i, pageSize = Model.PageSize })" 
-        class="@(i == Model.PageIndex ? "active" : "")">@i</a>
+class="@(i == Model.PageIndex ? "active" : "")">@i</a>
     }
 </div>

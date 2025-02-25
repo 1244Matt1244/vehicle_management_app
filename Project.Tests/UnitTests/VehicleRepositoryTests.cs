@@ -28,8 +28,8 @@ namespace Project.Tests.UnitTests
             using var context = new ApplicationDbContext(_options);
             context.VehicleMakes.AddRange(new[]
             {
-                new VehicleMake { Name = "Test1", Abrv = "T1" },
-                new VehicleMake { Name = "Test2", Abrv = "T2" }
+                new VehicleMake { Name = "Test1", Abbreviation = "T1" },
+                new VehicleMake { Name = "Test2", Abbreviation = "T2" }
             });
             await context.SaveChangesAsync();
 

@@ -9,7 +9,6 @@ using Project.Service.Models;
 using Project.Tests.Helpers;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;  // For ViewResult
 using Project.Service.Mappings;  // For ServiceMappingProfile
 using Project.Service.Data.Helpers;    // For PaginatedList<>
 using Project.MVC.ViewModels;  
@@ -42,7 +41,7 @@ public class VehicleMakeControllerTests
         var makes = new PaginatedList<VehicleMakeDTO>(
             new List<VehicleMakeDTO>
             { 
-                new VehicleMakeDTO { Id = 1, Name = "TestMake", Abrv = "TM" } 
+                new VehicleMakeDTO { Id = 1, Name = "TestMake", Abbreviation = "TM" } 
             },
             totalCount: 1,
             pageIndex: 1,
