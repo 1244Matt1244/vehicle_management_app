@@ -5,22 +5,25 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Project.Service.Data.Helpers
 {
-    public class PaginatedList<T> : List<T>
+    public class PaginatedList<T>
     {
+        public List<T> Items { get; }
+        public int TotalCount { get; }
         public int PageIndex { get; }
         public int PageSize { get; }
-        public int TotalPages { get; }
-        public int TotalCount { get; }
-        public bool HasPreviousPage => PageIndex > 1;
-        public bool HasNextPage => PageIndex < TotalPages;
 
         public PaginatedList(List<T> items, int totalCount, int pageIndex, int pageSize)
         {
+            Items = items;
+            TotalCount = totalCount;
             PageIndex = pageIndex;
             PageSize = pageSize;
-            TotalCount = totalCount;
-            TotalPages = (int)System.Math.Ceiling(totalCount / (double)pageSize);
-            AddRange(items);
+        }
+
+        public void Deconstruct(out List<T> items, out int totalCount)
+        {
+            items = Items;
+            totalCount = TotalCount;
         }
 
         public static async Task<PaginatedList<T>> CreateAsync(

@@ -1,17 +1,19 @@
-// Project.Service/Mappings/ServiceMappingProfile.cs
 using AutoMapper;
 using Project.Service.Data.DTOs;
+using Project.Service.Data.Helpers;
 using Project.Service.Models;
 
-namespace Project.Service.Mappings
+namespace Project.Service.Mapping
 {
     public class ServiceMappingProfile : Profile
     {
         public ServiceMappingProfile()
         {
-            // Map between DTOs and Domain Models (NOT ViewModels)
             CreateMap<VehicleMake, VehicleMakeDTO>().ReverseMap();
             CreateMap<VehicleModel, VehicleModelDTO>().ReverseMap();
+            
+            CreateMap(typeof(PaginatedList<>), typeof(PaginatedList<>))
+                .ConvertUsing(typeof(PaginatedListConverter<,>));
         }
     }
 }

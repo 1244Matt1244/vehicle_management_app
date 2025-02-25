@@ -4,9 +4,9 @@ using Project.Service.Data.Helpers;
 using Project.Service.Interfaces;
 using Project.Service.Models;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Collections.Generic;
 
 namespace Project.Service.Repositories
 {
@@ -20,21 +20,35 @@ namespace Project.Service.Repositories
         }
 
         #region VehicleMake Implementation
-        public async Task<PaginatedList<VehicleMake>> GetMakesPaginatedAsync(int page, int pageSize, string sortBy, string sortOrder, string searchString)
+
+        public async Task<(List<VehicleMake> Makes, int TotalCount)> GetMakesPaginatedAsync(
+            int page, int pageSize, string sortBy, string sortOrder, string searchString)
         {
             var query = _context.VehicleMakes.AsQueryable();
 
+            // Apply search filter if search string is provided
             if (!string.IsNullOrEmpty(searchString))
-                query = query.Where(m => m.Name.Contains(searchString));
+            {
+                query = query.Where(m => m.Name.Contains(searchString) || m.Abrv.Contains(searchString));
+            }
 
-            query = ApplySorting(query, sortBy, sortOrder);
-            return await PaginatedList<VehicleMake>.CreateAsync(query, page, pageSize);
+            // Get total count of the filtered results
+            var totalCount = await query.CountAsync();
+
+            // Apply sorting and pagination
+            var items = await query
+                .OrderByProperty(sortBy, sortOrder)  // Custom sorting logic
+                .Skip((page - 1) * pageSize)         // Skip records for pagination
+                .Take(pageSize)                      // Take records for the current page
+                .ToListAsync();
+
+            return (items, totalCount);
         }
 
         public async Task<VehicleMake?> GetMakeByIdAsync(int id) => 
             await _context.VehicleMakes.FindAsync(id);
 
-        public async Task AddMakeAsync(VehicleMake make)
+        public async Task CreateMakeAsync(VehicleMake make)
         {
             await _context.VehicleMakes.AddAsync(make);
             await _context.SaveChangesAsync();
@@ -51,12 +65,13 @@ namespace Project.Service.Repositories
             _context.VehicleMakes.Remove(make);
             await _context.SaveChangesAsync();
         }
+
         #endregion
 
         #region VehicleModel Implementation
-        public async Task<PaginatedList<VehicleModel>> GetModelsPaginatedAsync(
-            int page, int pageSize, string sortBy, string sortOrder, 
-            string searchString, int? makeId)
+
+        public async Task<(List<VehicleModel> Models, int TotalCount)> GetModelsPaginatedAsync(
+            int page, int pageSize, string sortBy, string sortOrder, string searchString, int? makeId)
         {
             var query = _context.VehicleModels
                 .Include(m => m.VehicleMake)
@@ -68,14 +83,20 @@ namespace Project.Service.Repositories
             if (!string.IsNullOrEmpty(searchString))
                 query = query.Where(m => m.Name.Contains(searchString));
 
-            query = ApplySorting(query, sortBy, sortOrder);
-            return await PaginatedList<VehicleModel>.CreateAsync(query, page, pageSize);
+            var totalCount = await query.CountAsync();
+            var items = await query
+                .OrderByProperty(sortBy, sortOrder)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            return (items, totalCount);
         }
 
         public async Task<VehicleModel?> GetModelByIdAsync(int id) => 
             await _context.VehicleModels.FindAsync(id);
 
-        public async Task AddModelAsync(VehicleModel model)
+        public async Task CreateModelAsync(VehicleModel model)
         {
             await _context.VehicleModels.AddAsync(model);
             await _context.SaveChangesAsync();
@@ -92,14 +113,17 @@ namespace Project.Service.Repositories
             _context.VehicleModels.Remove(model);
             await _context.SaveChangesAsync();
         }
+
         #endregion
 
         #region Common Implementation
+
         public async Task<List<VehicleMake>> GetAllMakesAsync() => 
             await _context.VehicleMakes.ToListAsync();
 
         public async Task<List<VehicleModel>> GetAllModelsAsync() => 
             await _context.VehicleModels.ToListAsync();
+
         #endregion
 
         private IQueryable<T> ApplySorting<T>(IQueryable<T> query, string sortBy, string sortOrder)

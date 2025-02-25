@@ -1,4 +1,3 @@
-// Project.Service/Services/VehicleService.cs
 using AutoMapper;
 using Project.Service.Data.DTOs;
 using Project.Service.Data.Helpers;
@@ -21,8 +20,6 @@ namespace Project.Service.Services
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
-        // VehicleMake Methods
-
         public async Task<PaginatedList<VehicleMakeDTO>> GetMakesAsync(int page, int pageSize, string sortBy, string sortOrder, string searchString)
         {
             var (makes, totalCount) = await _repository.GetMakesPaginatedAsync(page, pageSize, sortBy, sortOrder, searchString);
@@ -43,7 +40,7 @@ namespace Project.Service.Services
         public async Task<VehicleMakeDTO> CreateMakeAsync(VehicleMakeDTO makeDto)
         {
             var make = _mapper.Map<VehicleMake>(makeDto);
-            await _repository.AddMakeAsync(make);
+            await _repository.CreateMakeAsync(make);
             return _mapper.Map<VehicleMakeDTO>(make);
         }
 
@@ -59,8 +56,6 @@ namespace Project.Service.Services
             var make = await _repository.GetMakeByIdAsync(id) ?? throw new KeyNotFoundException("Vehicle make not found.");
             await _repository.DeleteMakeAsync(make);
         }
-
-        // VehicleModel Methods
 
         public async Task<PaginatedList<VehicleModelDTO>> GetModelsAsync(int page, int pageSize, string sortBy, string sortOrder, string searchString, int? makeId)
         {
@@ -98,8 +93,6 @@ namespace Project.Service.Services
             var model = await _repository.GetModelByIdAsync(id) ?? throw new KeyNotFoundException("Vehicle model not found.");
             await _repository.DeleteModelAsync(model);
         }
-
-        // Implement missing methods
 
         public async Task<List<VehicleMakeDTO>> GetAllMakesAsync()
         {
