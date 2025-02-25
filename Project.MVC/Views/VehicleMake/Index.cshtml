@@ -1,4 +1,4 @@
-@model Project.MVC.ViewModels.VehicleMakeVM
+@model PagedResult<Project.MVC.ViewModels.VehicleMakeVM>
 
 @{
     ViewData["Title"] = "Vehicle Makes";
@@ -6,62 +6,29 @@
 
 <h1>Vehicle Makes</h1>
 
-<!-- Search Box -->
-<form asp-action="Index" method="get">
-    <input type="text" name="searchString" value="@Model?.SearchString" placeholder="Search..." />
-    <input type="submit" value="Search" class="btn btn-primary" />
-</form>
-
-@if (Model?.PaginatedList == null || !Model.PaginatedList.Any())
-{
-    <p>No makes found.</p>
-}
-else
-{
-    <table class="table">
-        <thead>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Abbreviation</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Items)
+        {
             <tr>
-                <th>
-                    <a asp-action="Index" 
-                    asp-route-sortBy="Name" 
-                    asp-route-sortOrder="@(Model.SortOrder == "asc" ? "desc" : "asc")">
-                        Name @(Model.SortOrder == "asc" ? "↑" : "↓")
-                    </a>
-                </th>
-                <th>Abbreviation</th>
+                <td>@item.Name</td>
+                <td>@item.Abbreviation</td>
             </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model.PaginatedList)
-            {
-                <tr>
-                    <td>@item.Name</td>
-                    <td>@item.Abrv</td>
-                </tr>
-            }
-        </tbody>
-    </table>
-
-    <!-- Pagination -->
-    <div class="pagination">
-        @if (Model.PaginatedList.HasPreviousPage)
-        {
-            <a asp-action="Index" 
-            asp-route-page="@(Model.PaginatedList.PageIndex - 1)"
-            asp-route-sortBy="@Model.CurrentSort"
-            asp-route-sortOrder="@Model.SortOrder"
-            asp-route-searchString="@Model.SearchString"
-            class="btn btn-primary">Previous</a>
         }
+    </tbody>
+</table>
 
-        @if (Model.PaginatedList.HasNextPage)
-        {
-            <a asp-action="Index" 
-            asp-route-page="@(Model.PaginatedList.PageIndex + 1)"
-            asp-route-sortBy="@Model.CurrentSort"
-            asp-route-sortOrder="@Model.SortOrder"
-            asp-route-searchString="@Model.SearchString"
-            class="btn btn-primary">Next</a>
-        }
-    </div>
-}
+<!-- Pagination -->
+<div class="pagination">
+    @for (int i = 1; i <= Model.TotalPages; i++)
+    {
+        <a href="@Url.Action("Index", new { pageNumber = i, pageSize = Model.PageSize })" 
+        class="@(i == Model.PageNumber ? "active" : "")">@i</a>
+    }
+</div>

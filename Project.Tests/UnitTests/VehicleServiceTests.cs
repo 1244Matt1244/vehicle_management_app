@@ -1,38 +1,26 @@
-// Project.Tests/UnitTests/VehicleServiceTests.cs
-using AutoMapper;
+// UnitTests/ServiceTests.cs
 using Moq;
-using Project.Service.Data.DTOs;
-using Project.Service.Interfaces;
-using Project.Service.Models;
+using Project.Data.Repositories;
 using Project.Service.Services;
-using Project.Tests.Helpers;
 using Xunit;
 
-namespace Project.Tests.UnitTests
+public class VehicleServiceTests
 {
-    public class VehicleServiceTests
+    [Fact]
+    public async Task GetAllMakesAsync_ReturnsPagedResults()
     {
-        private readonly Mock<IVehicleRepository> _repoMock = new();
-        private readonly IMapper _mapper = TestHelpers.CreateTestMapper();
+        // Arrange
+        var mockRepo = new Mock<IVehicleMakeRepository>();
+        mockRepo.Setup(repo => repo.GetAllMakesPagedAsync(1, 10))
+                .ReturnsAsync((new List<VehicleMake>(), 0));
 
-        [Fact]
-        public async Task GetMakesAsync_ReturnsPaginatedList()
-        {
-            // Arrange
-            var service = new VehicleService(_repoMock.Object, _mapper);
-            var testData = await PaginatedList<VehicleMake>.CreateAsync(
-                TestHelpers.GetTestMakes().AsQueryable(), 1, 10);
-            
-            _repoMock.Setup(r => r.GetMakesPaginatedAsync(It.IsAny<int>(), It.IsAny<int>(), 
-                It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
-                .ReturnsAsync(testData);
+        var service = new VehicleService(mockRepo.Object, AutoMapperConfig.Configure());
 
-            // Act
-            var result = await service.GetMakesAsync(1, 10, "Name", "asc", "");
+        // Act
+        var result = await service.GetAllMakesAsync();
 
-            // Assert
-            Assert.IsType<PaginatedList<VehicleMakeDTO>>(result);
-            Assert.Equal(2, result.Items.Count);
-        }
+        // Assert
+        Assert.NotNull(result);
+        Assert.Equal(0, result.TotalCount);
     }
 }
