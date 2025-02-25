@@ -3,7 +3,6 @@ using Project.Service.Data.DTOs;
 using Project.Service.Data.Helpers;
 using Project.Service.Interfaces;
 using Project.Service.Models;
-using Project.Service.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -22,18 +21,24 @@ namespace Project.Service.Services
         }
 
         #region VehicleMake
-        public async Task<PaginatedList<VehicleMakeDTO>> GetMakesAsync(int page, int pageSize, string sortBy, string sortOrder, string searchString)
+        public async Task<PagedResult<VehicleMakeDTO>> GetMakesAsync(int page, int pageSize, string sortBy, string sortOrder, string searchString)
         {
-            var result = await _repository.GetMakesPaginatedAsync(page, pageSize, sortBy, sortOrder, searchString);
-            return _mapper.Map<PaginatedList<VehicleMakeDTO>>(result);
+            var (makes, totalCount) = await _repository.GetMakesPaginatedAsync(page, pageSize, sortBy, sortOrder, searchString);
+            return new PagedResult<VehicleMakeDTO>
+            {
+                Items = _mapper.Map<List<VehicleMakeDTO>>(makes),
+                TotalCount = totalCount,
+                PageNumber = page,
+                PageSize = pageSize
+            };
         }
-
+        
         public async Task<VehicleMakeDTO> GetMakeByIdAsync(int id)
         {
             var make = await _repository.GetMakeByIdAsync(id);
             return _mapper.Map<VehicleMakeDTO>(make);
         }
-
+        
         public async Task<VehicleMakeDTO> CreateMakeAsync(VehicleMakeDTO makeDto)
         {
             var make = _mapper.Map<VehicleMake>(makeDto);
@@ -56,12 +61,18 @@ namespace Project.Service.Services
         #endregion
 
         #region VehicleModel
-        public async Task<PaginatedList<VehicleModelDTO>> GetModelsAsync(int page, int pageSize, string sortBy, string sortOrder, string searchString, int? makeId)
+        public async Task<PagedResult<VehicleModelDTO>> GetModelsAsync(int page, int pageSize, string sortBy, string sortOrder, string searchString, int? makeId)
         {
-            var result = await _repository.GetModelsPaginatedAsync(page, pageSize, sortBy, sortOrder, searchString, makeId);
-            return _mapper.Map<PaginatedList<VehicleModelDTO>>(result);
+            var (models, totalCount) = await _repository.GetModelsPaginatedAsync(page, pageSize, sortBy, sortOrder, searchString, makeId);
+            return new PagedResult<VehicleModelDTO>
+            {
+                Items = _mapper.Map<List<VehicleModelDTO>>(models),
+                TotalCount = totalCount,
+                PageNumber = page,
+                PageSize = pageSize
+            };
         }
-
+        
         public async Task<VehicleModelDTO> GetModelByIdAsync(int id)
         {
             var model = await _repository.GetModelByIdAsync(id);
@@ -102,5 +113,14 @@ namespace Project.Service.Services
             return _mapper.Map<List<VehicleModelDTO>>(models);
         }
         #endregion
+    }
+
+    public class PagedResult<T>
+    {
+        public List<T> Items { get; set; }
+        public int TotalCount { get; set; }
+        public int PageNumber { get; set; }
+        public int PageSize { get; set; }
+        public int TotalPages => (int)Math.Ceiling(TotalCount / (double)PageSize);
     }
 }
