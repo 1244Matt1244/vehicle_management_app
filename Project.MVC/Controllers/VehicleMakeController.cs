@@ -1,29 +1,38 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Project.MVC.Helpers;
 using Project.MVC.ViewModels;
 using Project.Service.Interfaces;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
-public class VehicleMakeController : Controller
+namespace Project.MVC.Controllers
 {
-    private readonly IVehicleService _vehicleService;
-
-    public VehicleMakeController(IVehicleService vehicleService)
+    public class VehicleMakeController : Controller
     {
-        _vehicleService = vehicleService;
-    }
+        private readonly IVehicleService _vehicleService;
+        private readonly IMapper _mapper;
 
-    public async Task<IActionResult> Index(int page = 1, int pageSize = 10)
-    {
-        var serviceResult = await _vehicleService.GetMakesAsync(page, pageSize, "Name", "asc", "");
-        
-        var pagedResult = new PagedResult<VehicleMakeVM>
+        public VehicleMakeController(IVehicleService vehicleService, IMapper mapper)
         {
-            Items = serviceResult.Items,
-            TotalCount = serviceResult.TotalCount,
-            PageNumber = page,
-            PageSize = pageSize
-        };
+            _vehicleService = vehicleService;
+            _mapper = mapper;
+        }
 
-        return View(pagedResult);
+        public async Task<IActionResult> Index(int pageIndex = 1, int pageSize = 10, 
+            string sortBy = "Name", string sortOrder = "asc", string searchString = "")
+        {
+            var serviceResult = await _vehicleService.GetMakesAsync(pageIndex, pageSize, sortBy, sortOrder, searchString);
+            
+            var pagedResult = new PagedResult<VehicleMakeVM>
+            {
+                Items = _mapper.Map<List<VehicleMakeVM>>(serviceResult.Items),
+                TotalCount = serviceResult.TotalCount,
+                PageIndex = pageIndex,
+                PageSize = pageSize
+            };
+
+            return View(pagedResult);
+        }
     }
 }
