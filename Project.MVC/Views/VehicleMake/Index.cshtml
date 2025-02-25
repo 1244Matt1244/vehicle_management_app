@@ -1,4 +1,4 @@
-@model PagedResult<Project.MVC.ViewModels.VehicleMakeVM>
+@model Project.MVC.Helpers.PagedResult<Project.MVC.ViewModels.VehicleMakeVM>
 
 @{
     ViewData["Title"] = "Vehicle Makes";
@@ -28,7 +28,7 @@
 <div class="pagination">
     @for (int i = 1; i <= Model.TotalPages; i++)
     {
-        <a href="@Url.Action("Index", new { pageNumber = i, pageSize = Model.PageSize })" 
-        class="@(i == Model.PageNumber ? "active" : "")">@i</a>
+        <a href="@Url.Action("Index", new { page = i, pageSize = Model.PageSize })" 
+           class="@(i == Model.PageNumber ? "active" : "")">@i</a>
     }
 </div>

@@ -1,49 +1,29 @@
-// Project.MVC/Controllers/VehicleMakeController.cs
 using Microsoft.AspNetCore.Mvc;
-using AutoMapper;
-using Project.Service.Interfaces;
-using Project.Service.Data.DTOs;
+using Project.MVC.Helpers;
 using Project.MVC.ViewModels;
-using Project.Service.Data.Helpers;
-using System.Threading.Tasks;
+using Project.Service.Interfaces;
 
-namespace Project.MVC.Controllers
+public class VehicleMakeController : Controller
 {
-    public class VehicleMakeController : Controller
+    private readonly IVehicleService _vehicleService;
+
+    public VehicleMakeController(IVehicleService vehicleService)
     {
-        private readonly IVehicleService _vehicleService;
-        private readonly IMapper _mapper;
+        _vehicleService = vehicleService;
+    }
 
-        public VehicleMakeController(IVehicleService vehicleService, IMapper mapper)
+    public async Task<IActionResult> Index(int page = 1, int pageSize = 10)
+    {
+        var serviceResult = await _vehicleService.GetMakesAsync(page, pageSize, "Name", "asc", "");
+        
+        var pagedResult = new PagedResult<VehicleMakeVM>
         {
-            _vehicleService = vehicleService;
-            _mapper = mapper;
-        }
+            Items = serviceResult.Items,
+            TotalCount = serviceResult.TotalCount,
+            PageNumber = page,
+            PageSize = pageSize
+        };
 
-        // GET: VehicleMake/Edit/5
-        public async Task<IActionResult> Edit(int id)
-        {
-            var makeDto = await _vehicleService.GetMakeByIdAsync(id);
-            if (makeDto == null) return NotFound();
-            return View(_mapper.Map<VehicleMakeVM>(makeDto));
-        }
-
-        // POST: VehicleMake/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, VehicleMakeVM makeVm)
-        {
-            if (id != makeVm.Id) return BadRequest();
-
-            if (ModelState.IsValid)
-            {
-                await _vehicleService.UpdateMakeAsync(
-                    id, 
-                    _mapper.Map<VehicleMakeDTO>(makeVm) // Fixed parameter
-                );
-                return RedirectToAction(nameof(Index));
-            }
-            return View(makeVm);
-        }
+        return View(pagedResult);
     }
 }
