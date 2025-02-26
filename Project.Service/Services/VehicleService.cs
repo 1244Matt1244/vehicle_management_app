@@ -70,6 +70,8 @@ namespace Project.Service.Services
         public async Task UpdateMakeAsync(VehicleMakeDTO makeDto)
         {
             var make = await _context.VehicleMakes.FindAsync(makeDto.Id);
+            if (make == null) throw new ArgumentException("VehicleMake not found");
+            
             _mapper.Map(makeDto, make);
             _context.VehicleMakes.Update(make);
             await _context.SaveChangesAsync();
