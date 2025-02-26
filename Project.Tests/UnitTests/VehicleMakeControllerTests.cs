@@ -7,6 +7,7 @@ using Project.Service.Data.DTOs;
 using Project.Service.Interfaces;
 using Project.Tests;
 using Xunit;
+using System.Collections.Generic; // Ensure this is included for List<T>
 
 namespace Project.Tests.UnitTests
 {
