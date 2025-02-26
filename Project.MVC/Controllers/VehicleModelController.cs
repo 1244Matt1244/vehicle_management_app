@@ -58,21 +58,28 @@ namespace Project.MVC.Controllers
             return View(viewModel);
         }
 
-        // Add missing CRUD actions for VehicleModel
+        // Updated Create actions
         [HttpGet]
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            return View();
+            var makes = await _vehicleService.GetAllMakesAsync();
+            var vm = new VehicleModelCreateVM
+            {
+                AvailableMakes = _mapper.Map<List<VehicleMakeVM>>(makes)
+            };
+            return View(vm);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(VehicleModelVM model)
+        public async Task<IActionResult> Create(VehicleModelCreateVM model)
         {
             if (ModelState.IsValid)
             {
                 await _vehicleService.CreateModelAsync(_mapper.Map<VehicleModelDTO>(model));
                 return RedirectToAction(nameof(Index));
             }
+            // Repopulate makes if validation fails
+            model.AvailableMakes = _mapper.Map<List<VehicleMakeVM>>(await _vehicleService.GetAllMakesAsync());
             return View(model);
         }
 
