@@ -1,5 +1,5 @@
 using AutoMapper;
-using Project.MVC.Mapping;
+using Project.MVC.Mappings;
 using Project.Service.Mappings;
 using Project.Service.Models;
 

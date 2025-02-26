@@ -1,9 +1,9 @@
-// 1. Project.MVC/Mappings/MvcMappingProfile.cs (Updated)
 using AutoMapper;
-using Project.MVC.Helpers;
+using Project.MVC.Helpers; // For PagedResult<>
 using Project.MVC.ViewModels;
 using Project.Service.Data.DTOs;
-using Project.Service.Data.Helpers;
+using Project.Service.Data.Helpers; // For PaginatedList<>
+using System.Collections.Generic;
 
 namespace Project.MVC.Mappings
 {
@@ -11,15 +11,20 @@ namespace Project.MVC.Mappings
     {
         public MvcMappingProfile()
         {
-            // Vehicle mappings
+            // VehicleMake mappings
             CreateMap<VehicleMakeDTO, VehicleMakeVM>().ReverseMap();
+            
+            // VehicleModel mappings
             CreateMap<VehicleModelDTO, VehicleModelVM>()
-                .ForMember(dest => dest.MakeName, opt => opt.MapFrom(src => src.Make.Name))
+                .ForMember(dest => dest.MakeName, opt => opt.MapFrom(src => src.MakeName))
                 .ReverseMap();
 
-            // Pagination conversion
+            // Pagination mappings
             CreateMap<PaginatedList<VehicleMakeDTO>, PagedResult<VehicleMakeVM>>()
                 .ConvertUsing<PaginatedListConverter<VehicleMakeDTO, VehicleMakeVM>>();
+            
+            CreateMap<PaginatedList<VehicleModelDTO>, PagedResult<VehicleModelVM>>()
+                .ConvertUsing<PaginatedListConverter<VehicleModelDTO, VehicleModelVM>>();
         }
     }
 
@@ -31,7 +36,8 @@ namespace Project.MVC.Mappings
             PagedResult<TDestination> destination, 
             ResolutionContext context)
         {
-            return new PagedResult<TDestination> {
+            return new PagedResult<TDestination>
+            {
                 Items = context.Mapper.Map<List<TDestination>>(source.Items),
                 TotalCount = source.TotalCount,
                 PageNumber = source.PageIndex,

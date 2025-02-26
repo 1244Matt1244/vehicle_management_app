@@ -1,24 +1,24 @@
-// 2. Project.MVC/Program.cs (Simplified DI)
-using Microsoft.EntityFrameworkCore;
-using Project.MVC.Mappings;
-using Project.Service.Data.Context;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Project.Service.Interfaces;
 using Project.Service.Services;
+using AutoMapper;
+using Project.MVC.Helpers;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services
+// Add MVC services
 builder.Services.AddControllersWithViews();
-builder.Services.AddAutoMapper(typeof(MvcMappingProfile));
-builder.Services.AddScoped<IVehicleService, VehicleService>();
 
-// Database Context
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+// Register AutoMapper
+builder.Services.AddAutoMapper(typeof(MapperConfig));
+
+// Register services
+builder.Services.AddScoped<IVehicleService, VehicleService>();
 
 var app = builder.Build();
 
-// Middleware pipeline
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
