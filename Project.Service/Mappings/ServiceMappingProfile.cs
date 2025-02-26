@@ -8,13 +8,10 @@ namespace Project.Service.Mappings
     {
         public ServiceMappingProfile()
         {
-            CreateMap<VehicleMake, VehicleMakeDTO>()
-                .ReverseMap();
-
+            CreateMap<VehicleMake, VehicleMakeDTO>().ReverseMap();
             CreateMap<VehicleModel, VehicleModelDTO>()
-                .ForMember(dest => dest.MakeName, opt => opt.MapFrom(src => src.VehicleMake.Name))
-                .ReverseMap()
-                .ForPath(dest => dest.VehicleMake.Name, opt => opt.Ignore());
+                .ForMember(dest => dest.MakeName, opt => opt.MapFrom(src => src.Make.Name))
+                .ReverseMap();
         }
     }
 }
