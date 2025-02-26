@@ -7,20 +7,22 @@ namespace Project.Service.Interfaces
 {
     public interface IVehicleRepository
     {
-        // Vehicle Make Methods
-        Task<(List<VehicleMake> Makes, int TotalCount)> GetMakesPaginatedAsync(int page, int pageSize, string sortBy, string sortOrder, string searchString);
+        // VehicleMake Methods
+        Task<PaginatedList<VehicleMake>> GetMakesPaginatedAsync(
+            int pageIndex, int pageSize, string sortBy, string sortOrder, string searchString);
         Task<VehicleMake?> GetMakeByIdAsync(int id);
         Task CreateMakeAsync(VehicleMake make);
         Task UpdateMakeAsync(VehicleMake make);
-        Task DeleteMakeAsync(VehicleMake make);
+        Task DeleteMakeAsync(int id);
         Task<List<VehicleMake>> GetAllMakesAsync();
 
-        // Vehicle Model Methods
-        Task<(List<VehicleModel> Models, int TotalCount)> GetModelsPaginatedAsync(int page, int pageSize, string sortBy, string sortOrder, string searchString, int? makeId);
+        // VehicleModel Methods
+        Task<PaginatedList<VehicleModel>> GetModelsPaginatedAsync(
+            int pageIndex, int pageSize, string sortBy, string sortOrder, string searchString, int? makeId);
         Task<VehicleModel?> GetModelByIdAsync(int id);
         Task CreateModelAsync(VehicleModel model);
         Task UpdateModelAsync(VehicleModel model);
-        Task DeleteModelAsync(VehicleModel model);
+        Task DeleteModelAsync(int id);
         Task<List<VehicleModel>> GetAllModelsAsync();
     }
 }

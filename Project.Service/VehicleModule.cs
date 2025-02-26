@@ -1,5 +1,4 @@
 using Microsoft.Extensions.DependencyInjection;
-using Project.Service.Mappings;
 using AutoMapper;
 
 namespace Project.Service
@@ -9,10 +8,7 @@ namespace Project.Service
         public static IServiceCollection AddVehicleServices(this IServiceCollection services)
         {
             // AutoMapper Configuration
-            services.AddAutoMapper(typeof(ServiceMappingProfile));
-
-            // Add other service configurations here
-            
+            services.AddAutoMapper(typeof(Mappings.ServiceMappingProfile));
             return services;
         }
     }

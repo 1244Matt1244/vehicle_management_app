@@ -21,30 +21,27 @@ namespace Project.Service.Repositories
 
         #region VehicleMake Implementation
 
-        public async Task<(List<VehicleMake> Makes, int TotalCount)> GetMakesPaginatedAsync(
-            int page, int pageSize, string sortBy, string sortOrder, string searchString)
+        public async Task<PaginatedList<VehicleMake>> GetMakesPaginatedAsync(
+            int pageIndex, int pageSize, string sortBy, string sortOrder, string searchString)
         {
             var query = _context.VehicleMakes.AsQueryable();
 
             if (!string.IsNullOrEmpty(searchString))
             {
                 query = query.Where(m => 
-                    EF.Functions.Like(m.Name, $"%{searchString}%") ||
-                    EF.Functions.Like(m.Abbreviation, $"%{searchString}%"));
+                    m.Name.Contains(searchString) || 
+                    m.Abbreviation.Contains(searchString));
             }
 
             var totalCount = await query.CountAsync();
+            var orderedQuery = query.OrderByProperty(sortBy, sortOrder);
             
-            var orderedQuery = string.IsNullOrEmpty(sortBy) 
-                ? query 
-                : query.OrderByProperty(sortBy, sortOrder);
-
             var items = await orderedQuery
-                .Skip((page - 1) * pageSize)
+                .Skip((pageIndex - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();
 
-            return (items, totalCount);
+            return new PaginatedList<VehicleMake>(items, totalCount, pageIndex, pageSize);
         }
 
         public async Task<VehicleMake?> GetMakeByIdAsync(int id) => 
@@ -62,18 +59,22 @@ namespace Project.Service.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task DeleteMakeAsync(VehicleMake make)
+        public async Task DeleteMakeAsync(int id)
         {
-            _context.VehicleMakes.Remove(make);
+            var make = await _context.VehicleMakes.FindAsync(id);
+            if (make != null) _context.VehicleMakes.Remove(make);
             await _context.SaveChangesAsync();
         }
+
+        public async Task<List<VehicleMake>> GetAllMakesAsync() => 
+            await _context.VehicleMakes.ToListAsync();
 
         #endregion
 
         #region VehicleModel Implementation
 
-        public async Task<(List<VehicleModel> Models, int TotalCount)> GetModelsPaginatedAsync(
-            int page, int pageSize, string sortBy, string sortOrder, string searchString, int? makeId)
+        public async Task<PaginatedList<VehicleModel>> GetModelsPaginatedAsync(
+            int pageIndex, int pageSize, string sortBy, string sortOrder, string searchString, int? makeId)
         {
             var query = _context.VehicleModels
                 .Include(m => m.VehicleMake)
@@ -83,20 +84,17 @@ namespace Project.Service.Repositories
                 query = query.Where(m => m.MakeId == makeId.Value);
 
             if (!string.IsNullOrEmpty(searchString))
-                query = query.Where(m => EF.Functions.Like(m.Name, $"%{searchString}%"));
+                query = query.Where(m => m.Name.Contains(searchString));
 
             var totalCount = await query.CountAsync();
+            var orderedQuery = query.OrderByProperty(sortBy, sortOrder);
             
-            var orderedQuery = string.IsNullOrEmpty(sortBy) 
-                ? query 
-                : query.OrderByProperty(sortBy, sortOrder);
-
             var items = await orderedQuery
-                .Skip((page - 1) * pageSize)
+                .Skip((pageIndex - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();
 
-            return (items, totalCount);
+            return new PaginatedList<VehicleModel>(items, totalCount, pageIndex, pageSize);
         }
 
         public async Task<VehicleModel?> GetModelByIdAsync(int id) => 
@@ -116,18 +114,12 @@ namespace Project.Service.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task DeleteModelAsync(VehicleModel model)
+        public async Task DeleteModelAsync(int id)
         {
-            _context.VehicleModels.Remove(model);
+            var model = await _context.VehicleModels.FindAsync(id);
+            if (model != null) _context.VehicleModels.Remove(model);
             await _context.SaveChangesAsync();
         }
-
-        #endregion
-
-        #region Common Implementation
-
-        public async Task<List<VehicleMake>> GetAllMakesAsync() => 
-            await _context.VehicleMakes.ToListAsync();
 
         public async Task<List<VehicleModel>> GetAllModelsAsync() => 
             await _context.VehicleModels.ToListAsync();
