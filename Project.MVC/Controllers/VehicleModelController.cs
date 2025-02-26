@@ -20,6 +20,7 @@ namespace Project.MVC.Controllers
             _mapper = mapper;
         }
 
+        // Existing Index action
         public async Task<IActionResult> Index(
             int pageNumber = 1,
             int pageSize = 10,
@@ -55,6 +56,66 @@ namespace Project.MVC.Controllers
             ViewBag.CurrentFilter = searchString;
 
             return View(viewModel);
+        }
+
+        // Add missing CRUD actions for VehicleModel
+        [HttpGet]
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Create(VehicleModelVM model)
+        {
+            if (ModelState.IsValid)
+            {
+                await _vehicleService.CreateModelAsync(_mapper.Map<VehicleModelDTO>(model));
+                return RedirectToAction(nameof(Index));
+            }
+            return View(model);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Edit(int id)
+        {
+            var model = await _vehicleService.GetModelByIdAsync(id);
+            if (model == null) return NotFound();
+            return View(_mapper.Map<VehicleModelVM>(model));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(VehicleModelVM model)
+        {
+            if (ModelState.IsValid)
+            {
+                await _vehicleService.UpdateModelAsync(_mapper.Map<VehicleModelDTO>(model));
+                return RedirectToAction(nameof(Index));
+            }
+            return View(model);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Details(int id)
+        {
+            var model = await _vehicleService.GetModelByIdAsync(id);
+            if (model == null) return NotFound();
+            return View(_mapper.Map<VehicleModelVM>(model));
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var model = await _vehicleService.GetModelByIdAsync(id);
+            if (model == null) return NotFound();
+            return View(_mapper.Map<VehicleModelVM>(model));
+        }
+
+        [HttpPost, ActionName("Delete")]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            await _vehicleService.DeleteModelAsync(id);
+            return RedirectToAction(nameof(Index));
         }
     }
 }

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Project.MVC.Controllers;
 using Project.MVC.Helpers;
+using Project.MVC.Mappings; // Add this using
 using Project.MVC.ViewModels;
 using Project.Service.Data.DTOs;
 using Project.Service.Data.Helpers;
@@ -22,10 +23,10 @@ namespace Project.Tests.UnitTests
         public VehicleMakeControllerTests()
         {
             _mockService = new Mock<IVehicleService>();
-            var config = new MapperConfiguration(cfg => cfg.AddProfile<MapperConfig>());
+            var config = new MapperConfiguration(cfg => 
+                cfg.AddProfile<MvcMappingProfile>()); // Fixed here
             _mapper = config.CreateMapper();
 
-            // Mock service to return PaginatedList<VehicleMakeDTO>
             _mockService.Setup(s => s.GetMakesAsync(
                 It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()
             )).ReturnsAsync(
@@ -45,7 +46,7 @@ namespace Project.Tests.UnitTests
         {
             var result = await _controller.Index();
             var viewResult = Assert.IsType<ViewResult>(result);
-            Assert.IsType<PaginatedList<VehicleMakeVM>>(viewResult.Model);
+            Assert.IsType<PagedResult<VehicleMakeVM>>(viewResult.Model);
         }
     }
 }

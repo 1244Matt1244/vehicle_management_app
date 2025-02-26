@@ -20,6 +20,7 @@ namespace Project.MVC.Controllers
             _mapper = mapper;
         }
 
+        // Existing Index action
         public async Task<IActionResult> Index(
             int pageNumber = 1,
             int pageSize = 10,
@@ -43,6 +44,66 @@ namespace Project.MVC.Controllers
             };
 
             return View(pagedResult);
+        }
+
+        // Add missing CRUD actions
+        [HttpGet]
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Create(VehicleMakeVM model)
+        {
+            if (ModelState.IsValid)
+            {
+                await _vehicleService.CreateMakeAsync(_mapper.Map<VehicleMakeDTO>(model));
+                return RedirectToAction(nameof(Index));
+            }
+            return View(model);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Edit(int id)
+        {
+            var make = await _vehicleService.GetMakeByIdAsync(id);
+            if (make == null) return NotFound();
+            return View(_mapper.Map<VehicleMakeVM>(make));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(VehicleMakeVM model)
+        {
+            if (ModelState.IsValid)
+            {
+                await _vehicleService.UpdateMakeAsync(_mapper.Map<VehicleMakeDTO>(model));
+                return RedirectToAction(nameof(Index));
+            }
+            return View(model);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Details(int id)
+        {
+            var make = await _vehicleService.GetMakeByIdAsync(id);
+            if (make == null) return NotFound();
+            return View(_mapper.Map<VehicleMakeVM>(make));
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var make = await _vehicleService.GetMakeByIdAsync(id);
+            if (make == null) return NotFound();
+            return View(_mapper.Map<VehicleMakeVM>(make));
+        }
+
+        [HttpPost, ActionName("Delete")]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            await _vehicleService.DeleteMakeAsync(id);
+            return RedirectToAction(nameof(Index));
         }
     }
 }
