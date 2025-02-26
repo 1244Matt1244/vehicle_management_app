@@ -1,19 +1,37 @@
 using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Ninject.Web.AspNetCore; // Add this
-using Ninject.Web.AspNetCore.Hosting;
-using Project.MVC.Infrastructure;
+using Project.Service.Interfaces;
+using Project.Service.Services;
+using AutoMapper;
+using Project.MVC.Helpers;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Configure Ninject
-var kernel = new AspNetCoreKernel(new NinjectBootstrapper()); // Use AspNetCoreKernel instead of StandardKernel
-builder.Host.UseServiceProviderFactory(new NinjectServiceProviderFactory(kernel));
+// Add MVC services
+builder.Services.AddControllersWithViews();
+
+// Register AutoMapper
+builder.Services.AddAutoMapper(typeof(MapperConfig));
+
+// Register services
+builder.Services.AddScoped<IVehicleService, VehicleService>();
 
 var app = builder.Build();
+
+if (!app.Environment.IsDevelopment())
+{
+    app.UseExceptionHandler("/Home/Error");
+    app.UseHsts();
+}
+
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthorization();
-app.MapControllerRoute(name: "default", pattern: "{controller=VehicleMake}/{action=Index}/{id?}");
+
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=VehicleMake}/{action=Index}/{id?}");
+
 app.Run();
