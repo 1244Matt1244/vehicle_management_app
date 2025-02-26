@@ -8,9 +8,9 @@ namespace Project.Service.Data.Helpers
     public class PaginatedList<T>
     {
         public List<T> Items { get; }
-        public int TotalCount { get; }
         public int PageIndex { get; }
         public int PageSize { get; }
+        public int TotalCount { get; }
         public int TotalPages => (TotalCount + PageSize - 1) / PageSize;
 
         public PaginatedList(List<T> items, int totalCount, int pageIndex, int pageSize)
@@ -24,11 +24,11 @@ namespace Project.Service.Data.Helpers
         public static async Task<PaginatedList<T>> CreateAsync(
             IQueryable<T> source, int pageIndex, int pageSize)
         {
-            var count = await source.CountAsync();
+            var totalCount = await source.CountAsync();
             var items = await source.Skip((pageIndex - 1) * pageSize)
                                     .Take(pageSize)
                                     .ToListAsync();
-            return new PaginatedList<T>(items, count, pageIndex, pageSize);
+            return new PaginatedList<T>(items, totalCount, pageIndex, pageSize);
         }
     }
 }

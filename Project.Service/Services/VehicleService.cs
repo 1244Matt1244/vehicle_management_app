@@ -1,7 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Project.Service.Data.Context;
 using Project.Service.Data.DTOs;
-using Project.Service.Data.Helpers;
 using Project.Service.Interfaces;
 using System.Linq;
 using System.Threading.Tasks;
@@ -17,32 +16,42 @@ namespace Project.Service.Services
             _context = context;
         }
 
-        public async Task<PaginatedList<VehicleMakeDTO>> GetMakesAsync(
-            int pageIndex, 
+        // Updated model query with Include for navigation property
+        public async Task<PaginatedList<VehicleModelDTO>> GetModelsAsync(
+            int pageNumber, 
             int pageSize, 
             string sortBy, 
             string sortOrder, 
             string searchString)
         {
-            var query = _context.VehicleMakes.AsQueryable();
+            var query = _context.VehicleModels
+                .Include(m => m.VehicleMake)  // Eager load navigation property
+                .AsQueryable();
 
+            // Filtering logic
             if (!string.IsNullOrWhiteSpace(searchString))
             {
-                query = query.Where(m => 
-                    m.Name.Contains(searchString) || 
-                    m.Abbreviation.Contains(searchString));
+                query = query.Where(m => m.Name.Contains(searchString) || 
+                                         m.Abbreviation.Contains(searchString));
             }
 
-            query = query.OrderByProperty(sortBy, sortOrder);
+            // Sorting logic
+            if (!string.IsNullOrWhiteSpace(sortBy))
+            {
+                query = sortOrder.ToLower() == "desc" 
+                    ? query.OrderByDescending(m => EF.Property<object>(m, sortBy)) 
+                    : query.OrderBy(m => EF.Property<object>(m, sortBy));
+            }
 
-            return await PaginatedList<VehicleMakeDTO>.CreateAsync(
-                query.Select(m => new VehicleMakeDTO 
+            return await PaginatedList<VehicleModelDTO>.CreateAsync(
+                query.Select(m => new VehicleModelDTO 
                 { 
                     Id = m.Id,
                     Name = m.Name,
-                    Abbreviation = m.Abbreviation
+                    Abbreviation = m.Abbreviation,
+                    MakeName = m.VehicleMake.Name  // Correct navigation access
                 }), 
-                pageIndex, 
+                pageNumber, 
                 pageSize
             );
         }
