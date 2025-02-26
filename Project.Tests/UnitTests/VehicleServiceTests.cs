@@ -1,37 +1,39 @@
-using Xunit;
-using Moq;
-using Project.Service.Interfaces;
+using Microsoft.EntityFrameworkCore;
+using Project.Service.Data.Context;
 using Project.Service.Models;
-using Project.Service.Services;
+using Project.Service.Repositories;
 using Project.Tests;
-using System.Threading.Tasks;
+using Xunit;
 
 namespace Project.Tests.UnitTests
 {
     public class VehicleServiceTests
     {
-        private readonly Mock<IVehicleRepository> _mockRepo;
-        private readonly VehicleService _service;
+        private readonly ApplicationDbContext _context;
+        private readonly VehicleRepository _repository;
 
         public VehicleServiceTests()
         {
-            _mockRepo = new Mock<IVehicleRepository>();
-            _service = new VehicleService(_mockRepo.Object, TestHelpers.CreateTestMapper());
+            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
+                .UseInMemoryDatabase(databaseName: $"TestDb_{Guid.NewGuid()}")
+                .Options;
+
+            _context = new ApplicationDbContext(options);
+            _repository = new VehicleRepository(_context);
         }
 
         [Fact]
-        public async Task GetMakeById_ReturnsMake()
+        public async Task CreateMake_AddsNewVehicleMake()
         {
             // Arrange
             var testMake = TestHelpers.CreateTestMake();
-            _mockRepo.Setup(r => r.GetMakeByIdAsync(1)).ReturnsAsync(testMake);
 
             // Act
-            var result = await _service.GetMakeByIdAsync(1);
+            await _repository.CreateMakeAsync(testMake);
+            await _context.SaveChangesAsync();
 
             // Assert
-            Assert.Equal("Make1", result.Name);
-            Assert.Equal("M1", result.Abbreviation);
+            Assert.Equal(1, await _context.VehicleMakes.CountAsync());
         }
     }
 }
