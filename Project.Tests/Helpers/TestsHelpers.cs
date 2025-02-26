@@ -1,6 +1,8 @@
 using AutoMapper;
+using Project.MVC.Helpers;
 using Project.MVC.Mappings;
 using Project.Service.Mappings;
+using Project.Service.Models;
 
 namespace Project.Tests
 {
@@ -10,13 +12,17 @@ namespace Project.Tests
         {
             var config = new MapperConfiguration(cfg =>
             {
-                // Load both mapping profiles
-                cfg.AddProfile(new ServiceMappingProfile());
-                cfg.AddProfile(new MvcMappingProfile());
+                cfg.AddProfile<ServiceMappingProfile>();
+                cfg.AddProfile<MvcMappingProfile>();
             });
-
-            config.AssertConfigurationIsValid();
             return config.CreateMapper();
         }
+
+        public static VehicleMake CreateTestMake(int id = 1) => new()
+        {
+            Id = id,
+            Name = $"Make{id}",
+            Abbreviation = $"M{id}"
+        };
     }
 }
