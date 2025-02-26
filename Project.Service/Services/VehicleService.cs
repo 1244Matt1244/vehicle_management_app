@@ -83,6 +83,14 @@ namespace Project.Service.Services
             return _mapper.Map<List<VehicleMakeDTO>>(makes);
         }
 
+        // New method to create a vehicle make
+        public async Task CreateMakeAsync(VehicleMakeDTO makeDto)
+        {
+            var make = _mapper.Map<VehicleMake>(makeDto);
+            _context.VehicleMakes.Add(make);
+            await _context.SaveChangesAsync();
+        }
+
         // VehicleModel Implementation -----------------------------------------
 
         public async Task<PaginatedList<VehicleModelDTO>> GetModelsAsync(int pageIndex, int pageSize, string sortBy, string sortOrder, string searchString, int? makeId)
@@ -145,6 +153,14 @@ namespace Project.Service.Services
         {
             var models = await _context.VehicleModels.ToListAsync();
             return _mapper.Map<List<VehicleModelDTO>>(models);
+        }
+
+        // New method to create a vehicle model
+        public async Task CreateModelAsync(VehicleModelDTO modelDto)
+        {
+            var model = _mapper.Map<VehicleModel>(modelDto);
+            _context.VehicleModels.Add(model);
+            await _context.SaveChangesAsync();
         }
     }
 }

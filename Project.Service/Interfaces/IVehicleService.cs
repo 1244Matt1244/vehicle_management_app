@@ -10,17 +10,21 @@ namespace Project.Service.Interfaces
         // VehicleMake
         Task<PaginatedList<VehicleMakeDTO>> GetMakesAsync(int pageIndex, int pageSize, string sortBy, string sortOrder, string searchString);
         Task<VehicleMakeDTO> GetMakeByIdAsync(int id);
-        Task AddMakeAsync(VehicleMakeDTO makeDto);
-        Task UpdateMakeAsync(VehicleMakeDTO makeDto);
-        Task DeleteMakeAsync(int id);
-        Task<List<VehicleMakeDTO>> GetAllMakesAsync();
+        Task AddMakeAsync(VehicleMakeDTO makeDto); // Existing method
+        Task UpdateMakeAsync(VehicleMakeDTO makeDto); // Existing method
+        Task DeleteMakeAsync(int id); // Existing method
+        Task<List<VehicleMakeDTO>> GetAllMakesAsync(); // Existing method
+        
+        // New method definitions
+        Task CreateMakeAsync(VehicleMakeDTO make); // New method
+        Task CreateModelAsync(VehicleModelDTO model); // New method
 
         // VehicleModel
         Task<PaginatedList<VehicleModelDTO>> GetModelsAsync(int pageIndex, int pageSize, string sortBy, string sortOrder, string searchString, int? makeId);
         Task<VehicleModelDTO> GetModelByIdAsync(int id);
-        Task AddModelAsync(VehicleModelDTO modelDto);
-        Task UpdateModelAsync(VehicleModelDTO modelDto);
-        Task DeleteModelAsync(int id);
-        Task<List<VehicleModelDTO>> GetAllModelsAsync();
+        Task AddModelAsync(VehicleModelDTO modelDto); // Existing method
+        Task UpdateModelAsync(VehicleModelDTO modelDto); // Existing method
+        Task DeleteModelAsync(int id); // Existing method
+        Task<List<VehicleModelDTO>> GetAllModelsAsync(); // Existing method
     }
 }

@@ -46,13 +46,14 @@ namespace Project.MVC.Controllers
             return View(pagedResult);
         }
 
-        // Add missing CRUD actions
+        // Create action - GET
         [HttpGet]
         public IActionResult Create()
         {
             return View();
         }
 
+        // Create action - POST
         [HttpPost]
         public async Task<IActionResult> Create(VehicleMakeVM model)
         {
@@ -64,6 +65,7 @@ namespace Project.MVC.Controllers
             return View(model);
         }
 
+        // Edit action - GET
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
@@ -72,6 +74,7 @@ namespace Project.MVC.Controllers
             return View(_mapper.Map<VehicleMakeVM>(make));
         }
 
+        // Edit action - POST
         [HttpPost]
         public async Task<IActionResult> Edit(VehicleMakeVM model)
         {
@@ -83,6 +86,7 @@ namespace Project.MVC.Controllers
             return View(model);
         }
 
+        // Details action - GET
         [HttpGet]
         public async Task<IActionResult> Details(int id)
         {
@@ -91,6 +95,7 @@ namespace Project.MVC.Controllers
             return View(_mapper.Map<VehicleMakeVM>(make));
         }
 
+        // Delete action - GET
         [HttpGet]
         public async Task<IActionResult> Delete(int id)
         {
@@ -99,6 +104,7 @@ namespace Project.MVC.Controllers
             return View(_mapper.Map<VehicleMakeVM>(make));
         }
 
+        // Delete action - POST
         [HttpPost, ActionName("Delete")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
