@@ -14,7 +14,7 @@ using Project.MVC.Mappings;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add critical authorization services
-builder.Services.AddAuthorization(); 
+builder.Services.AddAuthorization(); // Add this line
 
 // Database Context
 builder.Services.AddDbContext<ApplicationDbContext>(options => 
