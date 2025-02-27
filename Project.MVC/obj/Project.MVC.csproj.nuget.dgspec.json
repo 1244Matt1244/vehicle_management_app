@@ -91,10 +91,6 @@
               "target": "Package",
               "version": "[9.0.2, )"
             },
-            "Ninject": {
-              "target": "Package",
-              "version": "[3.3.6, )"
-            },
             "Ninject.Web.Common": {
               "target": "Package",
               "version": "[3.3.2, )"
