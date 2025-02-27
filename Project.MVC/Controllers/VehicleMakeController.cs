@@ -59,7 +59,7 @@ namespace Project.MVC.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _vehicleService.CreateMakeAsync(_mapper.Map<VehicleMakeDTO>(model));
+                await _vehicleService.AddMakeAsync(_mapper.Map<VehicleMakeDTO>(model));
                 return RedirectToAction(nameof(Index));
             }
             return View(model);

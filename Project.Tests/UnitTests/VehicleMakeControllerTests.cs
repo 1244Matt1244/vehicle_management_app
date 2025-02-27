@@ -1,3 +1,4 @@
+// Project.Tests/UnitTests/VehicleMakeControllerTests.cs
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -43,9 +44,9 @@ namespace Project.Tests.UnitTests
             _mockService.Setup(s => s.GetMakeByIdAsync(1))
                 .ReturnsAsync(new VehicleMakeDTO { Id = 1, Name = "Test", Abbreviation = "T" });
 
-            // Setup for invalid ID (999) - returns a new instance instead of null
+            // Setup for invalid ID (999) - returns null
             _mockService.Setup(s => s.GetMakeByIdAsync(999))
-                .ReturnsAsync(new VehicleMakeDTO()); // Return a default instance instead of null
+                .ReturnsAsync((VehicleMakeDTO?)null); // Return null for invalid ID
 
             _controller = new VehicleMakeController(_mockService.Object, _mapper);
         }
@@ -65,7 +66,7 @@ namespace Project.Tests.UnitTests
             var result = await _controller.Details(999);
 
             // Assert
-            Assert.IsType<NotFoundResult>(result);
+            Assert.IsType<NotFoundResult>(result); // Check for NotFoundResult
         }
     }
 }
