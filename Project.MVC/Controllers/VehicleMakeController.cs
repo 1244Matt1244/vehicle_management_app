@@ -55,14 +55,15 @@ namespace Project.MVC.Controllers
 
         // Create action - POST
         [HttpPost]
-        public async Task<IActionResult> Create(VehicleMakeVM model)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create([FromForm] VehicleMakeVM make)
         {
             if (ModelState.IsValid)
             {
-                await _vehicleService.AddMakeAsync(_mapper.Map<VehicleMakeDTO>(model));
-                return RedirectToAction(nameof(Index));
+                await _vehicleService.AddMakeAsync(_mapper.Map<VehicleMakeDTO>(make));
+                return CreatedAtAction(nameof(Details), new { id = make.Id }, make); // 201 Created
             }
-            return View(model);
+            return View(make); // 400 Bad Request
         }
 
         // Edit action - GET
@@ -108,8 +109,15 @@ namespace Project.MVC.Controllers
         [HttpPost, ActionName("Delete")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            await _vehicleService.DeleteMakeAsync(id);
-            return RedirectToAction(nameof(Index));
+            try
+            {
+                await _vehicleService.DeleteMakeAsync(id);
+                return NoContent(); // 204 No Content
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound(); // 404 Not Found
+            }
         }
     }
 }

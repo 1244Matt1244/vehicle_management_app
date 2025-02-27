@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "6NSOJflgIKQ=",
+  "dgSpecHash": "sFT4UD9fstk=",
   "success": true,
   "projectFilePath": "C:\\Users\\korisnik\\Desktop\\vehicle_management_app\\Project.MVC\\Project.MVC.csproj",
   "expectedPackageFiles": [
@@ -61,7 +61,6 @@
     "C:\\Users\\korisnik\\.nuget\\packages\\microsoft.win32.systemevents\\6.0.0\\microsoft.win32.systemevents.6.0.0.nupkg.sha512",
     "C:\\Users\\korisnik\\.nuget\\packages\\mono.texttemplating\\3.0.0\\mono.texttemplating.3.0.0.nupkg.sha512",
     "C:\\Users\\korisnik\\.nuget\\packages\\ninject\\3.3.6\\ninject.3.3.6.nupkg.sha512",
-    "C:\\Users\\korisnik\\.nuget\\packages\\ninject.extensions.dependencyinjection\\1.0.2\\ninject.extensions.dependencyinjection.1.0.2.nupkg.sha512",
     "C:\\Users\\korisnik\\.nuget\\packages\\ninject.web.aspnetcore\\9.0.0\\ninject.web.aspnetcore.9.0.0.nupkg.sha512",
     "C:\\Users\\korisnik\\.nuget\\packages\\ninject.web.common\\3.3.2\\ninject.web.common.3.3.2.nupkg.sha512",
     "C:\\Users\\korisnik\\.nuget\\packages\\ninject.web.common.selfhost\\3.3.2\\ninject.web.common.selfhost.3.3.2.nupkg.sha512",

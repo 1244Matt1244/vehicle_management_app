@@ -1,16 +1,16 @@
-// Project.Service/VehicleModule.cs
-using Microsoft.Extensions.DependencyInjection;
-using AutoMapper;
-using Project.Service.Mappings; // Correct namespace
+using Ninject.Modules;
+using Project.Service.Data.Context;
+using Project.Service.Interfaces;
+using Project.Service.Services;
 
 namespace Project.Service
 {
-    public static class VehicleModule
+    public class VehicleModule : NinjectModule
     {
-        public static IServiceCollection AddVehicleServices(this IServiceCollection services)
+        public override void Load()
         {
-            services.AddAutoMapper(typeof(ServiceMappingProfile));
-            return services;
+            Bind<ApplicationDbContext>().ToSelf().InSingletonScope();
+            Bind<IVehicleService>().To<VehicleService>();
         }
     }
 }
