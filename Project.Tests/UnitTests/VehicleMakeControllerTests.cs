@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Project.MVC.Controllers;
 using Project.MVC.Helpers;
-using Project.MVC.Mappings; // Add this using
+using Project.MVC.Mappings;
 using Project.MVC.ViewModels;
 using Project.Service.Data.DTOs;
 using Project.Service.Data.Helpers;
@@ -24,9 +24,10 @@ namespace Project.Tests.UnitTests
         {
             _mockService = new Mock<IVehicleService>();
             var config = new MapperConfiguration(cfg => 
-                cfg.AddProfile<MvcMappingProfile>()); // Fixed here
+                cfg.AddProfile<MvcMappingProfile>());
             _mapper = config.CreateMapper();
 
+            // Setup for GetMakesAsync
             _mockService.Setup(s => s.GetMakesAsync(
                 It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()
             )).ReturnsAsync(
@@ -38,6 +39,14 @@ namespace Project.Tests.UnitTests
                 )
             );
 
+            // Setup for valid ID (1)
+            _mockService.Setup(s => s.GetMakeByIdAsync(1))
+                .ReturnsAsync(new VehicleMakeDTO { Id = 1, Name = "Test", Abbreviation = "T" });
+
+            // Setup for invalid ID (999) - returns a new instance instead of null
+            _mockService.Setup(s => s.GetMakeByIdAsync(999))
+                .ReturnsAsync(new VehicleMakeDTO()); // Return a default instance instead of null
+
             _controller = new VehicleMakeController(_mockService.Object, _mapper);
         }
 
@@ -47,6 +56,16 @@ namespace Project.Tests.UnitTests
             var result = await _controller.Index();
             var viewResult = Assert.IsType<ViewResult>(result);
             Assert.IsType<PagedResult<VehicleMakeVM>>(viewResult.Model);
+        }
+
+        [Fact]
+        public async Task GetById_ReturnsNotFound_ForInvalidId()
+        {
+            // Act
+            var result = await _controller.Details(999);
+
+            // Assert
+            Assert.IsType<NotFoundResult>(result);
         }
     }
 }
