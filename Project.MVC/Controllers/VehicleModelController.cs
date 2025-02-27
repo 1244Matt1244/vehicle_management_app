@@ -75,7 +75,7 @@ namespace Project.MVC.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _vehicleService.CreateModelAsync(_mapper.Map<VehicleModelDTO>(model));
+                await _vehicleService.AddModelAsync(_mapper.Map<VehicleModelDTO>(model));
                 return RedirectToAction(nameof(Index));
             }
             // Repopulate makes if validation fails
