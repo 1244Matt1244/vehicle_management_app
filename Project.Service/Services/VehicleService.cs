@@ -1,4 +1,6 @@
+// Project.Service/Services/VehicleService.cs
 using AutoMapper;
+using AutoMapper.QueryableExtensions; // Add this namespace
 using Microsoft.EntityFrameworkCore;
 using Project.Service.Data.Context;
 using Project.Service.Data.DTOs;
@@ -12,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace Project.Service.Services
 {
-    public class VehicleService : IVehicleService
+    public sealed class VehicleService : IVehicleService
     {
         private readonly ApplicationDbContext _context;
         private readonly IMapper _mapper;
@@ -23,11 +25,11 @@ namespace Project.Service.Services
             _mapper = mapper;
         }
 
-        // VehicleMake Implementation ------------------------------------------
-
-        public async Task<PaginatedList<VehicleMakeDTO>> GetMakesAsync(int pageIndex, int pageSize, string sortBy, string sortOrder, string searchString)
+        // VehicleMake Implementation
+        public async Task<PaginatedList<VehicleMakeDTO>> GetMakesAsync(int pageIndex, int pageSize, 
+            string sortBy, string sortOrder, string searchString)
         {
-            var query = _context.VehicleMakes.AsQueryable();
+            var query = _context.VehicleMakes.AsNoTracking();
 
             if (!string.IsNullOrWhiteSpace(searchString))
             {
@@ -37,17 +39,20 @@ namespace Project.Service.Services
             }
 
             query = query.OrderByProperty(sortBy, sortOrder);
+            
             return await PaginatedList<VehicleMakeDTO>.CreateAsync(
-                query.Select(m => _mapper.Map<VehicleMakeDTO>(m)),
+                query.ProjectTo<VehicleMakeDTO>(_mapper.ConfigurationProvider), // Fixed ProjectTo
                 pageIndex,
                 pageSize
             );
         }
 
-        public async Task<VehicleMakeDTO> GetMakeByIdAsync(int id)
+        public async Task<VehicleMakeDTO?> GetMakeByIdAsync(int id)
         {
-            var make = await _context.VehicleMakes.FindAsync(id);
-            return _mapper.Map<VehicleMakeDTO>(make);
+            return await _context.VehicleMakes
+                .AsNoTracking()
+                .ProjectTo<VehicleMakeDTO>(_mapper.ConfigurationProvider)
+                .FirstOrDefaultAsync(m => m.Id == id);
         }
 
         public async Task AddMakeAsync(VehicleMakeDTO makeDto)
@@ -60,8 +65,8 @@ namespace Project.Service.Services
         public async Task UpdateMakeAsync(VehicleMakeDTO makeDto)
         {
             var make = await _context.VehicleMakes.FindAsync(makeDto.Id);
-            if (make == null) throw new ArgumentException("VehicleMake not found");
-            
+            if (make == null) throw new KeyNotFoundException($"No VehicleMake found with ID {makeDto.Id}");
+
             _mapper.Map(makeDto, make);
             _context.VehicleMakes.Update(make);
             await _context.SaveChangesAsync();
@@ -70,55 +75,51 @@ namespace Project.Service.Services
         public async Task DeleteMakeAsync(int id)
         {
             var make = await _context.VehicleMakes.FindAsync(id);
-            if (make != null)
-            {
-                _context.VehicleMakes.Remove(make);
-                await _context.SaveChangesAsync();
-            }
+            if (make == null) throw new KeyNotFoundException($"No VehicleMake found with ID {id}");
+
+            _context.VehicleMakes.Remove(make);
+            await _context.SaveChangesAsync();
         }
 
         public async Task<List<VehicleMakeDTO>> GetAllMakesAsync()
         {
-            var makes = await _context.VehicleMakes.ToListAsync();
-            return _mapper.Map<List<VehicleMakeDTO>>(makes);
+            return await _context.VehicleMakes
+                .AsNoTracking()
+                .ProjectTo<VehicleMakeDTO>(_mapper.ConfigurationProvider)
+                .ToListAsync();
         }
 
-        // New method to create a vehicle make
-        public async Task CreateMakeAsync(VehicleMakeDTO makeDto)
-        {
-            var make = _mapper.Map<VehicleMake>(makeDto);
-            _context.VehicleMakes.Add(make);
-            await _context.SaveChangesAsync();
-        }
-
-        // VehicleModel Implementation -----------------------------------------
-
-        public async Task<PaginatedList<VehicleModelDTO>> GetModelsAsync(int pageIndex, int pageSize, string sortBy, string sortOrder, string searchString, int? makeId)
+        // VehicleModel Implementation
+        public async Task<PaginatedList<VehicleModelDTO>> GetModelsAsync(int pageIndex, int pageSize, 
+            string sortBy, string sortOrder, string searchString, int? makeId)
         {
             var query = _context.VehicleModels
-                .Include(m => m.VehicleMake)
+                .AsNoTracking()
+                .Include(m => m.VehicleMake) // Correct include
                 .AsQueryable();
 
             if (makeId.HasValue)
                 query = query.Where(m => m.MakeId == makeId.Value);
 
             if (!string.IsNullOrWhiteSpace(searchString))
-                query = query.Where(m => m.Name.Contains(searchString) || m.Abbreviation.Contains(searchString));
+                query = query.Where(m => m.Name.Contains(searchString));
 
             query = query.OrderByProperty(sortBy, sortOrder);
+            
             return await PaginatedList<VehicleModelDTO>.CreateAsync(
-                query.Select(m => _mapper.Map<VehicleModelDTO>(m)),
+                query.ProjectTo<VehicleModelDTO>(_mapper.ConfigurationProvider), // Fixed ProjectTo
                 pageIndex,
                 pageSize
             );
         }
 
-        public async Task<VehicleModelDTO> GetModelByIdAsync(int id)
+        public async Task<VehicleModelDTO?> GetModelByIdAsync(int id)
         {
-            var model = await _context.VehicleModels
+            return await _context.VehicleModels
+                .AsNoTracking()
                 .Include(m => m.VehicleMake)
+                .ProjectTo<VehicleModelDTO>(_mapper.ConfigurationProvider)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            return _mapper.Map<VehicleModelDTO>(model);
         }
 
         public async Task AddModelAsync(VehicleModelDTO modelDto)
@@ -131,36 +132,29 @@ namespace Project.Service.Services
         public async Task UpdateModelAsync(VehicleModelDTO modelDto)
         {
             var model = await _context.VehicleModels.FindAsync(modelDto.Id);
-            if (model != null)
-            {
-                _mapper.Map(modelDto, model);
-                _context.VehicleModels.Update(model);
-                await _context.SaveChangesAsync();
-            }
+            if (model == null) throw new KeyNotFoundException($"No VehicleModel found with ID {modelDto.Id}");
+
+            _mapper.Map(modelDto, model);
+            _context.VehicleModels.Update(model);
+            await _context.SaveChangesAsync();
         }
 
         public async Task DeleteModelAsync(int id)
         {
             var model = await _context.VehicleModels.FindAsync(id);
-            if (model != null)
-            {
-                _context.VehicleModels.Remove(model);
-                await _context.SaveChangesAsync();
-            }
+            if (model == null) throw new KeyNotFoundException($"No VehicleModel found with ID {id}");
+
+            _context.VehicleModels.Remove(model);
+            await _context.SaveChangesAsync();
         }
 
         public async Task<List<VehicleModelDTO>> GetAllModelsAsync()
         {
-            var models = await _context.VehicleModels.ToListAsync();
-            return _mapper.Map<List<VehicleModelDTO>>(models);
-        }
-
-        // New method to create a vehicle model
-        public async Task CreateModelAsync(VehicleModelDTO modelDto)
-        {
-            var model = _mapper.Map<VehicleModel>(modelDto);
-            _context.VehicleModels.Add(model);
-            await _context.SaveChangesAsync();
+            return await _context.VehicleModels
+                .AsNoTracking()
+                .Include(m => m.VehicleMake)
+                .ProjectTo<VehicleModelDTO>(_mapper.ConfigurationProvider)
+                .ToListAsync();
         }
     }
 }

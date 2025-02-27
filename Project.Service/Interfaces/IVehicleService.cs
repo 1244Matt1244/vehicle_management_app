@@ -1,3 +1,4 @@
+// Project.Service/Interfaces/IVehicleService.cs
 using Project.Service.Data.DTOs;
 using Project.Service.Data.Helpers;
 using System.Collections.Generic;
@@ -7,24 +8,20 @@ namespace Project.Service.Interfaces
 {
     public interface IVehicleService
     {
-        // VehicleMake
+        // Vehicle Make Methods
         Task<PaginatedList<VehicleMakeDTO>> GetMakesAsync(int pageIndex, int pageSize, string sortBy, string sortOrder, string searchString);
-        Task<VehicleMakeDTO> GetMakeByIdAsync(int id);
-        Task AddMakeAsync(VehicleMakeDTO makeDto); // Existing method
-        Task UpdateMakeAsync(VehicleMakeDTO makeDto); // Existing method
-        Task DeleteMakeAsync(int id); // Existing method
-        Task<List<VehicleMakeDTO>> GetAllMakesAsync(); // Existing method
-        
-        // New method definitions
-        Task CreateMakeAsync(VehicleMakeDTO make); // New method
-        Task CreateModelAsync(VehicleModelDTO model); // New method
+        Task<VehicleMakeDTO?> GetMakeByIdAsync(int id);
+        Task AddMakeAsync(VehicleMakeDTO makeDto);
+        Task UpdateMakeAsync(VehicleMakeDTO makeDto);
+        Task DeleteMakeAsync(int id);
+        Task<List<VehicleMakeDTO>> GetAllMakesAsync();
 
-        // VehicleModel
+        // Vehicle Model Methods
         Task<PaginatedList<VehicleModelDTO>> GetModelsAsync(int pageIndex, int pageSize, string sortBy, string sortOrder, string searchString, int? makeId);
-        Task<VehicleModelDTO> GetModelByIdAsync(int id);
-        Task AddModelAsync(VehicleModelDTO modelDto); // Existing method
-        Task UpdateModelAsync(VehicleModelDTO modelDto); // Existing method
-        Task DeleteModelAsync(int id); // Existing method
-        Task<List<VehicleModelDTO>> GetAllModelsAsync(); // Existing method
+        Task<VehicleModelDTO?> GetModelByIdAsync(int id);
+        Task AddModelAsync(VehicleModelDTO modelDto);
+        Task UpdateModelAsync(VehicleModelDTO modelDto);
+        Task DeleteModelAsync(int id);
+        Task<List<VehicleModelDTO>> GetAllModelsAsync();
     }
 }
