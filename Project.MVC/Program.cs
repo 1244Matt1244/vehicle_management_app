@@ -7,24 +7,30 @@ using Project.Service.Services;
 using Project.Service.Data.Context;
 using AutoMapper;
 using Project.MVC.Helpers;
-using Microsoft.Extensions.Configuration; // Add this line
+using Project.Service.Mappings;
+using Project.MVC.Mappings;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container
 builder.Services.AddControllersWithViews();
 
-// Register ApplicationDbContext
+// Database Context
 builder.Services.AddDbContext<ApplicationDbContext>(options => 
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))); // Fixed
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Register AutoMapper and services
-builder.Services.AddAutoMapper(typeof(MapperConfig));
+// AutoMapper Configuration
+builder.Services.AddAutoMapper(
+    typeof(ServiceMappingProfile),        // Service Layer Mappings
+    typeof(MvcMappingProfile)      // MVC Mappings
+);
+
+// Service Registration
 builder.Services.AddScoped<IVehicleService, VehicleService>();
 
 var app = builder.Build();
 
-// Middleware configuration
+// Middleware pipeline
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");

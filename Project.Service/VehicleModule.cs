@@ -1,5 +1,7 @@
+// Project.Service/VehicleModule.cs
 using Microsoft.Extensions.DependencyInjection;
 using AutoMapper;
+using Project.Service.Mappings; // Correct namespace
 
 namespace Project.Service
 {
@@ -7,8 +9,7 @@ namespace Project.Service
     {
         public static IServiceCollection AddVehicleServices(this IServiceCollection services)
         {
-            // AutoMapper Configuration
-            services.AddAutoMapper(typeof(Mappings.ServiceMappingProfile));
+            services.AddAutoMapper(typeof(ServiceMappingProfile));
             return services;
         }
     }
