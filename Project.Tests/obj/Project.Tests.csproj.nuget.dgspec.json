@@ -91,10 +91,6 @@
               "target": "Package",
               "version": "[9.0.2, )"
             },
-            "Ninject": {
-              "target": "Package",
-              "version": "[3.3.6, )"
-            },
             "Ninject.Web.Common": {
               "target": "Package",
               "version": "[3.3.2, )"
@@ -317,10 +313,6 @@
             "AutoMapper": {
               "target": "Package",
               "version": "[12.0.1, )"
-            },
-            "Microsoft.AspNetCore.Mvc.Testing": {
-              "target": "Package",
-              "version": "[8.0.0, )"
             },
             "Microsoft.EntityFrameworkCore.InMemory": {
               "target": "Package",

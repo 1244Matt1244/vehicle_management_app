@@ -8,14 +8,10 @@ using Project.Service.Services;
 using Project.Service.Data.Context;
 using AutoMapper;
 using Ninject;
-using Ninject.Extensions.DependencyInjection;
+using Project.MVC.Mappings;
+using Project.Service.Mappings;
 
 var builder = WebApplication.CreateBuilder(args);
-
-// Ninject Configuration
-var kernel = new StandardKernel();
-kernel.Load<VehicleModule>();
-builder.Host.UseServiceProviderFactory(new NinjectServiceProviderFactory(kernel));
 
 // Database
 builder.Services.AddDbContext<ApplicationDbContext>(options => 
@@ -29,20 +25,12 @@ builder.Services.AddAutoMapper(
 
 // Services
 builder.Services.AddScoped<IVehicleService, VehicleService>();
-
-// MVC
 builder.Services.AddControllersWithViews();
 builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
-// Middleware
-if (!app.Environment.IsDevelopment())
-{
-    app.UseExceptionHandler("/Home/Error");
-    app.UseHsts();
-}
-
+// Middleware pipeline
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();

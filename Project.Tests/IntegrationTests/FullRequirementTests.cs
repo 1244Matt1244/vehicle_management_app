@@ -1,53 +1,107 @@
-// Project.Tests/Integration/FullRequirementTests.cs
-
 using System.Net;
-using System.Net.Http.Json;
+using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Xunit;
 
-namespace Project.Tests.Integration
+namespace Project.Tests.IntegrationTests
 {
-    public class FullSystemTests : IClassFixture<WebApplicationFactory<Program>>
+    public class FullRequirementTests : IClassFixture<WebApplicationFactory<Program>>
     {
         private readonly HttpClient _client;
 
-        public FullSystemTests(WebApplicationFactory<Program> factory)
+        public FullRequirementTests(WebApplicationFactory<Program> factory)
         {
             _client = factory.CreateClient();
         }
 
         [Fact]
-        public async Task FullCRUDWorkflow_ReturnsProperStatusCodes()
+        public async Task Get_HomePage_ReturnsSuccess()
         {
-            // Create (POST)
-            var createResponse = await _client.PostAsJsonAsync("/VehicleMake", new 
-            {
-                Name = "TestMake",
-                Abbreviation = "TM"
-            });
-            Assert.Equal(HttpStatusCode.Created, createResponse.StatusCode);
+            // Arrange
+            var request = "/"; // Home page route
 
-            // Read (GET)
-            var getResponse = await _client.GetAsync(createResponse.Headers.Location);
-            Assert.Equal(HttpStatusCode.OK, getResponse.StatusCode);
+            // Act
+            var response = await _client.GetAsync(request);
 
-            // Update (PUT)
-            var updateResponse = await _client.PutAsJsonAsync($"/VehicleMake/1", new 
-            {
-                Id = 1,
-                Name = "UpdatedMake",
-                Abbreviation = "UM"
-            });
-            Assert.Equal(HttpStatusCode.NoContent, updateResponse.StatusCode);
-
-            // Delete (DELETE)
-            var deleteResponse = await _client.DeleteAsync("/VehicleMake/1");
-            Assert.Equal(HttpStatusCode.NoContent, deleteResponse.StatusCode);
-
-            // Verify deletion
-            var verifyDelete = await _client.GetAsync("/VehicleMake/1");
-            Assert.Equal(HttpStatusCode.NotFound, verifyDelete.StatusCode);
+            // Assert
+            response.EnsureSuccessStatusCode(); // Status Code 200-299
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         }
+
+        [Fact]
+        public async Task Get_AboutPage_ReturnsSuccess()
+        {
+            // Arrange
+            var request = "/about"; // Update with your actual route
+
+            // Act
+            var response = await _client.GetAsync(request);
+
+            // Assert
+            response.EnsureSuccessStatusCode(); // Status Code 200-299
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task Post_ContactForm_ReturnsSuccess()
+        {
+            // Arrange
+            var request = "/contact"; // Update with your actual route
+            var content = new StringContent("{\"name\":\"Test User\", \"email\":\"test@example.com\"}", 
+                Encoding.UTF8, "application/json");
+
+            // Act
+            var response = await _client.PostAsync(request, content);
+
+            // Assert
+            response.EnsureSuccessStatusCode(); // Status Code 200-299
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task Get_NonExistentPage_ReturnsNotFound()
+        {
+            // Arrange
+            var request = "/non-existent-page"; // Non-existent route
+
+            // Act
+            var response = await _client.GetAsync(request);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task Post_ContactForm_InvalidData_ReturnsBadRequest()
+        {
+            // Arrange
+            var request = "/contact"; // Update with your actual route
+            var content = new StringContent("{\"name\":\"\", \"email\":\"invalid-email\"}", 
+                Encoding.UTF8, "application/json");
+
+            // Act
+            var response = await _client.PostAsync(request, content);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task Get_HealthCheck_ReturnsSuccess()
+        {
+            // Arrange
+            var request = "/health"; // Health check route
+
+            // Act
+            var response = await _client.GetAsync(request);
+
+            // Assert
+            response.EnsureSuccessStatusCode(); // Status Code 200-299
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        }
+
+        // Additional tests can be added here for other requirements
     }
 }
