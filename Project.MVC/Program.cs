@@ -1,20 +1,21 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Project.Service.Data.Context;
+using Project.Service.Mappings;
+using Project.MVC.Mappings;
 using Project.Service.Interfaces;
 using Project.Service.Services;
-using Project.Service.Data.Context;
-using AutoMapper;
-using Ninject;
-using Project.MVC.Mappings;
-using Project.Service.Mappings;
+using Project.Service.Repositories;
+using System.Runtime.CompilerServices;
+
+[assembly: InternalsVisibleTo("Project.Tests")]
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Database
-builder.Services.AddDbContext<ApplicationDbContext>(options => 
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // AutoMapper
@@ -23,21 +24,23 @@ builder.Services.AddAutoMapper(
     typeof(MvcMappingProfile)
 );
 
-// Services
+// Register Service and Repository dependencies
+builder.Services.AddScoped<IVehicleRepository, VehicleRepository>();
 builder.Services.AddScoped<IVehicleService, VehicleService>();
+
+// MVC Services
 builder.Services.AddControllersWithViews();
-builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
-// Middleware pipeline
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
-app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=VehicleMake}/{action=Index}/{id?}");
 
 app.Run();
+
+public partial class Program { } // Required for integration testing
