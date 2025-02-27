@@ -7,34 +7,36 @@ using Project.Service.Interfaces;
 using Project.Service.Services;
 using Project.Service.Data.Context;
 using AutoMapper;
-using Project.MVC.Helpers;
-using Project.Service.Mappings;
-using Project.MVC.Mappings;
+using Ninject;
+using Ninject.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add critical authorization services
-builder.Services.AddAuthorization(); // Add this line
+// Ninject Configuration
+var kernel = new StandardKernel();
+kernel.Load<VehicleModule>();
+builder.Host.UseServiceProviderFactory(new NinjectServiceProviderFactory(kernel));
 
-// Database Context
+// Database
 builder.Services.AddDbContext<ApplicationDbContext>(options => 
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// AutoMapper Configuration
+// AutoMapper
 builder.Services.AddAutoMapper(
     typeof(ServiceMappingProfile),
     typeof(MvcMappingProfile)
 );
 
-// Service Registration
+// Services
 builder.Services.AddScoped<IVehicleService, VehicleService>();
 
-// Add MVC services
+// MVC
 builder.Services.AddControllersWithViews();
+builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
-// Middleware pipeline
+// Middleware
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
@@ -44,8 +46,6 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
-
-// Authorization must come after authentication if used
 app.UseAuthorization();
 
 app.MapControllerRoute(

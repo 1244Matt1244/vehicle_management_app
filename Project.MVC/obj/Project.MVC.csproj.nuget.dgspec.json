@@ -95,14 +95,6 @@
               "target": "Package",
               "version": "[3.3.6, )"
             },
-            "Ninject.Extensions.DependencyInjection": {
-              "target": "Package",
-              "version": "[1.0.2, )"
-            },
-            "Ninject.Web.AspNetCore": {
-              "target": "Package",
-              "version": "[9.0.0, )"
-            },
             "Ninject.Web.Common": {
               "target": "Package",
               "version": "[3.3.2, )"
