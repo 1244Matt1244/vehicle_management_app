@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting; 
 using Microsoft.Extensions.Configuration;
 using Project.Service.Data.Context;
 using Project.Service.Mappings;
@@ -14,8 +15,16 @@ using System.Runtime.CompilerServices;
 var builder = WebApplication.CreateBuilder(args);
 
 // Database Configuration
-builder.Services.AddDbContext<ApplicationDbContext>(options => 
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+if (builder.Environment.IsEnvironment("Test"))
+{
+    builder.Services.AddDbContext<ApplicationDbContext>(options => 
+        options.UseInMemoryDatabase("TestDatabase"));
+}
+else
+{
+    builder.Services.AddDbContext<ApplicationDbContext>(options => 
+        options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+}
 
 // AutoMapper with Profiles
 builder.Services.AddAutoMapper(config => 

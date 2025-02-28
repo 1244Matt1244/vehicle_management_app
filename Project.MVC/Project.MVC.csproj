@@ -9,6 +9,10 @@
 
 
   <ItemGroup>
+
+    <!-- Add EF Core InMemory package -->
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="9.0.2" />
+
     <!-- Core Dependencies -->
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="8.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="8.0.0" />
