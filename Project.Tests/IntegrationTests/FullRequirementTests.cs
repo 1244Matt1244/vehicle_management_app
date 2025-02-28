@@ -1,11 +1,12 @@
+using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
-using System.Threading.Tasks;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Xunit;
 using Project.MVC;
-using System.Collections.Generic;
 
 namespace Project.Tests.IntegrationTests
 {
@@ -17,99 +18,93 @@ namespace Project.Tests.IntegrationTests
         public FullRequirementTests(WebApplicationFactory<Program> factory)
         {
             _factory = factory.WithWebHostBuilder(builder =>
-                builder.UseSetting("ConnectionStrings:DefaultConnection", "Your_Test_Connection_String"));
+            {
+                builder.UseSetting("ConnectionStrings:DefaultConnection", "TestConnectionString");
+            });
+
             _client = _factory.CreateClient();
         }
 
         [Fact]
         public async Task CRUD_Workflow_ReturnsProperStatusCodes()
         {
-            // Get CSRF token from create form
+            // Step 1: Get Create Form
             var getCreateResponse = await _client.GetAsync("/VehicleMake/Create");
             getCreateResponse.EnsureSuccessStatusCode();
-            var createHtml = await getCreateResponse.Content.ReadAsStringAsync();
-            var csrfToken = await ExtractAntiForgeryToken(createHtml);
-            Assert.NotNull(csrfToken);
+            var createFormContent = await getCreateResponse.Content.ReadAsStringAsync();
+            var verificationToken = ExtractAntiForgeryToken(createFormContent);
+            Assert.NotNull(verificationToken);
 
-            // Create: POST new VehicleMake
-            var postResponse = await _client.SendAsync(CreatePostRequest(
-                "/VehicleMake/Create",
-                new Dictionary<string, string>
-                {
-                    {"Name", "TestMake"},
-                    {"Abbreviation", "TMK"},
-                    {"__RequestVerificationToken", csrfToken!}
-                }
-            ));
+            // Step 2: Create New VehicleMake
+            var postContent = new FormUrlEncodedContent(new[]
+            {
+                new KeyValuePair<string, string>("Name", "TestMake"),
+                new KeyValuePair<string, string>("Abbreviation", "TM"),
+                new KeyValuePair<string, string>("__RequestVerificationToken", verificationToken!)
+            });
+
+            var postResponse = await _client.PostAsync("/VehicleMake/Create", postContent);
             Assert.Equal(HttpStatusCode.Redirect, postResponse.StatusCode);
 
-            // Follow redirect to Index
+            // Step 3: Follow Redirect to Index
             var indexResponse = await _client.GetAsync(postResponse.Headers.Location);
             indexResponse.EnsureSuccessStatusCode();
             var indexContent = await indexResponse.Content.ReadAsStringAsync();
 
-            // Extract ID from table
+            Console.WriteLine(indexContent); // Debug: Check HTML content structure
+
             var id = ExtractFirstIdFromTable(indexContent);
             Assert.NotNull(id);
 
-            // Get CSRF token for edit form
+            // Step 4: Get Edit Form
             var getEditResponse = await _client.GetAsync($"/VehicleMake/Edit/{id}");
             getEditResponse.EnsureSuccessStatusCode();
-            var editHtml = await getEditResponse.Content.ReadAsStringAsync();
-            var editCsrfToken = await ExtractAntiForgeryToken(editHtml);
-            Assert.NotNull(editCsrfToken);
+            var editFormContent = await getEditResponse.Content.ReadAsStringAsync();
+            var editVerificationToken = ExtractAntiForgeryToken(editFormContent);
+            Assert.NotNull(editVerificationToken);
 
-            // Update: PUT changes
-            var putResponse = await _client.SendAsync(CreatePostRequest(
-                $"/VehicleMake/Edit/{id}",
-                new Dictionary<string, string>
-                {
-                    {"Id", id!},
-                    {"Name", "UpdatedMake"},
-                    {"Abbreviation", "UMK"},
-                    {"__RequestVerificationToken", editCsrfToken!}
-                }
-            ));
+            // Step 5: Update VehicleMake
+            var putContent = new FormUrlEncodedContent(new[]
+            {
+                new KeyValuePair<string, string>("Id", id!),
+                new KeyValuePair<string, string>("Name", "UpdatedMake"),
+                new KeyValuePair<string, string>("Abbreviation", "UM"),
+                new KeyValuePair<string, string>("__RequestVerificationToken", editVerificationToken!)
+            });
+
+            var putResponse = await _client.SendAsync(new HttpRequestMessage(HttpMethod.Post, $"/VehicleMake/Edit/{id}")
+            {
+                Content = putContent
+            });
             Assert.Equal(HttpStatusCode.Redirect, putResponse.StatusCode);
 
-            // Get CSRF token for delete form
+            // Step 6: Get Delete Confirmation
             var getDeleteResponse = await _client.GetAsync($"/VehicleMake/Delete/{id}");
             getDeleteResponse.EnsureSuccessStatusCode();
-            var deleteHtml = await getDeleteResponse.Content.ReadAsStringAsync();
-            var deleteCsrfToken = await ExtractAntiForgeryToken(deleteHtml);
-            Assert.NotNull(deleteCsrfToken);
+            var deleteFormContent = await getDeleteResponse.Content.ReadAsStringAsync();
+            var deleteVerificationToken = ExtractAntiForgeryToken(deleteFormContent);
+            Assert.NotNull(deleteVerificationToken);
 
-            // Delete: POST delete
-            var deleteResponse = await _client.SendAsync(CreatePostRequest(
-                $"/VehicleMake/Delete/{id}",
-                new Dictionary<string, string>
-                {
-                    {"Id", id!},
-                    {"__RequestVerificationToken", deleteCsrfToken!}
-                }
-            ));
+            // Step 7: Delete VehicleMake
+            var deleteContent = new FormUrlEncodedContent(new[]
+            {
+                new KeyValuePair<string, string>("Id", id!),
+                new KeyValuePair<string, string>("__RequestVerificationToken", deleteVerificationToken!)
+            });
+
+            var deleteResponse = await _client.PostAsync($"/VehicleMake/Delete/{id}", deleteContent);
             Assert.Equal(HttpStatusCode.Redirect, deleteResponse.StatusCode);
         }
 
-        private HttpRequestMessage CreatePostRequest(string url, Dictionary<string, string> formData)
+        private string? ExtractAntiForgeryToken(string htmlContent)
         {
-            var request = new HttpRequestMessage(HttpMethod.Post, url);
-            request.Content = new FormUrlEncodedContent(formData);
-            return request;
-        }
-
-        // Updated regex: more flexible to match input element with anti-forgery token.
-        private Task<string?> ExtractAntiForgeryToken(string htmlContent)
-        {
-            var match = Regex.Match(htmlContent,
-                @"<input[^>]+name\s*=\s*[""']__RequestVerificationToken[""'][^>]+value\s*=\s*[""']([^""']+)[""']",
-                RegexOptions.IgnoreCase);
-            return Task.FromResult(match.Success ? match.Groups[1].Value : null);
+            var match = Regex.Match(htmlContent, @"name=""__RequestVerificationToken""[^>]*value=""([^""]+)""", RegexOptions.IgnoreCase);
+            return match.Success ? match.Groups[1].Value : null;
         }
 
         private string? ExtractFirstIdFromTable(string htmlContent)
         {
-            var match = Regex.Match(htmlContent, @"<tr>\s*<td[^>]*>(\d+)</td>");
+            var match = Regex.Match(htmlContent, @"<tr[^>]*>\s*<td[^>]*>(\d+)</td>", RegexOptions.Singleline);
             return match.Success ? match.Groups[1].Value : null;
         }
     }
