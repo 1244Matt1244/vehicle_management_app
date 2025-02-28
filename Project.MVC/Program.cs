@@ -48,6 +48,7 @@ app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthorization();
 
+// Default Route Configuration
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=VehicleMake}/{action=Index}/{id?}");

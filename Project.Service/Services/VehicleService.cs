@@ -1,5 +1,3 @@
-// Project.Service/Services/VehicleService.cs
-
 using AutoMapper;
 using AutoMapper.QueryableExtensions; // Add this namespace
 using Microsoft.EntityFrameworkCore;
