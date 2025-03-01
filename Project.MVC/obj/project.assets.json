@@ -7238,6 +7238,7 @@
       "Microsoft.Extensions.Configuration.Json >= 9.0.2",
       "Microsoft.Extensions.DependencyInjection >= 9.0.2",
       "Microsoft.Extensions.DependencyInjection.Abstractions >= 9.0.2",
+      "Microsoft.Extensions.Options >= 9.0.2",
       "Ninject.Web.Common >= 3.3.2",
       "Project.Service >= 1.0.0",
       "Serilog.AspNetCore >= 9.0.0",
@@ -7345,6 +7346,10 @@
             "version": "[9.0.2, )"
           },
           "Microsoft.Extensions.DependencyInjection.Abstractions": {
+            "target": "Package",
+            "version": "[9.0.2, )"
+          },
+          "Microsoft.Extensions.Options": {
             "target": "Package",
             "version": "[9.0.2, )"
           },
