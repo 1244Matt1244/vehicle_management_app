@@ -44,6 +44,7 @@ namespace Project.Tests.IntegrationTests
         [Fact]
         public async Task Full_CRUD_Workflow_With_CSRF()
         {
+            // Arrange
             var client = _factory.CreateClient(new WebApplicationFactoryClientOptions 
             {
                 AllowAutoRedirect = true,
@@ -58,7 +59,7 @@ namespace Project.Tests.IntegrationTests
                 new KeyValuePair<string, string>("Abbreviation", "TMK"),
                 new KeyValuePair<string, string>("__RequestVerificationToken", csrfToken)
             }));
-            Assert.Equal(HttpStatusCode.OK, createResponse.StatusCode);
+            Assert.Equal(HttpStatusCode.Redirect, createResponse.StatusCode); // Expecting a redirect after creation
 
             // Extract ID from the index page to use for update and delete operations
             var indexHtml = await client.GetStringAsync("/VehicleMake");
@@ -74,7 +75,7 @@ namespace Project.Tests.IntegrationTests
                 new KeyValuePair<string, string>("Abbreviation", "UMK"),
                 new KeyValuePair<string, string>("__RequestVerificationToken", editToken)
             }));
-            Assert.Equal(HttpStatusCode.OK, updateResponse.StatusCode);
+            Assert.Equal(HttpStatusCode.Redirect, updateResponse.StatusCode); // Expecting a redirect after update
 
             // Verify Update - Ensure the updated name appears in the HTML response
             var updatedHtml = await client.GetStringAsync("/VehicleMake");
@@ -86,7 +87,7 @@ namespace Project.Tests.IntegrationTests
             {
                 new KeyValuePair<string, string>("__RequestVerificationToken", deleteToken)
             }));
-            Assert.Equal(HttpStatusCode.OK, deleteResponse.StatusCode);
+            Assert.Equal(HttpStatusCode.Redirect, deleteResponse.StatusCode); // Expecting a redirect after delete
         }
 
         // Method to extract CSRF token from the response page
