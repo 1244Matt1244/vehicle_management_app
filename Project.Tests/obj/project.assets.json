@@ -9334,6 +9334,7 @@
       "Project.Service >= 1.0.0",
       "coverlet.collector >= 6.0.4",
       "xunit >= 2.9.3",
+      "xunit.extensibility.execution >= 2.9.3",
       "xunit.runner.visualstudio >= 3.0.2"
     ]
   },
@@ -9435,6 +9436,10 @@
             "version": "[6.0.4, )"
           },
           "xunit": {
+            "target": "Package",
+            "version": "[2.9.3, )"
+          },
+          "xunit.extensibility.execution": {
             "target": "Package",
             "version": "[2.9.3, )"
           },

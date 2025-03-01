@@ -1,98 +1,135 @@
 using System.Net;
 using System.Net.Http;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.AspNetCore.Routing;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 using Xunit;
 using Project.MVC;
+using Project.Service.Data;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace Project.Tests.IntegrationTests
 {
     public class FullRequirementTests : IClassFixture<WebApplicationFactory<Program>>
     {
-        private readonly HttpClient _client;
+        private readonly WebApplicationFactory<Program> _factory;
 
         public FullRequirementTests(WebApplicationFactory<Program> factory)
         {
-            _client = factory.WithWebHostBuilder(builder =>
+            _factory = factory.WithWebHostBuilder(builder =>
             {
                 builder.ConfigureServices(services =>
                 {
-                    // Explicitly add options and configure RouteOptions
-                    services.AddOptions<RouteOptions>()
-                        .Configure(options => options.LowercaseUrls = true);
+                    // Remove existing database configuration
+                    var descriptor = services.SingleOrDefault(
+                        d => d.ServiceType == typeof(DbContextOptions<ApplicationDbContext>));
+                    if (descriptor != null)
+                    {
+                        services.Remove(descriptor);
+                    }
+
+                    // Add in-memory database for testing
+                    services.AddDbContext<ApplicationDbContext>(options =>
+                    {
+                        options.UseInMemoryDatabase("TestDatabase");
+                    });
                 });
-            }).CreateClient(new WebApplicationFactoryClientOptions
-            {
-                AllowAutoRedirect = true,
-                HandleCookies = true
             });
+        }
+
+        [Fact]
+        public async Task Full_CRUD_Workflow_With_CSRF()
+        {
+            var client = _factory.CreateClient(new WebApplicationFactoryClientOptions
+            {
+                AllowAutoRedirect = false
+            });
+
+            // Create a new VehicleMake - Get CSRF token
+            var csrfToken = await ExtractCsrfToken(client, "/VehicleMake/Create");
+            Assert.NotNull(csrfToken);
+
+            // Create new VehicleMake
+            var createResponse = await client.PostAsync("/VehicleMake/Create", new FormUrlEncodedContent(new[]
+            {
+                new KeyValuePair<string, string>("__RequestVerificationToken", csrfToken),
+                new KeyValuePair<string, string>("Name", "TestMake")
+            }));
+            Assert.Equal(HttpStatusCode.Redirect, createResponse.StatusCode);
+
+            // Read - Get the index page and verify the newly created VehicleMake
+            var indexResponse = await client.GetAsync("/VehicleMake");
+            indexResponse.EnsureSuccessStatusCode();
+            var indexContent = await indexResponse.Content.ReadAsStringAsync();
+            Assert.Contains("TestMake", indexContent);
+
+            // Update - Get CSRF token for editing the newly created VehicleMake
+            var editToken = await ExtractCsrfToken(client, "/VehicleMake/Edit/1");
+            var updateResponse = await client.PostAsync("/VehicleMake/Edit/1", new FormUrlEncodedContent(new[]
+            {
+                new KeyValuePair<string, string>("__RequestVerificationToken", editToken),
+                new KeyValuePair<string, string>("Name", "UpdatedMake")
+            }));
+            Assert.Equal(HttpStatusCode.Redirect, updateResponse.StatusCode);
+
+            // Read - Verify the updated VehicleMake on the index page
+            var updatedIndexResponse = await client.GetAsync("/VehicleMake");
+            updatedIndexResponse.EnsureSuccessStatusCode();
+            var updatedIndexContent = await updatedIndexResponse.Content.ReadAsStringAsync();
+            Assert.Contains("UpdatedMake", updatedIndexContent);
+
+            // Delete - Get CSRF token for deleting the VehicleMake
+            var deleteToken = await ExtractCsrfToken(client, "/VehicleMake/Delete/1");
+            var deleteResponse = await client.PostAsync("/VehicleMake/Delete/1", new FormUrlEncodedContent(new[]
+            {
+                new KeyValuePair<string, string>("__RequestVerificationToken", deleteToken)
+            }));
+            Assert.Equal(HttpStatusCode.Redirect, deleteResponse.StatusCode);
+
+            // Read - Verify the VehicleMake was deleted
+            var deletedIndexResponse = await client.GetAsync("/VehicleMake");
+            deletedIndexResponse.EnsureSuccessStatusCode();
+            var deletedIndexContent = await deletedIndexResponse.Content.ReadAsStringAsync();
+            Assert.DoesNotContain("UpdatedMake", deletedIndexContent);
+        }
+
+        // Helper method to extract CSRF token from the HTML page
+        private async Task<string> ExtractCsrfToken(HttpClient client, string url)
+        {
+            var response = await client.GetAsync(url);
+            response.EnsureSuccessStatusCode();
+            var html = await response.Content.ReadAsStringAsync();
+
+            var match = Regex.Match(html, 
+                @"<input[^>]*name=[""']__RequestVerificationToken[""'][^>]*value=[""']([^""']+)[""']",
+                RegexOptions.IgnoreCase);
+
+            return match.Success ? match.Groups[1].Value : null!;
         }
 
         [Fact]
         public async Task CRUD_Workflow_ReturnsProperStatusCodes()
         {
-            // Create - First ensure CSRF token is fetched
-            var csrfToken = await ExtractCsrfToken("/vehiclemake/create");
-            var createContent = new FormUrlEncodedContent(new[] 
-            {
-                new KeyValuePair<string, string>("Name", "TestMake"),
-                new KeyValuePair<string, string>("Abbreviation", "TMK"),
-                new KeyValuePair<string, string>("__RequestVerificationToken", csrfToken)
-            });
-            var createResponse = await _client.PostAsync("/vehiclemake/create", createContent);
+            var client = _factory.CreateClient();
+
+            // Test the index page
+            var indexResponse = await client.GetAsync("/VehicleMake");
+            Assert.Equal(HttpStatusCode.OK, indexResponse.StatusCode);
+
+            // Test create page
+            var createResponse = await client.GetAsync("/VehicleMake/Create");
             Assert.Equal(HttpStatusCode.OK, createResponse.StatusCode);
 
-            // Extract ID from the index page
-            var indexHtml = await _client.GetStringAsync("/vehiclemake");
-            var idMatch = Regex.Match(indexHtml, @"data-id=""(\d+)""");
-            Assert.True(idMatch.Success, "No ID found in the index page.");
-            var id = idMatch.Groups[1].Value;
+            // Test edit page for a vehicle make
+            var editResponse = await client.GetAsync("/VehicleMake/Edit/1");
+            Assert.Equal(HttpStatusCode.OK, editResponse.StatusCode);
 
-            // Update - Ensure token is valid for editing
-            var editToken = await ExtractCsrfToken($"/vehiclemake/edit/{id}");
-            var updateContent = new FormUrlEncodedContent(new[]
-            {
-                new KeyValuePair<string, string>("Name", "UpdatedMake"),
-                new KeyValuePair<string, string>("Abbreviation", "UMK"),
-                new KeyValuePair<string, string>("__RequestVerificationToken", editToken)
-            });
-            var updateResponse = await _client.PostAsync($"/vehiclemake/edit/{id}", updateContent);
-            Assert.Equal(HttpStatusCode.OK, updateResponse.StatusCode);
-
-            // Delete - Ensure token is valid for deleting
-            var deleteToken = await ExtractCsrfToken($"/vehiclemake/delete/{id}");
-            var deleteContent = new FormUrlEncodedContent(new[]
-            {
-                new KeyValuePair<string, string>("__RequestVerificationToken", deleteToken)
-            });
-            var deleteResponse = await _client.PostAsync($"/vehiclemake/delete/{id}", deleteContent);
+            // Test delete page for a vehicle make
+            var deleteResponse = await client.GetAsync("/VehicleMake/Delete/1");
             Assert.Equal(HttpStatusCode.OK, deleteResponse.StatusCode);
-        }
-
-        private async Task<string> ExtractCsrfToken(string url)
-        {
-            var response = await _client.GetAsync(url);
-            response.EnsureSuccessStatusCode(); // Ensure the response is successful
-            var html = await response.Content.ReadAsStringAsync();
-            
-            // Regex to find the CSRF token
-            var match = Regex.Match(html, 
-                @"<input[^>]*name=[""']__RequestVerificationToken[""'][^>]*value=[""']([^""']+)[""']",
-                RegexOptions.IgnoreCase | RegexOptions.Singleline);
-            
-            if (match.Success)
-            {
-                return match.Groups[1].Value;
-            }
-            else
-            {
-                throw new Exception($"CSRF token not found at {url}\nHTML:{html}");
-            }
         }
     }
 }

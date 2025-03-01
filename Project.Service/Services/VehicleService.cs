@@ -56,28 +56,55 @@ namespace Project.Service.Services
 
         public async Task AddMakeAsync(VehicleMakeDTO makeDto)
         {
-            var make = _mapper.Map<VehicleMake>(makeDto);
-            await _context.VehicleMakes.AddAsync(make);
-            await _context.SaveChangesAsync();
+            try
+            {
+                var make = _mapper.Map<VehicleMake>(makeDto);
+                await _context.VehicleMakes.AddAsync(make);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                // Log the error and throw a custom exception
+                // Example: Logger.LogError(ex, "Error adding vehicle make");
+                throw new ApplicationException("Error adding vehicle make", ex);
+            }
         }
 
         public async Task UpdateMakeAsync(VehicleMakeDTO makeDto)
         {
-            var make = await _context.VehicleMakes.FindAsync(makeDto.Id);
-            if (make == null) throw new KeyNotFoundException($"No VehicleMake found with ID {makeDto.Id}");
+            try
+            {
+                var make = await _context.VehicleMakes.FindAsync(makeDto.Id);
+                if (make == null) throw new KeyNotFoundException($"No VehicleMake found with ID {makeDto.Id}");
 
-            _mapper.Map(makeDto, make);
-            _context.VehicleMakes.Update(make);
-            await _context.SaveChangesAsync();
+                _mapper.Map(makeDto, make);
+                _context.VehicleMakes.Update(make);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                // Log the error and throw a custom exception
+                // Example: Logger.LogError(ex, "Error updating vehicle make");
+                throw new ApplicationException("Error updating vehicle make", ex);
+            }
         }
 
         public async Task DeleteMakeAsync(int id)
         {
-            var make = await _context.VehicleMakes.FindAsync(id);
-            if (make == null) throw new KeyNotFoundException($"No VehicleMake found with ID {id}");
+            try
+            {
+                var make = await _context.VehicleMakes.FindAsync(id);
+                if (make == null) throw new KeyNotFoundException($"No VehicleMake found with ID {id}");
 
-            _context.VehicleMakes.Remove(make);
-            await _context.SaveChangesAsync();
+                _context.VehicleMakes.Remove(make);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                // Log the error and throw a custom exception
+                // Example: Logger.LogError(ex, "Error deleting vehicle make");
+                throw new ApplicationException("Error deleting vehicle make", ex);
+            }
         }
 
         public async Task<List<VehicleMakeDTO>> GetAllMakesAsync()
@@ -123,28 +150,55 @@ namespace Project.Service.Services
 
         public async Task AddModelAsync(VehicleModelDTO modelDto)
         {
-            var model = _mapper.Map<VehicleModel>(modelDto);
-            await _context.VehicleModels.AddAsync(model);
-            await _context.SaveChangesAsync();
+            try
+            {
+                var model = _mapper.Map<VehicleModel>(modelDto);
+                await _context.VehicleModels.AddAsync(model);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                // Log the error and throw a custom exception
+                // Example: Logger.LogError(ex, "Error adding vehicle model");
+                throw new ApplicationException("Error adding vehicle model", ex);
+            }
         }
 
         public async Task UpdateModelAsync(VehicleModelDTO modelDto)
         {
-            var model = await _context.VehicleModels.FindAsync(modelDto.Id);
-            if (model == null) throw new KeyNotFoundException($"No VehicleModel found with ID {modelDto.Id}");
+            try
+            {
+                var model = await _context.VehicleModels.FindAsync(modelDto.Id);
+                if (model == null) throw new KeyNotFoundException($"No VehicleModel found with ID {modelDto.Id}");
 
-            _mapper.Map(modelDto, model);
-            _context.VehicleModels.Update(model);
-            await _context.SaveChangesAsync();
+                _mapper.Map(modelDto, model);
+                _context.VehicleModels.Update(model);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                // Log the error and throw a custom exception
+                // Example: Logger.LogError(ex, "Error updating vehicle model");
+                throw new ApplicationException("Error updating vehicle model", ex);
+            }
         }
 
         public async Task DeleteModelAsync(int id)
         {
-            var model = await _context.VehicleModels.FindAsync(id);
-            if (model == null) throw new KeyNotFoundException($"No VehicleModel found with ID {id}");
+            try
+            {
+                var model = await _context.VehicleModels.FindAsync(id);
+                if (model == null) throw new KeyNotFoundException($"No VehicleModel found with ID {id}");
 
-            _context.VehicleModels.Remove(model);
-            await _context.SaveChangesAsync();
+                _context.VehicleModels.Remove(model);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                // Log the error and throw a custom exception
+                // Example: Logger.LogError(ex, "Error deleting vehicle model");
+                throw new ApplicationException("Error deleting vehicle model", ex);
+            }
         }
 
         public async Task<List<VehicleModelDTO>> GetAllModelsAsync()
