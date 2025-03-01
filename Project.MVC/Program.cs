@@ -17,23 +17,25 @@ var builder = WebApplication.CreateBuilder(args);
 // Database Configuration
 if (builder.Environment.IsEnvironment("Test"))
 {
+    // Use In-Memory Database for Testing
     builder.Services.AddDbContext<ApplicationDbContext>(options => 
         options.UseInMemoryDatabase("TestDatabase"));
 }
 else
 {
+    // Use SQL Server for Production
     builder.Services.AddDbContext<ApplicationDbContext>(options => 
         options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 }
 
-// AutoMapper with Profiles
+// AutoMapper Configuration with Profiles
 builder.Services.AddAutoMapper(config => 
 {
     config.AddProfile<ServiceMappingProfile>();
     config.AddProfile<MvcMappingProfile>();
 });
 
-// Service Layer
+// Service Layer Configuration
 builder.Services.AddScoped<IVehicleService, VehicleService>();
 
 // MVC Configuration
