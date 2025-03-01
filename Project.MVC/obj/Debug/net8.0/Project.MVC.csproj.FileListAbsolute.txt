@@ -1,5 +1,6 @@
 C:\Users\korisnik\Desktop\vehicle_management_app\Project.MVC\bin\Debug\net8.0\appsettings.Development.json
 C:\Users\korisnik\Desktop\vehicle_management_app\Project.MVC\bin\Debug\net8.0\appsettings.json
+C:\Users\korisnik\Desktop\vehicle_management_app\Project.MVC\bin\Debug\net8.0\appsettings.Test.json
 C:\Users\korisnik\Desktop\vehicle_management_app\Project.MVC\bin\Debug\net8.0\MvcTestingAppManifest.json
 C:\Users\korisnik\Desktop\vehicle_management_app\Project.MVC\bin\Debug\net8.0\Project.MVC.staticwebassets.runtime.json
 C:\Users\korisnik\Desktop\vehicle_management_app\Project.MVC\bin\Debug\net8.0\Project.MVC.staticwebassets.endpoints.json
@@ -486,4 +487,3 @@ C:\Users\korisnik\Desktop\vehicle_management_app\Project.MVC\obj\Debug\net8.0\re
 C:\Users\korisnik\Desktop\vehicle_management_app\Project.MVC\obj\Debug\net8.0\Project.MVC.pdb
 C:\Users\korisnik\Desktop\vehicle_management_app\Project.MVC\obj\Debug\net8.0\Project.MVC.genruntimeconfig.cache
 C:\Users\korisnik\Desktop\vehicle_management_app\Project.MVC\obj\Debug\net8.0\ref\Project.MVC.dll
-C:\Users\korisnik\Desktop\vehicle_management_app\Project.MVC\bin\Debug\net8.0\appsettings.Test.json
