@@ -5,14 +5,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Project.Service.Data.Context;
 using Project.Service.Mappings;
-using Project.MVC.Mappings;
 using Project.Service.Services;
 using Project.Service.Interfaces;
-using System.Runtime.CompilerServices;
-using System; 
+using System;
 
 [assembly: InternalsVisibleTo("Project.Tests")]
 
@@ -28,9 +25,10 @@ builder.Services.AddDbContext<ApplicationDbContext>((serviceProvider, options) =
     var env = builder.Environment;
     var configuration = serviceProvider.GetRequiredService<IConfiguration>();
 
-    if (env.IsEnvironment("Test"))
+    // In-memory database for testing and development environments
+    if (env.IsEnvironment("Test") || env.IsDevelopment())
     {
-        options.UseInMemoryDatabase("TestDatabase");
+        options.UseInMemoryDatabase("VehicleManagementDB");
     }
     else
     {

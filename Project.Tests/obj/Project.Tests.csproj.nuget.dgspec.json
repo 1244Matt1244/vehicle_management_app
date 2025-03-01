@@ -374,6 +374,10 @@
               "target": "Package",
               "version": "[2.9.3, )"
             },
+            "xunit.extensibility.execution": {
+              "target": "Package",
+              "version": "[2.9.3, )"
+            },
             "xunit.runner.visualstudio": {
               "target": "Package",
               "version": "[3.0.2, )"
