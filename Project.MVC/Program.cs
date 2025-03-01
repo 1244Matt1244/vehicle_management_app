@@ -1,35 +1,50 @@
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting; 
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Project.Service.Data.Context;
 using Project.Service.Mappings;
 using Project.MVC.Mappings;
 using Project.Service.Services;
 using Project.Service.Interfaces;
 using System.Runtime.CompilerServices;
+using System; 
 
 [assembly: InternalsVisibleTo("Project.Tests")]
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Database Configuration
-if (builder.Environment.IsEnvironment("Test"))
+// Logging Configuration
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
+
+// Database Configuration (Ensuring Only One Provider)
+builder.Services.AddDbContext<ApplicationDbContext>((serviceProvider, options) =>
 {
-    // Use In-Memory Database for Testing
-    builder.Services.AddDbContext<ApplicationDbContext>(options => 
-        options.UseInMemoryDatabase("TestDatabase"));
-}
-else
-{
-    // Use SQL Server for Production
-    builder.Services.AddDbContext<ApplicationDbContext>(options => 
-        options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-}
+    var env = builder.Environment;
+    var configuration = serviceProvider.GetRequiredService<IConfiguration>();
+
+    if (env.IsEnvironment("Test"))
+    {
+        options.UseInMemoryDatabase("TestDatabase");
+    }
+    else
+    {
+        var connectionString = configuration.GetConnectionString("DefaultConnection");
+        if (string.IsNullOrEmpty(connectionString))
+        {
+            throw new InvalidOperationException("Database connection string is missing.");
+        }
+        options.UseSqlServer(connectionString);
+    }
+});
 
 // AutoMapper Configuration with Profiles
-builder.Services.AddAutoMapper(config => 
+builder.Services.AddAutoMapper(config =>
 {
     config.AddProfile<ServiceMappingProfile>();
     config.AddProfile<MvcMappingProfile>();
@@ -38,6 +53,12 @@ builder.Services.AddAutoMapper(config =>
 // Service Layer Configuration
 builder.Services.AddScoped<IVehicleService, VehicleService>();
 
+// Enable Anti-Forgery Protection
+builder.Services.AddAntiforgery(options =>
+{
+    options.HeaderName = "X-CSRF-TOKEN";
+});
+
 // MVC Configuration
 builder.Services.AddControllersWithViews();
 builder.Services.AddRouting(options => options.LowercaseUrls = true);
@@ -45,10 +66,18 @@ builder.Services.AddRouting(options => options.LowercaseUrls = true);
 var app = builder.Build();
 
 // Middleware Pipeline
+if (!app.Environment.IsDevelopment())
+{
+    app.UseExceptionHandler("/Home/Error");
+    app.UseHsts();
+}
+
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
-app.UseAuthorization();
+
+app.UseAntiforgery(); // CSRF Protection Middleware
+app.UseAuthorization(); // Ensure Authorization is applied
 
 // Default Route Configuration
 app.MapControllerRoute(
@@ -57,4 +86,5 @@ app.MapControllerRoute(
 
 app.Run();
 
-public partial class Program {} // Required for integration testing
+// Required for integration testing
+public partial class Program {}

@@ -146,6 +146,16 @@
         "resolved": "9.0.2",
         "contentHash": "MNe7GSTBf3jQx5vYrXF0NZvn6l7hUKF6J54ENfAgCO8y6xjN1XUmKKWG464LP2ye6QqDiA1dkaWEZBYnhoZzjg=="
       },
+      "Microsoft.Extensions.Options": {
+        "type": "Direct",
+        "requested": "[9.0.2, )",
+        "resolved": "9.0.2",
+        "contentHash": "zr98z+AN8+isdmDmQRuEJ/DAKZGUTHmdv3t0ZzjHvNqvA44nAgkXE9kYtfoN6581iALChhVaSw2Owt+Z2lVbkQ==",
+        "dependencies": {
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "9.0.2",
+          "Microsoft.Extensions.Primitives": "9.0.2"
+        }
+      },
       "Ninject.Web.Common": {
         "type": "Direct",
         "requested": "[3.3.2, )",
@@ -614,15 +624,6 @@
           "Microsoft.Extensions.Options": "8.0.0",
           "Microsoft.Extensions.Primitives": "8.0.0",
           "System.Text.Json": "8.0.0"
-        }
-      },
-      "Microsoft.Extensions.Options": {
-        "type": "Transitive",
-        "resolved": "9.0.2",
-        "contentHash": "zr98z+AN8+isdmDmQRuEJ/DAKZGUTHmdv3t0ZzjHvNqvA44nAgkXE9kYtfoN6581iALChhVaSw2Owt+Z2lVbkQ==",
-        "dependencies": {
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "9.0.2",
-          "Microsoft.Extensions.Primitives": "9.0.2"
         }
       },
       "Microsoft.Extensions.Options.ConfigurationExtensions": {

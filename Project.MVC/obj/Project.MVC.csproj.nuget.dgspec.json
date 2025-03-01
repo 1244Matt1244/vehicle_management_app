@@ -103,6 +103,10 @@
               "target": "Package",
               "version": "[9.0.2, )"
             },
+            "Microsoft.Extensions.Options": {
+              "target": "Package",
+              "version": "[9.0.2, )"
+            },
             "Ninject.Web.Common": {
               "target": "Package",
               "version": "[3.3.2, )"

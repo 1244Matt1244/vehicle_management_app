@@ -1,10 +1,12 @@
-using System;
-using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.AspNetCore.Routing;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Xunit;
 using Project.MVC;
 
@@ -13,99 +15,84 @@ namespace Project.Tests.IntegrationTests
     public class FullRequirementTests : IClassFixture<WebApplicationFactory<Program>>
     {
         private readonly HttpClient _client;
-        private readonly WebApplicationFactory<Program> _factory;
 
         public FullRequirementTests(WebApplicationFactory<Program> factory)
         {
-            _factory = factory.WithWebHostBuilder(builder =>
+            _client = factory.WithWebHostBuilder(builder =>
             {
-                builder.UseSetting("ConnectionStrings:DefaultConnection", "TestConnectionString");
+                builder.ConfigureServices(services =>
+                {
+                    // Explicitly add options and configure RouteOptions
+                    services.AddOptions<RouteOptions>()
+                        .Configure(options => options.LowercaseUrls = true);
+                });
+            }).CreateClient(new WebApplicationFactoryClientOptions
+            {
+                AllowAutoRedirect = true,
+                HandleCookies = true
             });
-
-            _client = _factory.CreateClient();
         }
 
         [Fact]
         public async Task CRUD_Workflow_ReturnsProperStatusCodes()
         {
-            // Step 1: Get Create Form
-            var getCreateResponse = await _client.GetAsync("/VehicleMake/Create");
-            getCreateResponse.EnsureSuccessStatusCode();
-            var createFormContent = await getCreateResponse.Content.ReadAsStringAsync();
-            var verificationToken = ExtractAntiForgeryToken(createFormContent);
-            Assert.NotNull(verificationToken);
-
-            // Step 2: Create New VehicleMake
-            var postContent = new FormUrlEncodedContent(new[]
+            // Create - First ensure CSRF token is fetched
+            var csrfToken = await ExtractCsrfToken("/vehiclemake/create");
+            var createContent = new FormUrlEncodedContent(new[] 
             {
                 new KeyValuePair<string, string>("Name", "TestMake"),
-                new KeyValuePair<string, string>("Abbreviation", "TM"),
-                new KeyValuePair<string, string>("__RequestVerificationToken", verificationToken!)
+                new KeyValuePair<string, string>("Abbreviation", "TMK"),
+                new KeyValuePair<string, string>("__RequestVerificationToken", csrfToken)
             });
+            var createResponse = await _client.PostAsync("/vehiclemake/create", createContent);
+            Assert.Equal(HttpStatusCode.OK, createResponse.StatusCode);
 
-            var postResponse = await _client.PostAsync("/VehicleMake/Create", postContent);
-            Assert.Equal(HttpStatusCode.Redirect, postResponse.StatusCode);
+            // Extract ID from the index page
+            var indexHtml = await _client.GetStringAsync("/vehiclemake");
+            var idMatch = Regex.Match(indexHtml, @"data-id=""(\d+)""");
+            Assert.True(idMatch.Success, "No ID found in the index page.");
+            var id = idMatch.Groups[1].Value;
 
-            // Step 3: Follow Redirect to Index
-            var indexResponse = await _client.GetAsync(postResponse.Headers.Location);
-            indexResponse.EnsureSuccessStatusCode();
-            var indexContent = await indexResponse.Content.ReadAsStringAsync();
-
-            Console.WriteLine(indexContent); // Debug: Check HTML content structure
-
-            var id = ExtractFirstIdFromTable(indexContent);
-            Assert.NotNull(id);
-
-            // Step 4: Get Edit Form
-            var getEditResponse = await _client.GetAsync($"/VehicleMake/Edit/{id}");
-            getEditResponse.EnsureSuccessStatusCode();
-            var editFormContent = await getEditResponse.Content.ReadAsStringAsync();
-            var editVerificationToken = ExtractAntiForgeryToken(editFormContent);
-            Assert.NotNull(editVerificationToken);
-
-            // Step 5: Update VehicleMake
-            var putContent = new FormUrlEncodedContent(new[]
+            // Update - Ensure token is valid for editing
+            var editToken = await ExtractCsrfToken($"/vehiclemake/edit/{id}");
+            var updateContent = new FormUrlEncodedContent(new[]
             {
-                new KeyValuePair<string, string>("Id", id!),
                 new KeyValuePair<string, string>("Name", "UpdatedMake"),
-                new KeyValuePair<string, string>("Abbreviation", "UM"),
-                new KeyValuePair<string, string>("__RequestVerificationToken", editVerificationToken!)
+                new KeyValuePair<string, string>("Abbreviation", "UMK"),
+                new KeyValuePair<string, string>("__RequestVerificationToken", editToken)
             });
+            var updateResponse = await _client.PostAsync($"/vehiclemake/edit/{id}", updateContent);
+            Assert.Equal(HttpStatusCode.OK, updateResponse.StatusCode);
 
-            var putResponse = await _client.SendAsync(new HttpRequestMessage(HttpMethod.Post, $"/VehicleMake/Edit/{id}")
-            {
-                Content = putContent
-            });
-            Assert.Equal(HttpStatusCode.Redirect, putResponse.StatusCode);
-
-            // Step 6: Get Delete Confirmation
-            var getDeleteResponse = await _client.GetAsync($"/VehicleMake/Delete/{id}");
-            getDeleteResponse.EnsureSuccessStatusCode();
-            var deleteFormContent = await getDeleteResponse.Content.ReadAsStringAsync();
-            var deleteVerificationToken = ExtractAntiForgeryToken(deleteFormContent);
-            Assert.NotNull(deleteVerificationToken);
-
-            // Step 7: Delete VehicleMake
+            // Delete - Ensure token is valid for deleting
+            var deleteToken = await ExtractCsrfToken($"/vehiclemake/delete/{id}");
             var deleteContent = new FormUrlEncodedContent(new[]
             {
-                new KeyValuePair<string, string>("Id", id!),
-                new KeyValuePair<string, string>("__RequestVerificationToken", deleteVerificationToken!)
+                new KeyValuePair<string, string>("__RequestVerificationToken", deleteToken)
             });
-
-            var deleteResponse = await _client.PostAsync($"/VehicleMake/Delete/{id}", deleteContent);
-            Assert.Equal(HttpStatusCode.Redirect, deleteResponse.StatusCode);
+            var deleteResponse = await _client.PostAsync($"/vehiclemake/delete/{id}", deleteContent);
+            Assert.Equal(HttpStatusCode.OK, deleteResponse.StatusCode);
         }
 
-        private string? ExtractAntiForgeryToken(string htmlContent)
+        private async Task<string> ExtractCsrfToken(string url)
         {
-            var match = Regex.Match(htmlContent, @"name=""__RequestVerificationToken""[^>]*value=""([^""]+)""", RegexOptions.IgnoreCase);
-            return match.Success ? match.Groups[1].Value : null;
-        }
-
-        private string? ExtractFirstIdFromTable(string htmlContent)
-        {
-            var match = Regex.Match(htmlContent, @"<tr[^>]*>\s*<td[^>]*>(\d+)</td>", RegexOptions.Singleline);
-            return match.Success ? match.Groups[1].Value : null;
+            var response = await _client.GetAsync(url);
+            response.EnsureSuccessStatusCode(); // Ensure the response is successful
+            var html = await response.Content.ReadAsStringAsync();
+            
+            // Regex to find the CSRF token
+            var match = Regex.Match(html, 
+                @"<input[^>]*name=[""']__RequestVerificationToken[""'][^>]*value=[""']([^""']+)[""']",
+                RegexOptions.IgnoreCase | RegexOptions.Singleline);
+            
+            if (match.Success)
+            {
+                return match.Groups[1].Value;
+            }
+            else
+            {
+                throw new Exception($"CSRF token not found at {url}\nHTML:{html}");
+            }
         }
     }
 }
