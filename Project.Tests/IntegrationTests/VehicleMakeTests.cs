@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 using Project.MVC;
 using Project.Service.Data.Context;
+using System.Collections.Generic;
 
 namespace Project.Tests.IntegrationTests
 {
@@ -21,8 +22,7 @@ namespace Project.Tests.IntegrationTests
             {
                 builder.ConfigureServices(services =>
                 {
-                    var descriptor = services.SingleOrDefault(
-                        d => d.ServiceType == typeof(DbContextOptions<ApplicationDbContext>));
+                    var descriptor = services.SingleOrDefault(d => d.ServiceType == typeof(DbContextOptions<ApplicationDbContext>));
                     if (descriptor != null)
                     {
                         services.Remove(descriptor);
@@ -44,7 +44,7 @@ namespace Project.Tests.IntegrationTests
                 AllowAutoRedirect = false
             });
 
-            // Get CSRF token
+            // Get CSRF token for Create
             var csrfToken = await ExtractCsrfToken(client, "/VehicleMake/Create");
             Assert.NotNull(csrfToken);
 
@@ -52,7 +52,8 @@ namespace Project.Tests.IntegrationTests
             var createResponse = await client.PostAsync("/VehicleMake/Create", new FormUrlEncodedContent(new[]
             {
                 new KeyValuePair<string, string>("__RequestVerificationToken", csrfToken),
-                new KeyValuePair<string, string>("Name", "TestMake")
+                new KeyValuePair<string, string>("Name", "TestMake"),
+                new KeyValuePair<string, string>("Abbreviation", "TMK")
             }));
             Assert.Equal(HttpStatusCode.Redirect, createResponse.StatusCode);
 
@@ -67,9 +68,16 @@ namespace Project.Tests.IntegrationTests
             var updateResponse = await client.PostAsync("/VehicleMake/Edit/1", new FormUrlEncodedContent(new[]
             {
                 new KeyValuePair<string, string>("__RequestVerificationToken", editToken),
-                new KeyValuePair<string, string>("Name", "UpdatedMake")
+                new KeyValuePair<string, string>("Name", "UpdatedMake"),
+                new KeyValuePair<string, string>("Abbreviation", "UMK")
             }));
             Assert.Equal(HttpStatusCode.Redirect, updateResponse.StatusCode);
+
+            // Read updated
+            var updatedIndexResponse = await client.GetAsync("/VehicleMake");
+            updatedIndexResponse.EnsureSuccessStatusCode();
+            var updatedIndexContent = await updatedIndexResponse.Content.ReadAsStringAsync();
+            Assert.Contains("UpdatedMake", updatedIndexContent);
 
             // Delete
             var deleteToken = await ExtractCsrfToken(client, "/VehicleMake/Delete/1");
@@ -78,6 +86,12 @@ namespace Project.Tests.IntegrationTests
                 new KeyValuePair<string, string>("__RequestVerificationToken", deleteToken)
             }));
             Assert.Equal(HttpStatusCode.Redirect, deleteResponse.StatusCode);
+
+            // Verify deletion
+            var deletedIndexResponse = await client.GetAsync("/VehicleMake");
+            deletedIndexResponse.EnsureSuccessStatusCode();
+            var deletedIndexContent = await deletedIndexResponse.Content.ReadAsStringAsync();
+            Assert.DoesNotContain("UpdatedMake", deletedIndexContent);
         }
 
         private async Task<string> ExtractCsrfToken(HttpClient client, string url)
@@ -85,11 +99,11 @@ namespace Project.Tests.IntegrationTests
             var response = await client.GetAsync(url);
             response.EnsureSuccessStatusCode();
             var html = await response.Content.ReadAsStringAsync();
-            
+
             var match = Regex.Match(html, 
                 @"<input[^>]*name=[""']__RequestVerificationToken[""'][^>]*value=[""']([^""']+)[""']", 
                 RegexOptions.IgnoreCase);
-            
+
             return match.Success ? match.Groups[1].Value : null!;
         }
     }

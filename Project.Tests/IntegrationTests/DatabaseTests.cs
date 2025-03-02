@@ -1,7 +1,11 @@
 using Project.Service.Data.Context;
 using Project.Service.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Antiforgery;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Mvc.Testing;
 using Xunit;
+using System.Linq;
 
 namespace Project.Tests.IntegrationTests
 {
@@ -16,7 +20,11 @@ namespace Project.Tests.IntegrationTests
                 builder.ConfigureServices(services => 
                 {
                     // Remove existing database configuration
-                    services.RemoveAll<DbContextOptions<ApplicationDbContext>>();
+                    var descriptor = services.SingleOrDefault(d => d.ServiceType == typeof(DbContextOptions<ApplicationDbContext>));
+                    if (descriptor != null)
+                    {
+                        services.Remove(descriptor);
+                    }
 
                     // Add in-memory database with a unique name for each test
                     services.AddDbContext<ApplicationDbContext>(options => 
