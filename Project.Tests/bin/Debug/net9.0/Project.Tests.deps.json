@@ -38,7 +38,8 @@
       "Project.Tests/1.0.0": {
         "dependencies": {
           "AutoMapper": "12.0.1",
-          "Microsoft.AspNetCore.Mvc.Testing": "8.0.0",
+          "HtmlAgilityPack": "1.11.74",
+          "Microsoft.AspNetCore.Mvc.Testing": "9.0.0",
           "Microsoft.AspNetCore.Routing": "1.0.0",
           "Microsoft.Extensions.DependencyInjection": "9.0.0",
           "Microsoft.Extensions.Hosting": "9.0.0",
@@ -244,7 +245,7 @@
           "System.IO.FileSystem.Watcher": "9.0.0.0",
           "System.IO.IsolatedStorage": "9.0.0.0",
           "System.IO.MemoryMappedFiles": "9.0.0.0",
-          "System.IO.Pipelines.Reference": "9.0.0.0",
+          "System.IO.Pipelines": "9.0.0.0",
           "System.IO.Pipes.AccessControl": "9.0.0.0",
           "System.IO.Pipes": "9.0.0.0",
           "System.IO.UnmanagedMemoryStream": "9.0.0.0",
@@ -446,6 +447,17 @@
         }
       },
       "coverlet.collector/6.0.4": {},
+      "HtmlAgilityPack/1.11.74": {
+        "runtime": {
+          "lib/netstandard2.0/HtmlAgilityPack.dll": {
+            "assemblyVersion": "1.11.74.0",
+            "fileVersion": "1.11.74.0"
+          }
+        },
+        "compile": {
+          "lib/netstandard2.0/HtmlAgilityPack.dll": {}
+        }
+      },
       "Microsoft.AspNetCore.Http.Abstractions/1.0.0": {
         "dependencies": {
           "Microsoft.AspNetCore.Http.Features": "1.0.0",
@@ -479,51 +491,51 @@
           "System.Security.Principal": "4.0.1"
         }
       },
-      "Microsoft.AspNetCore.JsonPatch/8.0.0": {
+      "Microsoft.AspNetCore.JsonPatch/9.0.0": {
         "dependencies": {
           "Microsoft.CSharp": "4.7.0",
           "Newtonsoft.Json": "13.0.3"
         },
         "runtime": {
-          "lib/net8.0/Microsoft.AspNetCore.JsonPatch.dll": {
-            "assemblyVersion": "8.0.0.0",
-            "fileVersion": "8.0.23.53112"
+          "lib/net9.0/Microsoft.AspNetCore.JsonPatch.dll": {
+            "assemblyVersion": "9.0.0.0",
+            "fileVersion": "9.0.24.52903"
           }
         },
         "compile": {
-          "lib/net8.0/Microsoft.AspNetCore.JsonPatch.dll": {}
+          "lib/net9.0/Microsoft.AspNetCore.JsonPatch.dll": {}
         }
       },
-      "Microsoft.AspNetCore.Mvc.NewtonsoftJson/8.0.0": {
+      "Microsoft.AspNetCore.Mvc.NewtonsoftJson/9.0.0": {
         "dependencies": {
-          "Microsoft.AspNetCore.JsonPatch": "8.0.0",
+          "Microsoft.AspNetCore.JsonPatch": "9.0.0",
           "Newtonsoft.Json": "13.0.3",
           "Newtonsoft.Json.Bson": "1.0.2"
         },
         "runtime": {
-          "lib/net8.0/Microsoft.AspNetCore.Mvc.NewtonsoftJson.dll": {
-            "assemblyVersion": "8.0.0.0",
-            "fileVersion": "8.0.23.53112"
+          "lib/net9.0/Microsoft.AspNetCore.Mvc.NewtonsoftJson.dll": {
+            "assemblyVersion": "9.0.0.0",
+            "fileVersion": "9.0.24.52903"
           }
         },
         "compile": {
-          "lib/net8.0/Microsoft.AspNetCore.Mvc.NewtonsoftJson.dll": {}
+          "lib/net9.0/Microsoft.AspNetCore.Mvc.NewtonsoftJson.dll": {}
         }
       },
-      "Microsoft.AspNetCore.Mvc.Testing/8.0.0": {
+      "Microsoft.AspNetCore.Mvc.Testing/9.0.0": {
         "dependencies": {
-          "Microsoft.AspNetCore.TestHost": "8.0.0",
+          "Microsoft.AspNetCore.TestHost": "9.0.0",
           "Microsoft.Extensions.DependencyModel": "9.0.0",
           "Microsoft.Extensions.Hosting": "9.0.0"
         },
         "runtime": {
-          "lib/net8.0/Microsoft.AspNetCore.Mvc.Testing.dll": {
-            "assemblyVersion": "8.0.0.0",
-            "fileVersion": "8.0.23.53112"
+          "lib/net9.0/Microsoft.AspNetCore.Mvc.Testing.dll": {
+            "assemblyVersion": "9.0.0.0",
+            "fileVersion": "9.0.24.52903"
           }
         },
         "compile": {
-          "lib/net8.0/Microsoft.AspNetCore.Mvc.Testing.dll": {}
+          "lib/net9.0/Microsoft.AspNetCore.Mvc.Testing.dll": {}
         }
       },
       "Microsoft.AspNetCore.Razor.Design/2.3.0": {},
@@ -546,18 +558,15 @@
           "System.Threading.Tasks": "4.3.0"
         }
       },
-      "Microsoft.AspNetCore.TestHost/8.0.0": {
-        "dependencies": {
-          "System.IO.Pipelines": "8.0.0"
-        },
+      "Microsoft.AspNetCore.TestHost/9.0.0": {
         "runtime": {
-          "lib/net8.0/Microsoft.AspNetCore.TestHost.dll": {
-            "assemblyVersion": "8.0.0.0",
-            "fileVersion": "8.0.23.53112"
+          "lib/net9.0/Microsoft.AspNetCore.TestHost.dll": {
+            "assemblyVersion": "9.0.0.0",
+            "fileVersion": "9.0.24.52903"
           }
         },
         "compile": {
-          "lib/net8.0/Microsoft.AspNetCore.TestHost.dll": {}
+          "lib/net9.0/Microsoft.AspNetCore.TestHost.dll": {}
         }
       },
       "Microsoft.Bcl.AsyncInterfaces/1.1.1": {
@@ -1820,7 +1829,6 @@
           "System.Runtime": "4.3.0"
         }
       },
-      "System.IO.Pipelines/8.0.0": {},
       "System.Linq/4.1.0": {
         "dependencies": {
           "System.Collections": "4.0.11",
@@ -2317,8 +2325,8 @@
         "dependencies": {
           "AutoMapper": "12.0.1",
           "AutoMapper.Extensions.Microsoft.DependencyInjection": "12.0.1",
-          "Microsoft.AspNetCore.Mvc.NewtonsoftJson": "8.0.0",
-          "Microsoft.AspNetCore.Mvc.Testing": "8.0.0",
+          "Microsoft.AspNetCore.Mvc.NewtonsoftJson": "9.0.0",
+          "Microsoft.AspNetCore.Mvc.Testing": "9.0.0",
           "Microsoft.AspNetCore.Razor.Design": "2.3.0",
           "Microsoft.EntityFrameworkCore": "9.0.0",
           "Microsoft.EntityFrameworkCore.InMemory": "9.0.0",
@@ -3529,7 +3537,7 @@
         },
         "compileOnly": true
       },
-      "System.IO.Pipelines.Reference/9.0.0.0": {
+      "System.IO.Pipelines/9.0.0.0": {
         "compile": {
           "System.IO.Pipelines.dll": {}
         },
@@ -4233,6 +4241,13 @@
       "path": "coverlet.collector/6.0.4",
       "hashPath": "coverlet.collector.6.0.4.nupkg.sha512"
     },
+    "HtmlAgilityPack/1.11.74": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-q0wRGbegtr4sZXjCNoV3OeRLTOcTNJQKiO9etNVSKPoTo33unmSK8Ahg36C4jIg/Hd3aw8YnTQjtKpBy+wlOpg==",
+      "path": "htmlagilitypack/1.11.74",
+      "hashPath": "htmlagilitypack.1.11.74.nupkg.sha512"
+    },
     "Microsoft.AspNetCore.Http.Abstractions/1.0.0": {
       "type": "package",
       "serviceable": true,
@@ -4254,26 +4269,26 @@
       "path": "microsoft.aspnetcore.http.features/1.0.0",
       "hashPath": "microsoft.aspnetcore.http.features.1.0.0.nupkg.sha512"
     },
-    "Microsoft.AspNetCore.JsonPatch/8.0.0": {
+    "Microsoft.AspNetCore.JsonPatch/9.0.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-klQdb/9+j0u8MDjoqHEgDCPz8GRhfsbRVvZIM3glFqjs8uY7S1hS9RvKZuz8o4dS9NsEpFp4Jccd8CQuIYHK0g==",
-      "path": "microsoft.aspnetcore.jsonpatch/8.0.0",
-      "hashPath": "microsoft.aspnetcore.jsonpatch.8.0.0.nupkg.sha512"
+      "sha512": "sha512-/4UONYoAIeexPoAmbzBPkVGA6KAY7t0BM+1sr0fKss2V1ERCdcM+Llub4X5Ma+LJ60oPp6KzM0e3j+Pp/JHCNw==",
+      "path": "microsoft.aspnetcore.jsonpatch/9.0.0",
+      "hashPath": "microsoft.aspnetcore.jsonpatch.9.0.0.nupkg.sha512"
     },
-    "Microsoft.AspNetCore.Mvc.NewtonsoftJson/8.0.0": {
+    "Microsoft.AspNetCore.Mvc.NewtonsoftJson/9.0.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-/e5+eBvY759xiZJO+y1lHi4VzXqbDzTJSyCtKpaj3Ko2JAFQjiCOJ0ZHk2i4g4HpoSdXmzEXQsjr6dUX9U0/JA==",
-      "path": "microsoft.aspnetcore.mvc.newtonsoftjson/8.0.0",
-      "hashPath": "microsoft.aspnetcore.mvc.newtonsoftjson.8.0.0.nupkg.sha512"
+      "sha512": "sha512-pTFDEmZi3GheCSPrBxzyE63+d5unln2vYldo/nOm1xet/4rpEk2oJYcwpclPQ13E+LZBF9XixkgwYTUwqznlWg==",
+      "path": "microsoft.aspnetcore.mvc.newtonsoftjson/9.0.0",
+      "hashPath": "microsoft.aspnetcore.mvc.newtonsoftjson.9.0.0.nupkg.sha512"
     },
-    "Microsoft.AspNetCore.Mvc.Testing/8.0.0": {
+    "Microsoft.AspNetCore.Mvc.Testing/9.0.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-PWPgPAlRdMEkVCHHic/Yy6t37PsPsymY1WkEH0TnjTeIlYu+g8Qfw1axj/ZmNDLvhKdiUNC2E2thHrYf2s7Yhg==",
-      "path": "microsoft.aspnetcore.mvc.testing/8.0.0",
-      "hashPath": "microsoft.aspnetcore.mvc.testing.8.0.0.nupkg.sha512"
+      "sha512": "sha512-4tyGN2cb2lVqMwqPhDhXAkTtSci8RJ0cFKVHEU3yj6I4krcbyQE6SJmAQr5Hq8ARyVopKUrQp/qniDje/1I07A==",
+      "path": "microsoft.aspnetcore.mvc.testing/9.0.0",
+      "hashPath": "microsoft.aspnetcore.mvc.testing.9.0.0.nupkg.sha512"
     },
     "Microsoft.AspNetCore.Razor.Design/2.3.0": {
       "type": "package",
@@ -4296,12 +4311,12 @@
       "path": "microsoft.aspnetcore.routing.abstractions/1.0.0",
       "hashPath": "microsoft.aspnetcore.routing.abstractions.1.0.0.nupkg.sha512"
     },
-    "Microsoft.AspNetCore.TestHost/8.0.0": {
+    "Microsoft.AspNetCore.TestHost/9.0.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-Rk6Ai9bFf1KubVY5oEbEPN5fiKWW2oeU+easjokyUqqYyTHRsXlkjFeMvwecgoXsoTfXMSwEHzJp8FCjQcyYTQ==",
-      "path": "microsoft.aspnetcore.testhost/8.0.0",
-      "hashPath": "microsoft.aspnetcore.testhost.8.0.0.nupkg.sha512"
+      "sha512": "sha512-T5t8Qac05kJtFzsBxo+B3p0UcLNTRoWQf/1EbpaVBw9d7w2xL6RKYh0mqG+rPn2rulJDKeU3VfAd+r/YHdaKBg==",
+      "path": "microsoft.aspnetcore.testhost/9.0.0",
+      "hashPath": "microsoft.aspnetcore.testhost.9.0.0.nupkg.sha512"
     },
     "Microsoft.Bcl.AsyncInterfaces/1.1.1": {
       "type": "package",
@@ -4988,13 +5003,6 @@
       "sha512": "sha512-kWkKD203JJKxJeE74p8aF8y4Qc9r9WQx4C0cHzHPrY3fv/L/IhWnyCHaFJ3H1QPOH6A93whlQ2vG5nHlBDvzWQ==",
       "path": "system.io.filesystem.primitives/4.0.1",
       "hashPath": "system.io.filesystem.primitives.4.0.1.nupkg.sha512"
-    },
-    "System.IO.Pipelines/8.0.0": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-FHNOatmUq0sqJOkTx+UF/9YK1f180cnW5FVqnQMvYUN0elp6wFzbtPSiqbo1/ru8ICp43JM1i7kKkk6GsNGHlA==",
-      "path": "system.io.pipelines/8.0.0",
-      "hashPath": "system.io.pipelines.8.0.0.nupkg.sha512"
     },
     "System.Linq/4.1.0": {
       "type": "package",
@@ -6356,7 +6364,7 @@
       "serviceable": false,
       "sha512": ""
     },
-    "System.IO.Pipelines.Reference/9.0.0.0": {
+    "System.IO.Pipelines/9.0.0.0": {
       "type": "referenceassembly",
       "serviceable": false,
       "sha512": ""

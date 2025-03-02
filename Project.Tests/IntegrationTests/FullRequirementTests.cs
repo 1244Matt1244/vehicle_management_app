@@ -1,75 +1,128 @@
 using System;
 using System.Net;
-using System.Net.Http;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Xunit;
+using Project.Service.Data.Context;
+using HtmlAgilityPack;
+using System.Net.Http;
+using System.Collections.Generic;
+using System.Linq;
+using Project.Service.Models;
+using Microsoft.AspNetCore.Hosting;
 
 namespace Project.Tests.IntegrationTests
 {
-    public class FullRequirementTests : IClassFixture<WebApplicationFactory<Program>>
+    public class FullRequirementTests : IClassFixture<WebApplicationFactory<Program>>, IDisposable
     {
         private readonly WebApplicationFactory<Program> _factory;
+        private readonly HttpClient _client;
+        private readonly ApplicationDbContext _dbContext;
 
         public FullRequirementTests()
         {
-            _factory = new WebApplicationFactory<Program>();
+            _factory = new WebApplicationFactory<Program>().WithWebHostBuilder(builder =>
+            {
+                builder.UseEnvironment("Test");
+                builder.ConfigureServices(services =>
+                {
+                    services.RemoveAll(typeof(DbContextOptions<ApplicationDbContext>));
+                    services.AddDbContext<ApplicationDbContext>(options => 
+                        options.UseInMemoryDatabase("FullReqTestDB_"+Guid.NewGuid()));
+                });
+                
+                builder.Configure(app =>
+                {
+                    app.Use(async (context, next) =>
+                    {
+                        context.Request.Scheme = "https";
+                        await next();
+                    });
+                });
+            });
+            
+            _client = _factory.CreateClient(new WebApplicationFactoryClientOptions
+            {
+                HandleCookies = true,
+                AllowAutoRedirect = false,
+                BaseAddress = new Uri("https://localhost")
+            });
+            
+            var scope = _factory.Services.CreateScope();
+            _dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+            _dbContext.Database.EnsureCreated();
         }
 
         [Fact]
         public async Task CRUD_Workflow_ReturnsProperStatusCodes()
         {
-            var client = _factory.CreateClient();
-
-            // Verify index page
-            var indexResponse = await client.GetAsync("/VehicleMake");
-            Assert.Equal(HttpStatusCode.OK, indexResponse.StatusCode);
-
-            // Extract CSRF token and cookie for creation
-            var (csrfToken, cookie) = await ExtractCsrfData(await client.GetAsync("/VehicleMake/Create"));
-            client.DefaultRequestHeaders.Add("Cookie", cookie);
+            // Get CSRF token and cookie
+            var (csrfToken, cookie) = await GetCsrfData("/VehicleMake/Create");
+            _client.DefaultRequestHeaders.Add("Cookie", cookie);
 
             // Create
-            var createResponse = await client.PostAsync("/VehicleMake/Create", new FormUrlEncodedContent(new[]
+            var createResponse = await _client.PostAsync("/VehicleMake/Create", new FormUrlEncodedContent(new[]
             {
                 new KeyValuePair<string, string>("__RequestVerificationToken", csrfToken),
                 new KeyValuePair<string, string>("Name", "TestMake"),
                 new KeyValuePair<string, string>("Abbreviation", "TMK")
             }));
+            
             Assert.Equal(HttpStatusCode.Redirect, createResponse.StatusCode);
 
             // Verify creation
-            var createdContent = await client.GetStringAsync("/VehicleMake");
-            var id = ExtractFirstId(createdContent);
-            Assert.True(id > 0, "No valid ID found after creation.");
+            var created = _dbContext.VehicleMakes.FirstOrDefault();
+            Assert.NotNull(created);
+            var id = created.Id;
 
-            // Test edit page
-            var editResponse = await client.GetAsync($"/VehicleMake/Edit/{id}");
-            Assert.Equal(HttpStatusCode.OK, editResponse.StatusCode);
+            // Read details
+            var detailsResponse = await _client.GetAsync($"/VehicleMake/Details/{id}");
+            Assert.Equal(HttpStatusCode.OK, detailsResponse.StatusCode);
 
-            // Test delete page
-            var deleteResponse = await client.GetAsync($"/VehicleMake/Delete/{id}");
-            Assert.Equal(HttpStatusCode.OK, deleteResponse.StatusCode);
+            // Update
+            var (editCsrf, _) = await GetCsrfData($"/VehicleMake/Edit/{id}");
+            var updateResponse = await _client.PostAsync($"/VehicleMake/Edit/{id}", new FormUrlEncodedContent(new[]
+            {
+                new KeyValuePair<string, string>("__RequestVerificationToken", editCsrf),
+                new KeyValuePair<string, string>("Name", "UpdatedMake"),
+                new KeyValuePair<string, string>("Abbreviation", "UMK"),
+                new KeyValuePair<string, string>("Id", id.ToString())
+            }));
+            Assert.Equal(HttpStatusCode.Redirect, updateResponse.StatusCode);
+
+            // Delete
+            var (deleteCsrf, _) = await GetCsrfData($"/VehicleMake/Delete/{id}");
+            var deleteResponse = await _client.PostAsync($"/VehicleMake/Delete/{id}", new FormUrlEncodedContent(new[]
+            {
+                new KeyValuePair<string, string>("__RequestVerificationToken", deleteCsrf),
+                new KeyValuePair<string, string>("Id", id.ToString())
+            }));
+            Assert.Equal(HttpStatusCode.Redirect, deleteResponse.StatusCode);
         }
 
-        private async Task<(string Token, string Cookie)> ExtractCsrfData(HttpResponseMessage response)
+        private async Task<(string Token, string Cookie)> GetCsrfData(string url)
         {
+            var response = await _client.GetAsync(url);
             response.EnsureSuccessStatusCode();
-            var html = await response.Content.ReadAsStringAsync();
-            var cookie = response.Headers.GetValues("Set-Cookie").FirstOrDefault() ?? string.Empty;
+            
+            var content = await response.Content.ReadAsStringAsync();
+            var doc = new HtmlDocument();
+            doc.LoadHtml(content);
 
-            var match = Regex.Match(html,
-                @"<input[^>]*name=""__RequestVerificationToken""[^>]*value=""([^""]*)""",
-                RegexOptions.IgnoreCase);
-
-            return (match.Success ? match.Groups[1].Value : string.Empty, cookie);
+            var tokenNode = doc.DocumentNode.SelectSingleNode("//input[@name='__RequestVerificationToken']") 
+                        ?? throw new Exception($"CSRF token not found in:\n{content}");
+            
+            var cookie = response.Headers.GetValues("Set-Cookie").FirstOrDefault();
+            return (tokenNode.GetAttributeValue("value", ""), cookie ?? "");
         }
 
-        private int ExtractFirstId(string html)
+        public void Dispose()
         {
-            var match = Regex.Match(html, @"data-id=""(\d+)""");
-            return match.Success ? int.Parse(match.Groups[1].Value) : -1;
+            _dbContext.Database.EnsureDeleted();
+            _client.Dispose();
+            _factory.Dispose();
         }
     }
 }

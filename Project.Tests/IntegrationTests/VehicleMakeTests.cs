@@ -1,109 +1,131 @@
 using System;
 using System.Net;
 using System.Net.Http;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.EntityFrameworkCore; 
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Xunit;
 using Project.Service.Data.Context;
+using HtmlAgilityPack;
 using System.Collections.Generic;
 using System.Linq;
+using Project.Service.Models;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting;
 
 namespace Project.Tests.IntegrationTests
 {
-    public class VehicleMakeTests : IClassFixture<WebApplicationFactory<Program>>
+    public class VehicleMakeTests : IClassFixture<WebApplicationFactory<Program>>, IDisposable
     {
         private readonly WebApplicationFactory<Program> _factory;
+        private readonly HttpClient _client;
+        private readonly ApplicationDbContext _dbContext;
 
         public VehicleMakeTests()
         {
             _factory = new WebApplicationFactory<Program>().WithWebHostBuilder(builder =>
             {
+                builder.UseEnvironment("Test");
                 builder.ConfigureServices(services =>
                 {
-                    // Fix RemoveAll error
-                    var descriptor = services.FirstOrDefault(d => d.ServiceType == typeof(DbContextOptions<ApplicationDbContext>));
-                    if (descriptor != null) services.Remove(descriptor);
-
+                    services.RemoveAll(typeof(DbContextOptions<ApplicationDbContext>));
                     services.AddDbContext<ApplicationDbContext>(options => 
-                        options.UseInMemoryDatabase("TestDB"));
+                        options.UseInMemoryDatabase("VehicleMakeTestDB_"+Guid.NewGuid()));
+                });
+                
+                builder.Configure(app =>
+                {
+                    // Disable HTTPS redirection
+                    app.Use(async (context, next) =>
+                    {
+                        context.Request.Scheme = "https";
+                        await next();
+                    });
                 });
             });
+            
+            _client = _factory.CreateClient(new WebApplicationFactoryClientOptions
+            {
+                AllowAutoRedirect = false,
+                HandleCookies = true,
+                BaseAddress = new Uri("https://localhost")
+            });
+            
+            var scope = _factory.Services.CreateScope();
+            _dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+            _dbContext.Database.EnsureCreated();
         }
 
         [Fact]
         public async Task Full_CRUD_Workflow_With_CSRF()
         {
-            var client = _factory.CreateClient(new WebApplicationFactoryClientOptions
-            {
-                AllowAutoRedirect = false,
-                BaseAddress = new Uri("https://localhost")
-            });
+            // Get CSRF token for creation
+            var (csrfToken, cookie) = await GetCsrfData("/VehicleMake/Create");
+            _client.DefaultRequestHeaders.Add("Cookie", cookie);
 
-            // Get CSRF token with cookie handling
-            var initialResponse = await client.GetAsync("/VehicleMake/Create");
-            initialResponse.EnsureSuccessStatusCode();
-            var (csrfToken, cookie) = await ExtractCsrfData(initialResponse);
-
-            client.DefaultRequestHeaders.Add("Cookie", cookie);
-
-            // Create
-            var createResponse = await client.PostAsync("/VehicleMake/Create", new FormUrlEncodedContent(new[]
+            // Create new vehicle make
+            var createResponse = await _client.PostAsync("/VehicleMake/Create", new FormUrlEncodedContent(new[]
             {
                 new KeyValuePair<string, string>("__RequestVerificationToken", csrfToken),
                 new KeyValuePair<string, string>("Name", "TestMake"),
                 new KeyValuePair<string, string>("Abbreviation", "TMK")
             }));
             
-            // Fix status code expectation
             Assert.Equal(HttpStatusCode.Redirect, createResponse.StatusCode);
 
-            // Read
-            var indexResponse = await client.GetAsync("/VehicleMake");
-            indexResponse.EnsureSuccessStatusCode();
-            var indexContent = await indexResponse.Content.ReadAsStringAsync();
-            var id = ExtractFirstId(indexContent);
-            Assert.True(id > 0, "No valid ID found after creation.");
+            // Verify creation in database
+            var createdEntity = _dbContext.VehicleMakes.FirstOrDefault();
+            Assert.NotNull(createdEntity);
+            var id = createdEntity.Id;
 
-            // Update
-            var editResponse = await client.GetAsync($"/VehicleMake/Edit/{id}");
-            editResponse.EnsureSuccessStatusCode();
-            var (editToken, _) = await ExtractCsrfData(editResponse);
+            // Get CSRF token for edit
+            var (editCsrf, _) = await GetCsrfData($"/VehicleMake/Edit/{id}");
             
-            var updateResponse = await client.PostAsync($"/VehicleMake/Edit/{id}", new FormUrlEncodedContent(new[]
+            // Update the entity
+            var updateResponse = await _client.PostAsync($"/VehicleMake/Edit/{id}", new FormUrlEncodedContent(new[]
             {
-                new KeyValuePair<string, string>("__RequestVerificationToken", editToken),
+                new KeyValuePair<string, string>("__RequestVerificationToken", editCsrf),
                 new KeyValuePair<string, string>("Name", "UpdatedMake"),
-                new KeyValuePair<string, string>("Abbreviation", "UMK")
+                new KeyValuePair<string, string>("Abbreviation", "UMK"),
+                new KeyValuePair<string, string>("Id", id.ToString())
             }));
             Assert.Equal(HttpStatusCode.Redirect, updateResponse.StatusCode);
 
-            // Delete
-            var deleteResponse = await client.PostAsync($"/VehicleMake/Delete/{id}", new FormUrlEncodedContent(new[]
+            // Get CSRF token for delete
+            var (deleteCsrf, _) = await GetCsrfData($"/VehicleMake/Delete/{id}");
+            
+            // Delete the entity
+            var deleteResponse = await _client.PostAsync($"/VehicleMake/Delete/{id}", new FormUrlEncodedContent(new[]
             {
-                new KeyValuePair<string, string>("__RequestVerificationToken", editToken)
+                new KeyValuePair<string, string>("__RequestVerificationToken", deleteCsrf),
+                new KeyValuePair<string, string>("Id", id.ToString())
             }));
             Assert.Equal(HttpStatusCode.Redirect, deleteResponse.StatusCode);
         }
 
-        private async Task<(string Token, string Cookie)> ExtractCsrfData(HttpResponseMessage response)
+        private async Task<(string Token, string Cookie)> GetCsrfData(string url)
         {
-            var html = await response.Content.ReadAsStringAsync();
-            var cookie = response.Headers.GetValues("Set-Cookie").FirstOrDefault() ?? string.Empty;
+            var response = await _client.GetAsync(url);
+            response.EnsureSuccessStatusCode();
+            
+            var content = await response.Content.ReadAsStringAsync();
+            var doc = new HtmlDocument();
+            doc.LoadHtml(content);
 
-            var match = Regex.Match(html,
-                @"<input[^>]*name=""__RequestVerificationToken""[^>]*value=""([^""]*)""",
-                RegexOptions.IgnoreCase);
-
-            return (match.Success ? match.Groups[1].Value : string.Empty, cookie);
+            var tokenNode = doc.DocumentNode.SelectSingleNode("//input[@name='__RequestVerificationToken']") 
+                        ?? throw new Exception($"CSRF token not found in:\n{content}");
+            
+            var cookie = response.Headers.GetValues("Set-Cookie").FirstOrDefault();
+            return (tokenNode.GetAttributeValue("value", ""), cookie ?? "");
         }
 
-        private int ExtractFirstId(string html)
+        public void Dispose()
         {
-            var match = Regex.Match(html, @"data-id=""(\d+)""");
-            return match.Success ? int.Parse(match.Groups[1].Value) : -1;
+            _dbContext.Database.EnsureDeleted();
+            _client.Dispose();
+            _factory.Dispose();
         }
     }
 }

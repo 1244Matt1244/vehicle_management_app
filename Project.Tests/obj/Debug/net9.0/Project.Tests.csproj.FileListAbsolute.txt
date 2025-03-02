@@ -324,6 +324,7 @@ C:\Users\korisnik\Desktop\vehicle_management_app\Project.Tests\bin\Debug\net9.0\
 C:\Users\korisnik\Desktop\vehicle_management_app\Project.Tests\bin\Debug\net9.0\Azure.Core.dll
 C:\Users\korisnik\Desktop\vehicle_management_app\Project.Tests\bin\Debug\net9.0\Azure.Identity.dll
 C:\Users\korisnik\Desktop\vehicle_management_app\Project.Tests\bin\Debug\net9.0\Castle.Core.dll
+C:\Users\korisnik\Desktop\vehicle_management_app\Project.Tests\bin\Debug\net9.0\HtmlAgilityPack.dll
 C:\Users\korisnik\Desktop\vehicle_management_app\Project.Tests\bin\Debug\net9.0\Microsoft.AspNetCore.JsonPatch.dll
 C:\Users\korisnik\Desktop\vehicle_management_app\Project.Tests\bin\Debug\net9.0\Microsoft.AspNetCore.Mvc.NewtonsoftJson.dll
 C:\Users\korisnik\Desktop\vehicle_management_app\Project.Tests\bin\Debug\net9.0\Microsoft.AspNetCore.Mvc.Testing.dll
