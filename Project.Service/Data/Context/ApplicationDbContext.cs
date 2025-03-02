@@ -17,10 +17,10 @@ namespace Project.Service.Data.Context
         /// <summary>
         /// Configures an in-memory database for testing.
         /// </summary>
-        public static void ConfigureForTests(IServiceCollection services)
+        public static void ConfigureForTesting(IServiceCollection services)
         {
             services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseInMemoryDatabase("TestDB"), ServiceLifetime.Singleton);
+                options.UseInMemoryDatabase("TestDB"));
         }
 
         /// <summary>

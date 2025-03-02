@@ -55,31 +55,31 @@
             },
             "Microsoft.EntityFrameworkCore": {
               "target": "Package",
-              "version": "[9.0.2, )"
+              "version": "[8.0.0, )"
             },
             "Microsoft.EntityFrameworkCore.Design": {
               "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
               "suppressParent": "All",
               "target": "Package",
-              "version": "[9.0.2, )"
+              "version": "[8.0.0, )"
             },
             "Microsoft.EntityFrameworkCore.InMemory": {
               "target": "Package",
-              "version": "[9.0.2, )"
+              "version": "[8.0.0, )"
             },
             "Microsoft.EntityFrameworkCore.SqlServer": {
               "target": "Package",
-              "version": "[9.0.2, )"
+              "version": "[8.0.0, )"
             },
             "Microsoft.EntityFrameworkCore.Tools": {
               "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
               "suppressParent": "All",
               "target": "Package",
-              "version": "[9.0.2, )"
+              "version": "[8.0.0, )"
             },
             "Microsoft.Extensions.Logging.Abstractions": {
               "target": "Package",
-              "version": "[9.0.2, )"
+              "version": "[8.0.0, )"
             },
             "Ninject": {
               "target": "Package",
@@ -87,7 +87,7 @@
             },
             "Ninject.Web.AspNetCore": {
               "target": "Package",
-              "version": "[9.0.0, )"
+              "version": "[8.0.0, )"
             },
             "Ninject.Web.Common": {
               "target": "Package",
@@ -99,7 +99,7 @@
             },
             "Serilog.Extensions.Logging": {
               "target": "Package",
-              "version": "[9.0.0, )"
+              "version": "[8.0.0, )"
             },
             "Serilog.Sinks.Console": {
               "target": "Package",

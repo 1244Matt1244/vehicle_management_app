@@ -20,7 +20,7 @@ namespace Project.MVC.Controllers
             _mapper = mapper;
         }
 
-        // Existing Index action
+        // Index action
         public async Task<IActionResult> Index(
             int pageNumber = 1,
             int pageSize = 10,
@@ -62,9 +62,9 @@ namespace Project.MVC.Controllers
             {
                 var vehicleMakeDTO = _mapper.Map<VehicleMakeDTO>(vehicleMake);
                 await _vehicleService.AddMakeAsync(vehicleMakeDTO);
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Index)); // Ensure redirect after creation
             }
-            return View(vehicleMake);
+            return View(vehicleMake); // Return the view with validation errors
         }
 
         // Edit action - GET
@@ -87,9 +87,9 @@ namespace Project.MVC.Controllers
             {
                 var vehicleMakeDTO = _mapper.Map<VehicleMakeDTO>(vehicleMake);
                 await _vehicleService.UpdateMakeAsync(vehicleMakeDTO);
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Index)); // Ensure redirect after update
             }
-            return View(vehicleMake);
+            return View(vehicleMake); // Return the view with validation errors
         }
 
         // Details action - GET
@@ -116,7 +116,7 @@ namespace Project.MVC.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             await _vehicleService.DeleteMakeAsync(id);
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Index)); // Ensure redirect after deletion
         }
     }
 }
