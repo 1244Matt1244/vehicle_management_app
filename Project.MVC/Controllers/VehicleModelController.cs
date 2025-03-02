@@ -74,17 +74,17 @@ namespace Project.MVC.Controllers
             if (ModelState.IsValid)
             {
                 await _vehicleService.AddModelAsync(_mapper.Map<VehicleModelDTO>(model));
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Index)); // Redirect to Index after creation
             }
             model.AvailableMakes = _mapper.Map<List<VehicleMakeVM>>(await _vehicleService.GetAllMakesAsync());
-            return View(model);
+            return View(model); // Return to Create view if validation fails
         }
 
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
             var model = await _vehicleService.GetModelByIdAsync(id);
-            if (model == null) return NotFound();
+            if (model == null) return NotFound(); // Return 404 if model not found
 
             var vm = _mapper.Map<VehicleModelEditVM>(model);
             vm.AvailableMakes = _mapper.Map<List<VehicleMakeVM>>(await _vehicleService.GetAllMakesAsync());
@@ -99,36 +99,36 @@ namespace Project.MVC.Controllers
             if (ModelState.IsValid)
             {
                 await _vehicleService.UpdateModelAsync(_mapper.Map<VehicleModelDTO>(model));
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Index)); // Redirect to Index after successful update
             }
             
             model.AvailableMakes = _mapper.Map<List<VehicleMakeVM>>(
                 await _vehicleService.GetAllMakesAsync()
             );
-            return View(model);
+            return View(model); // Return view with validation errors if any
         }
 
         [HttpGet]
         public async Task<IActionResult> Details(int id)
         {
             var model = await _vehicleService.GetModelByIdAsync(id);
-            if (model == null) return NotFound();
-            return View(_mapper.Map<VehicleModelVM>(model));
+            if (model == null) return NotFound(); // Return 404 if not found
+            return View(_mapper.Map<VehicleModelVM>(model)); // Display model details
         }
 
         [HttpGet]
         public async Task<IActionResult> Delete(int id)
         {
             var model = await _vehicleService.GetModelByIdAsync(id);
-            if (model == null) return NotFound();
-            return View(_mapper.Map<VehicleModelVM>(model));
+            if (model == null) return NotFound(); // Return 404 if model not found
+            return View(_mapper.Map<VehicleModelVM>(model)); // Show confirmation for deletion
         }
 
         [HttpPost, ActionName("Delete")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             await _vehicleService.DeleteModelAsync(id);
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Index)); // Redirect to Index after deletion
         }
     }
 }

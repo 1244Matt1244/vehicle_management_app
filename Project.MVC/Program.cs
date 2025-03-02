@@ -10,10 +10,10 @@ using Project.Service.Mappings;
 using Project.MVC.Mappings;
 using Project.Service.Services;
 using Project.Service.Interfaces;
-using System.Runtime.CompilerServices;
+using System.Runtime.CompilerServices; // For InternalsVisibleToAttribute
 using System;
 
-[assembly: InternalsVisibleTo("Project.Tests")]
+[assembly: InternalsVisibleTo("Project.Tests")] // This line exposes internals to the test project
 
 var builder = WebApplication.CreateBuilder(args);
 

@@ -9,12 +9,12 @@ using System.Threading.Tasks;
 
 namespace Project.MVC.Controllers
 {
-    public class VehicleMakeControllerTests : Controller
+    public class VehicleMakeIntegrationTests : Controller
     {
         private readonly IVehicleService _vehicleService;
         private readonly IMapper _mapper;
 
-        public VehicleMakeControllerTests(IVehicleService vehicleService, IMapper mapper)
+        public VehicleMakeIntegrationTests(IVehicleService vehicleService, IMapper mapper)
         {
             _vehicleService = vehicleService;
             _mapper = mapper;

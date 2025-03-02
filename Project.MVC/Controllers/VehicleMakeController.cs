@@ -77,7 +77,7 @@ namespace Project.MVC.Controllers
         public async Task<IActionResult> Edit(int id)
         {
             var make = await _vehicleService.GetMakeByIdAsync(id);
-            if (make == null) return NotFound();
+            if (make == null) return NotFound(); // Return 404 if not found
             return View(_mapper.Map<VehicleMakeVM>(make)); // Map to ViewModel for the edit view
         }
 
