@@ -1,0 +1,36 @@
+@model Project.MVC.ViewModels.VehicleModelEditVM 
+
+<h1>Edit Vehicle Model</h1>
+
+<form asp-action="Edit">
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="Id" />
+    
+    <div class="form-group">
+        <label asp-for="Name"></label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+    
+    <div class="form-group">
+        <label asp-for="Abbreviation"></label>
+        <input asp-for="Abbreviation" class="form-control" />
+        <span asp-validation-for="Abbreviation" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="MakeId"></label>
+        <select asp-for="MakeId" 
+                asp-items="@(new SelectList(Model.AvailableMakes, "Id", "Name"))"
+                class="form-control">
+            <option value="">-- Select Make --</option>
+        </select>
+        <span asp-validation-for="MakeId" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Save</button>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

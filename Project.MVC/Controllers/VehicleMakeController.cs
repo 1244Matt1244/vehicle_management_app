@@ -1,7 +1,7 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Project.MVC.Helpers;
 using Project.MVC.ViewModels;
+using Project.MVC.Helpers;
 using Project.Service.Data.DTOs;
 using Project.Service.Interfaces;
 using System.Collections.Generic;
@@ -43,6 +43,11 @@ namespace Project.MVC.Controllers
                 PageSize = pageSize
             };
 
+            // Sorting and filtering data for view
+            ViewBag.SortOrder = sortOrder;
+            ViewBag.CurrentSort = sortBy;
+            ViewBag.CurrentFilter = searchString;
+
             return View(pagedResult);
         }
 
@@ -62,9 +67,9 @@ namespace Project.MVC.Controllers
             {
                 var vehicleMakeDTO = _mapper.Map<VehicleMakeDTO>(vehicleMake);
                 await _vehicleService.AddMakeAsync(vehicleMakeDTO);
-                return RedirectToAction(nameof(Index)); // Ensure redirect after creation
+                return RedirectToAction(nameof(Index)); // Redirect to Index after creation
             }
-            return View(vehicleMake); // Return the view with validation errors
+            return View(vehicleMake); // Return to Create view if validation fails
         }
 
         // Edit action - GET
@@ -73,7 +78,7 @@ namespace Project.MVC.Controllers
         {
             var make = await _vehicleService.GetMakeByIdAsync(id);
             if (make == null) return NotFound();
-            return View(_mapper.Map<VehicleMakeVM>(make));
+            return View(_mapper.Map<VehicleMakeVM>(make)); // Map to ViewModel for the edit view
         }
 
         // Edit action - POST
@@ -81,15 +86,15 @@ namespace Project.MVC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, VehicleMakeVM vehicleMake)
         {
-            if (id != vehicleMake.Id) return NotFound();
-            
+            if (id != vehicleMake.Id) return NotFound(); // Ensure the ID matches
+
             if (ModelState.IsValid)
             {
                 var vehicleMakeDTO = _mapper.Map<VehicleMakeDTO>(vehicleMake);
                 await _vehicleService.UpdateMakeAsync(vehicleMakeDTO);
-                return RedirectToAction(nameof(Index)); // Ensure redirect after update
+                return RedirectToAction(nameof(Index)); // Redirect to Index after successful update
             }
-            return View(vehicleMake); // Return the view with validation errors
+            return View(vehicleMake); // Return view with validation errors if any
         }
 
         // Details action - GET
@@ -97,8 +102,8 @@ namespace Project.MVC.Controllers
         public async Task<IActionResult> Details(int id)
         {
             var make = await _vehicleService.GetMakeByIdAsync(id);
-            if (make == null) return NotFound();
-            return View(_mapper.Map<VehicleMakeVM>(make));
+            if (make == null) return NotFound(); // Return 404 if not found
+            return View(_mapper.Map<VehicleMakeVM>(make)); // Display details in ViewModel format
         }
 
         // Delete action - GET
@@ -106,8 +111,8 @@ namespace Project.MVC.Controllers
         public async Task<IActionResult> Delete(int id)
         {
             var make = await _vehicleService.GetMakeByIdAsync(id);
-            if (make == null) return NotFound();
-            return View(_mapper.Map<VehicleMakeVM>(make));
+            if (make == null) return NotFound(); // Return 404 if not found
+            return View(_mapper.Map<VehicleMakeVM>(make)); // Display delete confirmation view
         }
 
         // Delete action - POST
@@ -115,8 +120,8 @@ namespace Project.MVC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            await _vehicleService.DeleteMakeAsync(id);
-            return RedirectToAction(nameof(Index)); // Ensure redirect after deletion
+            await _vehicleService.DeleteMakeAsync(id); // Perform delete operation
+            return RedirectToAction(nameof(Index)); // Redirect to Index after deletion
         }
     }
 }

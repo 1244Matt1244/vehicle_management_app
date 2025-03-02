@@ -3,6 +3,7 @@
 <h1>Create New Vehicle Model</h1>
 
 <form asp-action="Create">
+    @Html.AntiForgeryToken() <!-- Added token -->
     <div class="form-group">
         <label asp-for="Name"></label>
         <input asp-for="Name" class="form-control" />
@@ -27,3 +28,7 @@
 
     <button type="submit" class="btn btn-primary">Create</button>
 </form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
