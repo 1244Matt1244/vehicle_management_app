@@ -7,128 +7,131 @@ using Project.Service.Interfaces;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Project.MVC.Controllers
+public class VehicleModelController : Controller
 {
-    public class VehicleModelController : Controller
+    private readonly IVehicleService _vehicleService;
+    private readonly IMapper _mapper;
+
+    public VehicleModelController(IVehicleService vehicleService, IMapper mapper)
     {
-        private readonly IVehicleService _vehicleService;
-        private readonly IMapper _mapper;
+        _vehicleService = vehicleService;
+        _mapper = mapper;
+    }
 
-        public VehicleModelController(IVehicleService vehicleService, IMapper mapper)
+    public async Task<IActionResult> Index(
+        int pageNumber = 1,
+        int pageSize = 10,
+        string sortBy = "Name",
+        string sortOrder = "asc",
+        string searchString = "",
+        int? makeId = null)
+    {
+        var serviceResult = await _vehicleService.GetModelsAsync(
+            pageNumber,
+            pageSize,
+            sortBy,
+            sortOrder,
+            searchString,
+            makeId);
+
+        var makes = await _vehicleService.GetAllMakesAsync();
+
+        var viewModel = new VehicleModelIndexVM
         {
-            _vehicleService = vehicleService;
-            _mapper = mapper;
-        }
-
-        public async Task<IActionResult> Index(
-            int pageNumber = 1,
-            int pageSize = 10,
-            string sortBy = "Name",
-            string sortOrder = "asc",
-            string searchString = "",
-            int? makeId = null)
-        {
-            var serviceResult = await _vehicleService.GetModelsAsync(
-                pageNumber,
-                pageSize,
-                sortBy,
-                sortOrder,
-                searchString,
-                makeId);
-
-            var makes = await _vehicleService.GetAllMakesAsync();
-
-            var viewModel = new VehicleModelIndexVM
+            PagedResults = new PagedResult<VehicleModelVM>
             {
-                PagedResults = new PagedResult<VehicleModelVM>
-                {
-                    Items = _mapper.Map<List<VehicleModelVM>>(serviceResult.Items),
-                    TotalCount = serviceResult.TotalCount,
-                    PageNumber = pageNumber,
-                    PageSize = pageSize
-                },
-                Makes = _mapper.Map<List<VehicleMakeVM>>(makes)
-            };
+                Items = _mapper.Map<List<VehicleModelVM>>(serviceResult.Items),
+                TotalCount = serviceResult.TotalCount,
+                PageNumber = pageNumber,
+                PageSize = pageSize
+            },
+            Makes = _mapper.Map<List<VehicleMakeVM>>(makes)
+        };
 
-            ViewBag.SortOrder = sortOrder;
-            ViewBag.CurrentSort = sortBy;
-            ViewBag.CurrentFilter = searchString;
+        ViewBag.SortOrder = sortOrder;
+        ViewBag.CurrentSort = sortBy;
+        ViewBag.CurrentFilter = searchString;
 
-            return View(viewModel);
-        }
+        return View(viewModel);
+    }
 
-        [HttpGet]
-        public async Task<IActionResult> Create()
+    [HttpGet]
+    public async Task<IActionResult> Create()
+    {
+        var makes = await _vehicleService.GetAllMakesAsync();
+        var vm = new VehicleModelCreateVM
         {
-            var makes = await _vehicleService.GetAllMakesAsync();
-            var vm = new VehicleModelCreateVM
-            {
-                AvailableMakes = _mapper.Map<List<VehicleMakeVM>>(makes)
-            };
-            return View(vm);
-        }
+            AvailableMakes = _mapper.Map<List<VehicleMakeVM>>(makes)
+        };
+        return View(vm);
+    }
 
-        [HttpPost]
-        public async Task<IActionResult> Create(VehicleModelCreateVM model)
+    [HttpPost]
+    public async Task<IActionResult> Create(VehicleModelCreateVM model)
+    {
+        if (!ModelState.IsValid)
         {
-            if (ModelState.IsValid)
-            {
-                await _vehicleService.AddModelAsync(_mapper.Map<VehicleModelDTO>(model));
-                return RedirectToAction(nameof(Index)); // Redirect to Index after creation
-            }
-            model.AvailableMakes = _mapper.Map<List<VehicleMakeVM>>(await _vehicleService.GetAllMakesAsync());
-            return View(model); // Return to Create view if validation fails
+            return BadRequest(ModelState); // 400 - Bad Request for invalid model state
         }
 
-        [HttpGet]
-        public async Task<IActionResult> Edit(int id)
+        await _vehicleService.AddModelAsync(_mapper.Map<VehicleModelDTO>(model));
+        return Ok(); // 200 - OK for successful creation
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> Edit(int id)
+    {
+        var model = await _vehicleService.GetModelByIdAsync(id);
+        if (model == null)
         {
-            var model = await _vehicleService.GetModelByIdAsync(id);
-            if (model == null) return NotFound(); // Return 404 if model not found
-
-            var vm = _mapper.Map<VehicleModelEditVM>(model);
-            vm.AvailableMakes = _mapper.Map<List<VehicleMakeVM>>(await _vehicleService.GetAllMakesAsync());
-            
-            return View(vm);
+            return NotFound(); // 404 - Not Found
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(VehicleModelEditVM model)
+        var vm = _mapper.Map<VehicleModelEditVM>(model);
+        vm.AvailableMakes = _mapper.Map<List<VehicleMakeVM>>(await _vehicleService.GetAllMakesAsync());
+
+        return View(vm);
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Edit(VehicleModelEditVM model)
+    {
+        if (!ModelState.IsValid)
         {
-            if (ModelState.IsValid)
-            {
-                await _vehicleService.UpdateModelAsync(_mapper.Map<VehicleModelDTO>(model));
-                return RedirectToAction(nameof(Index)); // Redirect to Index after successful update
-            }
-            
-            model.AvailableMakes = _mapper.Map<List<VehicleMakeVM>>(
-                await _vehicleService.GetAllMakesAsync()
-            );
-            return View(model); // Return view with validation errors if any
+            return BadRequest(ModelState); // 400 - Bad Request for invalid model state
         }
 
-        [HttpGet]
-        public async Task<IActionResult> Details(int id)
-        {
-            var model = await _vehicleService.GetModelByIdAsync(id);
-            if (model == null) return NotFound(); // Return 404 if not found
-            return View(_mapper.Map<VehicleModelVM>(model)); // Display model details
-        }
+        await _vehicleService.UpdateModelAsync(_mapper.Map<VehicleModelDTO>(model));
+        return Ok(); // 200 - OK for successful update
+    }
 
-        [HttpGet]
-        public async Task<IActionResult> Delete(int id)
+    [HttpGet]
+    public async Task<IActionResult> Details(int id)
+    {
+        var model = await _vehicleService.GetModelByIdAsync(id);
+        if (model == null)
         {
-            var model = await _vehicleService.GetModelByIdAsync(id);
-            if (model == null) return NotFound(); // Return 404 if model not found
-            return View(_mapper.Map<VehicleModelVM>(model)); // Show confirmation for deletion
+            return NotFound(); // 404 - Not Found
         }
+        return View(_mapper.Map<VehicleModelVM>(model)); // Display model details
+    }
 
-        [HttpPost, ActionName("Delete")]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+    [HttpGet]
+    public async Task<IActionResult> Delete(int id)
+    {
+        var model = await _vehicleService.GetModelByIdAsync(id);
+        if (model == null)
         {
-            await _vehicleService.DeleteModelAsync(id);
-            return RedirectToAction(nameof(Index)); // Redirect to Index after deletion
+            return NotFound(); // 404 - Not Found
         }
+        return View(_mapper.Map<VehicleModelVM>(model)); // Show confirmation for deletion
+    }
+
+    [HttpPost, ActionName("Delete")]
+    public async Task<IActionResult> DeleteConfirmed(int id)
+    {
+        await _vehicleService.DeleteModelAsync(id);
+        return Ok(); // 200 - OK for successful deletion
     }
 }
