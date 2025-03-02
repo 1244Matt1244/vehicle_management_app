@@ -56,14 +56,15 @@ namespace Project.MVC.Controllers
         // Create action - POST
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([FromForm] VehicleMakeVM make)
+        public async Task<IActionResult> Create(VehicleMakeVM vehicleMake)
         {
             if (ModelState.IsValid)
             {
-                await _vehicleService.AddMakeAsync(_mapper.Map<VehicleMakeDTO>(make));
-                return CreatedAtAction(nameof(Details), new { id = make.Id }, make); // 201 Created
+                var vehicleMakeDTO = _mapper.Map<VehicleMakeDTO>(vehicleMake);
+                await _vehicleService.AddMakeAsync(vehicleMakeDTO);
+                return RedirectToAction(nameof(Index));
             }
-            return View(make); // 400 Bad Request
+            return View(vehicleMake);
         }
 
         // Edit action - GET
@@ -77,14 +78,18 @@ namespace Project.MVC.Controllers
 
         // Edit action - POST
         [HttpPost]
-        public async Task<IActionResult> Edit(VehicleMakeVM model)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, VehicleMakeVM vehicleMake)
         {
+            if (id != vehicleMake.Id) return NotFound();
+            
             if (ModelState.IsValid)
             {
-                await _vehicleService.UpdateMakeAsync(_mapper.Map<VehicleMakeDTO>(model));
+                var vehicleMakeDTO = _mapper.Map<VehicleMakeDTO>(vehicleMake);
+                await _vehicleService.UpdateMakeAsync(vehicleMakeDTO);
                 return RedirectToAction(nameof(Index));
             }
-            return View(model);
+            return View(vehicleMake);
         }
 
         // Details action - GET
@@ -107,17 +112,11 @@ namespace Project.MVC.Controllers
 
         // Delete action - POST
         [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            try
-            {
-                await _vehicleService.DeleteMakeAsync(id);
-                return NoContent(); // 204 No Content
-            }
-            catch (KeyNotFoundException)
-            {
-                return NotFound(); // 404 Not Found
-            }
+            await _vehicleService.DeleteMakeAsync(id);
+            return RedirectToAction(nameof(Index));
         }
     }
 }
