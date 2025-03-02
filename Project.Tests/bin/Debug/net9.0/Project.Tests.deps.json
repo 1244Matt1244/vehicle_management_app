@@ -42,6 +42,7 @@
           "Microsoft.AspNetCore.Mvc.Testing": "9.0.0",
           "Microsoft.AspNetCore.Routing": "1.0.0",
           "Microsoft.Extensions.DependencyInjection": "9.0.0",
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "9.0.2",
           "Microsoft.Extensions.Hosting": "9.0.0",
           "Microsoft.Extensions.Options": "9.0.0",
           "Microsoft.NET.Test.Sdk": "17.13.0",
@@ -746,7 +747,7 @@
       "Microsoft.Extensions.Caching.Memory/9.0.0": {
         "dependencies": {
           "Microsoft.Extensions.Caching.Abstractions": "9.0.0",
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "9.0.0",
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "9.0.2",
           "Microsoft.Extensions.Logging.Abstractions": "9.0.0",
           "Microsoft.Extensions.Options": "9.0.0",
           "Microsoft.Extensions.Primitives": "9.0.0"
@@ -807,10 +808,10 @@
       },
       "Microsoft.Extensions.DependencyInjection/9.0.0": {
         "dependencies": {
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "9.0.0"
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "9.0.2"
         }
       },
-      "Microsoft.Extensions.DependencyInjection.Abstractions/9.0.0": {},
+      "Microsoft.Extensions.DependencyInjection.Abstractions/9.0.2": {},
       "Microsoft.Extensions.DependencyModel/9.0.0": {
         "runtime": {
           "lib/net9.0/Microsoft.Extensions.DependencyModel.dll": {
@@ -831,7 +832,7 @@
       },
       "Microsoft.Extensions.Diagnostics.Abstractions/9.0.0": {
         "dependencies": {
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "9.0.0",
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "9.0.2",
           "Microsoft.Extensions.Options": "9.0.0"
         }
       },
@@ -859,7 +860,7 @@
           "Microsoft.Extensions.Configuration.Json": "9.0.0",
           "Microsoft.Extensions.Configuration.UserSecrets": "9.0.0",
           "Microsoft.Extensions.DependencyInjection": "9.0.0",
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "9.0.0",
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "9.0.2",
           "Microsoft.Extensions.Diagnostics": "9.0.0",
           "Microsoft.Extensions.FileProviders.Abstractions": "9.0.0",
           "Microsoft.Extensions.FileProviders.Physical": "9.0.0",
@@ -877,7 +878,7 @@
       "Microsoft.Extensions.Hosting.Abstractions/9.0.0": {
         "dependencies": {
           "Microsoft.Extensions.Configuration.Abstractions": "9.0.0",
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "9.0.0",
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "9.0.2",
           "Microsoft.Extensions.Diagnostics.Abstractions": "9.0.0",
           "Microsoft.Extensions.FileProviders.Abstractions": "9.0.0",
           "Microsoft.Extensions.Logging.Abstractions": "9.0.0"
@@ -892,7 +893,7 @@
       },
       "Microsoft.Extensions.Logging.Abstractions/9.0.0": {
         "dependencies": {
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "9.0.0"
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "9.0.2"
         }
       },
       "Microsoft.Extensions.Logging.Configuration/9.0.0": {
@@ -900,7 +901,7 @@
           "Microsoft.Extensions.Configuration": "9.0.0",
           "Microsoft.Extensions.Configuration.Abstractions": "9.0.0",
           "Microsoft.Extensions.Configuration.Binder": "9.0.0",
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "9.0.0",
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "9.0.2",
           "Microsoft.Extensions.Logging": "9.0.0",
           "Microsoft.Extensions.Logging.Abstractions": "9.0.0",
           "Microsoft.Extensions.Options": "9.0.0",
@@ -909,7 +910,7 @@
       },
       "Microsoft.Extensions.Logging.Console/9.0.0": {
         "dependencies": {
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "9.0.0",
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "9.0.2",
           "Microsoft.Extensions.Logging": "9.0.0",
           "Microsoft.Extensions.Logging.Abstractions": "9.0.0",
           "Microsoft.Extensions.Logging.Configuration": "9.0.0",
@@ -918,14 +919,14 @@
       },
       "Microsoft.Extensions.Logging.Debug/9.0.0": {
         "dependencies": {
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "9.0.0",
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "9.0.2",
           "Microsoft.Extensions.Logging": "9.0.0",
           "Microsoft.Extensions.Logging.Abstractions": "9.0.0"
         }
       },
       "Microsoft.Extensions.Logging.EventLog/9.0.0": {
         "dependencies": {
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "9.0.0",
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "9.0.2",
           "Microsoft.Extensions.Logging": "9.0.0",
           "Microsoft.Extensions.Logging.Abstractions": "9.0.0",
           "Microsoft.Extensions.Options": "9.0.0",
@@ -934,7 +935,7 @@
       },
       "Microsoft.Extensions.Logging.EventSource/9.0.0": {
         "dependencies": {
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "9.0.0",
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "9.0.2",
           "Microsoft.Extensions.Logging": "9.0.0",
           "Microsoft.Extensions.Logging.Abstractions": "9.0.0",
           "Microsoft.Extensions.Options": "9.0.0",
@@ -951,7 +952,7 @@
       },
       "Microsoft.Extensions.Options/9.0.0": {
         "dependencies": {
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "9.0.0",
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "9.0.2",
           "Microsoft.Extensions.Primitives": "9.0.0"
         }
       },
@@ -959,7 +960,7 @@
         "dependencies": {
           "Microsoft.Extensions.Configuration.Abstractions": "9.0.0",
           "Microsoft.Extensions.Configuration.Binder": "9.0.0",
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "9.0.0",
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "9.0.2",
           "Microsoft.Extensions.Options": "9.0.0",
           "Microsoft.Extensions.Primitives": "9.0.0"
         }
@@ -1547,7 +1548,7 @@
       },
       "Serilog.Extensions.Hosting/9.0.0": {
         "dependencies": {
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "9.0.0",
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "9.0.2",
           "Microsoft.Extensions.Hosting.Abstractions": "9.0.0",
           "Microsoft.Extensions.Logging.Abstractions": "9.0.0",
           "Serilog": "4.2.0",
@@ -2334,7 +2335,7 @@
           "Microsoft.Extensions.Configuration": "9.0.0",
           "Microsoft.Extensions.Configuration.Json": "9.0.0",
           "Microsoft.Extensions.DependencyInjection": "9.0.0",
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "9.0.0",
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "9.0.2",
           "Microsoft.Extensions.Options": "9.0.0",
           "Ninject.Web.Common": "3.3.2",
           "Project.Service": "1.0.0",
@@ -4472,12 +4473,12 @@
       "path": "microsoft.extensions.dependencyinjection/9.0.0",
       "hashPath": "microsoft.extensions.dependencyinjection.9.0.0.nupkg.sha512"
     },
-    "Microsoft.Extensions.DependencyInjection.Abstractions/9.0.0": {
+    "Microsoft.Extensions.DependencyInjection.Abstractions/9.0.2": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-+6f2qv2a3dLwd5w6JanPIPs47CxRbnk+ZocMJUhv9NxP88VlOcJYZs9jY+MYSjxvady08bUZn6qgiNh7DadGgg==",
-      "path": "microsoft.extensions.dependencyinjection.abstractions/9.0.0",
-      "hashPath": "microsoft.extensions.dependencyinjection.abstractions.9.0.0.nupkg.sha512"
+      "sha512": "sha512-MNe7GSTBf3jQx5vYrXF0NZvn6l7hUKF6J54ENfAgCO8y6xjN1XUmKKWG464LP2ye6QqDiA1dkaWEZBYnhoZzjg==",
+      "path": "microsoft.extensions.dependencyinjection.abstractions/9.0.2",
+      "hashPath": "microsoft.extensions.dependencyinjection.abstractions.9.0.2.nupkg.sha512"
     },
     "Microsoft.Extensions.DependencyModel/9.0.0": {
       "type": "package",
