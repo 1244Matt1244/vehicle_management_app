@@ -18,20 +18,14 @@ namespace Project.Tests.IntegrationTests
     {
         private readonly WebApplicationFactory<Program> _factory;
 
-        public VehicleMakeTests(WebApplicationFactory<Program> factory)
+        public VehicleMakeTests()
         {
-            _factory = factory.WithWebHostBuilder(builder =>
+            _factory = new WebApplicationFactory<Program>().WithWebHostBuilder(builder =>
             {
-                // Corrected environment configuration
-                builder.ConfigureAppConfiguration((context, config) =>
-                {
-                    context.HostingEnvironment.EnvironmentName = "Test";
-                });
-                
                 builder.ConfigureServices(services =>
                 {
-                    var descriptor = services.SingleOrDefault(
-                        d => d.ServiceType == typeof(DbContextOptions<ApplicationDbContext>));
+                    // Fix RemoveAll error
+                    var descriptor = services.FirstOrDefault(d => d.ServiceType == typeof(DbContextOptions<ApplicationDbContext>));
                     if (descriptor != null) services.Remove(descriptor);
 
                     services.AddDbContext<ApplicationDbContext>(options => 
@@ -46,13 +40,17 @@ namespace Project.Tests.IntegrationTests
             var client = _factory.CreateClient(new WebApplicationFactoryClientOptions
             {
                 AllowAutoRedirect = false,
-                BaseAddress = new Uri("https://localhost")
+                BaseAddress = new Uri("http://localhost")
             });
 
-            // CREATE
-            var csrfToken = await ExtractCsrfToken(client, "/VehicleMake/Create");
-            Assert.NotNull(csrfToken);
+            // Get CSRF token with cookie
+            var initialResponse = await client.GetAsync("/VehicleMake/Create");
+            initialResponse.EnsureSuccessStatusCode();
+            var (csrfToken, cookie) = await ExtractCsrfData(initialResponse);
 
+            client.DefaultRequestHeaders.Add("Cookie", cookie);
+
+            // Create
             var createResponse = await client.PostAsync("/VehicleMake/Create", new FormUrlEncodedContent(new[]
             {
                 new KeyValuePair<string, string>("__RequestVerificationToken", csrfToken),
@@ -61,14 +59,17 @@ namespace Project.Tests.IntegrationTests
             }));
             Assert.Equal(HttpStatusCode.Redirect, createResponse.StatusCode);
 
-            // READ
+            // Read
             var indexResponse = await client.GetAsync("/VehicleMake");
             indexResponse.EnsureSuccessStatusCode();
             var indexContent = await indexResponse.Content.ReadAsStringAsync();
             var id = ExtractFirstId(indexContent);
 
-            // UPDATE
-            var editToken = await ExtractCsrfToken(client, $"/VehicleMake/Edit/{id}");
+            // Update
+            var editResponse = await client.GetAsync($"/VehicleMake/Edit/{id}");
+            editResponse.EnsureSuccessStatusCode();
+            var (editToken, _) = await ExtractCsrfData(editResponse);
+            
             var updateResponse = await client.PostAsync($"/VehicleMake/Edit/{id}", new FormUrlEncodedContent(new[]
             {
                 new KeyValuePair<string, string>("__RequestVerificationToken", editToken),
@@ -77,26 +78,24 @@ namespace Project.Tests.IntegrationTests
             }));
             Assert.Equal(HttpStatusCode.Redirect, updateResponse.StatusCode);
 
-            // DELETE
-            var deleteToken = await ExtractCsrfToken(client, $"/VehicleMake/Delete/{id}");
+            // Delete
             var deleteResponse = await client.PostAsync($"/VehicleMake/Delete/{id}", new FormUrlEncodedContent(new[]
             {
-                new KeyValuePair<string, string>("__RequestVerificationToken", deleteToken)
+                new KeyValuePair<string, string>("__RequestVerificationToken", editToken)
             }));
             Assert.Equal(HttpStatusCode.Redirect, deleteResponse.StatusCode);
         }
 
-        private async Task<string> ExtractCsrfToken(HttpClient client, string url)
+        private async Task<(string Token, string Cookie)> ExtractCsrfData(HttpResponseMessage response)
         {
-            var response = await client.GetAsync(url);
-            response.EnsureSuccessStatusCode();
             var html = await response.Content.ReadAsStringAsync();
+            var cookie = response.Headers.GetValues("Set-Cookie").FirstOrDefault() ?? string.Empty;
             
-            var match = Regex.Match(html, 
-                @"<input[^>]*name=[""']__RequestVerificationToken[""'][^>]*value=[""']([^""']+)[""']",
+            var match = Regex.Match(html,
+                @"<input[^>]*name=""__RequestVerificationToken""[^>]*value=""([^""]*)""",
                 RegexOptions.IgnoreCase);
-            
-            return match.Success ? match.Groups[1].Value : null!;
+
+            return (match.Success ? match.Groups[1].Value : string.Empty, cookie);
         }
 
         private int ExtractFirstId(string html)
