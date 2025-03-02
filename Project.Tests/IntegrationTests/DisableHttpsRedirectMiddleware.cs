@@ -14,7 +14,8 @@ namespace Project.Tests.IntegrationTests
 
         public async Task Invoke(HttpContext context)
         {
-            // Bypass HTTPS redirection
+            // Force HTTPS scheme for CSRF validation
+            context.Request.Scheme = "https";
             await _next(context);
         }
     }

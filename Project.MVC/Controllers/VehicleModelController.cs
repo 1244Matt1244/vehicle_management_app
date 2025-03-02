@@ -20,7 +20,6 @@ namespace Project.MVC.Controllers
             _mapper = mapper;
         }
 
-        // Existing Index action
         public async Task<IActionResult> Index(
             int pageNumber = 1,
             int pageSize = 10,
@@ -58,7 +57,6 @@ namespace Project.MVC.Controllers
             return View(viewModel);
         }
 
-        // Updated Create actions
         [HttpGet]
         public async Task<IActionResult> Create()
         {
@@ -78,7 +76,6 @@ namespace Project.MVC.Controllers
                 await _vehicleService.AddModelAsync(_mapper.Map<VehicleModelDTO>(model));
                 return RedirectToAction(nameof(Index));
             }
-            // Repopulate makes if validation fails
             model.AvailableMakes = _mapper.Map<List<VehicleMakeVM>>(await _vehicleService.GetAllMakesAsync());
             return View(model);
         }
@@ -88,17 +85,26 @@ namespace Project.MVC.Controllers
         {
             var model = await _vehicleService.GetModelByIdAsync(id);
             if (model == null) return NotFound();
-            return View(_mapper.Map<VehicleModelVM>(model));
+
+            var vm = _mapper.Map<VehicleModelEditVM>(model);
+            vm.AvailableMakes = _mapper.Map<List<VehicleMakeVM>>(await _vehicleService.GetAllMakesAsync());
+            
+            return View(vm);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(VehicleModelVM model)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(VehicleModelEditVM model)
         {
             if (ModelState.IsValid)
             {
                 await _vehicleService.UpdateModelAsync(_mapper.Map<VehicleModelDTO>(model));
                 return RedirectToAction(nameof(Index));
             }
+            
+            model.AvailableMakes = _mapper.Map<List<VehicleMakeVM>>(
+                await _vehicleService.GetAllMakesAsync()
+            );
             return View(model);
         }
 
