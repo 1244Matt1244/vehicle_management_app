@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 using Project.MVC;
-using Project.Service.Data;
+using Project.Service.Data.Context;
 
 namespace Project.Tests.IntegrationTests
 {
@@ -21,7 +21,6 @@ namespace Project.Tests.IntegrationTests
             {
                 builder.ConfigureServices(services =>
                 {
-                    // Remove existing database configuration
                     var descriptor = services.SingleOrDefault(
                         d => d.ServiceType == typeof(DbContextOptions<ApplicationDbContext>));
                     if (descriptor != null)
@@ -29,7 +28,6 @@ namespace Project.Tests.IntegrationTests
                         services.Remove(descriptor);
                     }
 
-                    // Add in-memory database
                     services.AddDbContext<ApplicationDbContext>(options =>
                     {
                         options.UseInMemoryDatabase("TestDatabase");
@@ -89,7 +87,7 @@ namespace Project.Tests.IntegrationTests
             var html = await response.Content.ReadAsStringAsync();
             
             var match = Regex.Match(html, 
-                @"<input[^>]*name=[""']__RequestVerificationToken[""'][^>]*value=[""']([^""']+)[""']",
+                @"<input[^>]*name=[""']__RequestVerificationToken[""'][^>]*value=[""']([^""']+)[""']", 
                 RegexOptions.IgnoreCase);
             
             return match.Success ? match.Groups[1].Value : null!;

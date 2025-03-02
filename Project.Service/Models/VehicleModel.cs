@@ -16,9 +16,10 @@ namespace Project.Service.Models
         [StringLength(10)]
         public required string Abbreviation { get; set; }
 
-        [ForeignKey("VehicleMake")]
-        public int MakeId { get; set; }
+        [ForeignKey(nameof(VehicleMake))]  // Explicit foreign key annotation
+        public int VehicleMakeId { get; set; }  // Correct property name
 
-        public virtual VehicleMake VehicleMake { get; set; } = null!; // Non-nullable reference
+        [Required]
+        public virtual VehicleMake VehicleMake { get; set; } = null!;
     }
 }

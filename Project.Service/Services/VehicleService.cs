@@ -1,5 +1,5 @@
 using AutoMapper;
-using AutoMapper.QueryableExtensions; // Add this namespace
+using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 using Project.Service.Data.Context;
 using Project.Service.Data.DTOs;
@@ -24,7 +24,7 @@ namespace Project.Service.Services
             _mapper = mapper;
         }
 
-        // VehicleMake Implementation
+        // VehicleMake Methods
         public async Task<PaginatedList<VehicleMakeDTO>> GetMakesAsync(int pageIndex, int pageSize, 
             string sortBy, string sortOrder, string searchString)
         {
@@ -40,7 +40,7 @@ namespace Project.Service.Services
             query = query.OrderByProperty(sortBy, sortOrder);
             
             return await PaginatedList<VehicleMakeDTO>.CreateAsync(
-                query.ProjectTo<VehicleMakeDTO>(_mapper.ConfigurationProvider), // Fixed ProjectTo
+                query.ProjectTo<VehicleMakeDTO>(_mapper.ConfigurationProvider),
                 pageIndex,
                 pageSize
             );
@@ -64,8 +64,6 @@ namespace Project.Service.Services
             }
             catch (Exception ex)
             {
-                // Log the error and throw a custom exception
-                // Example: Logger.LogError(ex, "Error adding vehicle make");
                 throw new ApplicationException("Error adding vehicle make", ex);
             }
         }
@@ -83,8 +81,6 @@ namespace Project.Service.Services
             }
             catch (Exception ex)
             {
-                // Log the error and throw a custom exception
-                // Example: Logger.LogError(ex, "Error updating vehicle make");
                 throw new ApplicationException("Error updating vehicle make", ex);
             }
         }
@@ -101,8 +97,6 @@ namespace Project.Service.Services
             }
             catch (Exception ex)
             {
-                // Log the error and throw a custom exception
-                // Example: Logger.LogError(ex, "Error deleting vehicle make");
                 throw new ApplicationException("Error deleting vehicle make", ex);
             }
         }
@@ -115,17 +109,17 @@ namespace Project.Service.Services
                 .ToListAsync();
         }
 
-        // VehicleModel Implementation
+        // VehicleModel Methods
         public async Task<PaginatedList<VehicleModelDTO>> GetModelsAsync(int pageIndex, int pageSize, 
             string sortBy, string sortOrder, string searchString, int? makeId)
         {
             var query = _context.VehicleModels
                 .AsNoTracking()
-                .Include(m => m.VehicleMake) // Correct include
+                .Include(m => m.VehicleMake)
                 .AsQueryable();
 
             if (makeId.HasValue)
-                query = query.Where(m => m.MakeId == makeId.Value);
+                query = query.Where(m => m.VehicleMakeId == makeId.Value);
 
             if (!string.IsNullOrWhiteSpace(searchString))
                 query = query.Where(m => m.Name.Contains(searchString));
@@ -133,7 +127,7 @@ namespace Project.Service.Services
             query = query.OrderByProperty(sortBy, sortOrder);
             
             return await PaginatedList<VehicleModelDTO>.CreateAsync(
-                query.ProjectTo<VehicleModelDTO>(_mapper.ConfigurationProvider), // Fixed ProjectTo
+                query.ProjectTo<VehicleModelDTO>(_mapper.ConfigurationProvider),
                 pageIndex,
                 pageSize
             );
@@ -158,8 +152,6 @@ namespace Project.Service.Services
             }
             catch (Exception ex)
             {
-                // Log the error and throw a custom exception
-                // Example: Logger.LogError(ex, "Error adding vehicle model");
                 throw new ApplicationException("Error adding vehicle model", ex);
             }
         }
@@ -177,8 +169,6 @@ namespace Project.Service.Services
             }
             catch (Exception ex)
             {
-                // Log the error and throw a custom exception
-                // Example: Logger.LogError(ex, "Error updating vehicle model");
                 throw new ApplicationException("Error updating vehicle model", ex);
             }
         }
@@ -195,8 +185,6 @@ namespace Project.Service.Services
             }
             catch (Exception ex)
             {
-                // Log the error and throw a custom exception
-                // Example: Logger.LogError(ex, "Error deleting vehicle model");
                 throw new ApplicationException("Error deleting vehicle model", ex);
             }
         }

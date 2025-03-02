@@ -7,8 +7,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Project.Service.Data.Context;
 using Project.Service.Mappings;
+using Project.MVC.Mappings;
 using Project.Service.Services;
 using Project.Service.Interfaces;
+using System.Runtime.CompilerServices;
 using System;
 
 [assembly: InternalsVisibleTo("Project.Tests")]
