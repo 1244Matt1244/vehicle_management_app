@@ -84,7 +84,7 @@ namespace Project.Service.Repositories
                 .AsQueryable();
 
             if (makeId.HasValue)
-                query = query.Where(m => m.VehicleMakeId == makeId.Value); // Updated FK property
+                query = query.Where(m => m.VehicleMakeId == makeId.Value); 
 
             if (!string.IsNullOrEmpty(searchString))
                 query = query.Where(m => m.Name.Contains(searchString));
@@ -133,7 +133,7 @@ namespace Project.Service.Repositories
         public async Task<IEnumerable<VehicleModel>> GetModelsByMakeIdAsync(int makeId)
         {
             return await _context.VehicleModels
-                .Where(vm => vm.VehicleMakeId == makeId) // Updated FK property
+                .Where(vm => vm.VehicleMakeId == makeId) 
                 .ToListAsync();
         }
 

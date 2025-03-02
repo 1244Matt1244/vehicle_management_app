@@ -1,5 +1,5 @@
 using AutoMapper;
-using Project.MVC.Mappings; // Add this line
+using Project.MVC.Mappings;
 
 namespace Project.MVC.Helpers
 {

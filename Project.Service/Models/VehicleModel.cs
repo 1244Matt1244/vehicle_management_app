@@ -17,7 +17,7 @@ namespace Project.Service.Models
         public required string Abbreviation { get; set; }
 
         [ForeignKey(nameof(VehicleMake))]  // Explicit foreign key annotation
-        public int VehicleMakeId { get; set; }  // Correct property name
+        public int VehicleMakeId { get; set; }  
 
         [Required]
         public virtual VehicleMake VehicleMake { get; set; } = null!;
