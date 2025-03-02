@@ -20,17 +20,14 @@ namespace Project.Tests.IntegrationTests
         [Fact]
         public async Task CRUD_Workflow_ReturnsProperStatusCodes()
         {
-            var client = _factory.CreateClient(new WebApplicationFactoryClientOptions
-            {
-                BaseAddress = new Uri("https://localhost")
-            });
+            var client = _factory.CreateClient();
 
-            // Test index page
+            // Verify index page
             var indexResponse = await client.GetAsync("/VehicleMake");
             Assert.Equal(HttpStatusCode.OK, indexResponse.StatusCode);
 
-            // Extract CSRF token and cookie for subsequent requests
-            var (csrfToken, cookie) = await ExtractCsrfData(client, "/VehicleMake/Create");
+            // Extract CSRF token and cookie for creation
+            var (csrfToken, cookie) = await ExtractCsrfData(await client.GetAsync("/VehicleMake/Create"));
             client.DefaultRequestHeaders.Add("Cookie", cookie);
 
             // Create
@@ -56,9 +53,8 @@ namespace Project.Tests.IntegrationTests
             Assert.Equal(HttpStatusCode.OK, deleteResponse.StatusCode);
         }
 
-        private async Task<(string Token, string Cookie)> ExtractCsrfData(HttpClient client, string url)
+        private async Task<(string Token, string Cookie)> ExtractCsrfData(HttpResponseMessage response)
         {
-            var response = await client.GetAsync(url);
             response.EnsureSuccessStatusCode();
             var html = await response.Content.ReadAsStringAsync();
             var cookie = response.Headers.GetValues("Set-Cookie").FirstOrDefault() ?? string.Empty;

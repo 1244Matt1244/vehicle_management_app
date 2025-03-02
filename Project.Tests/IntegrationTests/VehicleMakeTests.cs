@@ -4,10 +4,8 @@ using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
-using Project.MVC;
 using Project.Service.Data.Context;
 using System.Collections.Generic;
 using System.Linq;
@@ -40,10 +38,10 @@ namespace Project.Tests.IntegrationTests
             var client = _factory.CreateClient(new WebApplicationFactoryClientOptions
             {
                 AllowAutoRedirect = false,
-                BaseAddress = new Uri("http://localhost")
+                BaseAddress = new Uri("https://localhost")
             });
 
-            // Get CSRF token with cookie
+            // Get CSRF token with cookie handling
             var initialResponse = await client.GetAsync("/VehicleMake/Create");
             initialResponse.EnsureSuccessStatusCode();
             var (csrfToken, cookie) = await ExtractCsrfData(initialResponse);
@@ -57,6 +55,8 @@ namespace Project.Tests.IntegrationTests
                 new KeyValuePair<string, string>("Name", "TestMake"),
                 new KeyValuePair<string, string>("Abbreviation", "TMK")
             }));
+            
+            // Fix status code expectation
             Assert.Equal(HttpStatusCode.Redirect, createResponse.StatusCode);
 
             // Read
@@ -64,6 +64,7 @@ namespace Project.Tests.IntegrationTests
             indexResponse.EnsureSuccessStatusCode();
             var indexContent = await indexResponse.Content.ReadAsStringAsync();
             var id = ExtractFirstId(indexContent);
+            Assert.True(id > 0, "No valid ID found after creation.");
 
             // Update
             var editResponse = await client.GetAsync($"/VehicleMake/Edit/{id}");
@@ -90,7 +91,7 @@ namespace Project.Tests.IntegrationTests
         {
             var html = await response.Content.ReadAsStringAsync();
             var cookie = response.Headers.GetValues("Set-Cookie").FirstOrDefault() ?? string.Empty;
-            
+
             var match = Regex.Match(html,
                 @"<input[^>]*name=""__RequestVerificationToken""[^>]*value=""([^""]*)""",
                 RegexOptions.IgnoreCase);
