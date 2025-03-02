@@ -14,38 +14,37 @@ namespace Project.Service.Data.Context
         public DbSet<VehicleMake> VehicleMakes { get; set; }
         public DbSet<VehicleModel> VehicleModels { get; set; }
 
-        // Static method to configure the in-memory database for testing
+        /// <summary>
+        /// Configures an in-memory database for testing.
+        /// </summary>
         public static void ConfigureForTests(IServiceCollection services)
         {
-            services.AddDbContext<ApplicationDbContext>(options => 
-                options.UseInMemoryDatabase("TestDB"));
+            services.AddDbContext<ApplicationDbContext>(options =>
+                options.UseInMemoryDatabase("TestDB"), ServiceLifetime.Singleton);
         }
 
-        // Override OnModelCreating to configure entity relationships and constraints
+        /// <summary>
+        /// Configures entity relationships and constraints.
+        /// </summary>
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // Example configuration for the VehicleMake entity
-            modelBuilder.Entity<VehicleMake>()
-                .HasKey(vm => vm.Id); // Set the primary key for VehicleMake
-
+            // Configure VehicleMake
             modelBuilder.Entity<VehicleMake>()
                 .Property(vm => vm.Name)
-                .IsRequired() // Mark Name as required
-                .HasMaxLength(100); // Set maximum length for Name
+                .IsRequired()
+                .HasMaxLength(100);
 
-            // Example configuration for the VehicleModel entity
-            modelBuilder.Entity<VehicleModel>()
-                .HasKey(vm => vm.Id); // Set the primary key for VehicleModel
-
+            // Configure VehicleModel
             modelBuilder.Entity<VehicleModel>()
                 .Property(vm => vm.Name)
-                .IsRequired() // Mark Name as required
-                .HasMaxLength(100); // Set maximum length for Name
+                .IsRequired()
+                .HasMaxLength(100);
 
             modelBuilder.Entity<VehicleModel>()
-                .HasOne(vm => vm.VehicleMake) // Set up the one-to-many relationship with VehicleMake
-                .WithMany(v => v.VehicleModels) // The VehicleMake has many VehicleModels
-                .HasForeignKey(vm => vm.VehicleMakeId); // The foreign key is VehicleMakeId
+                .HasOne(vm => vm.VehicleMake)
+                .WithMany(v => v.VehicleModels) // One-to-many relationship
+                .HasForeignKey(vm => vm.VehicleMakeId)
+                .OnDelete(DeleteBehavior.Cascade); // Cascade delete when parent is removed
         }
     }
 }

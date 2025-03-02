@@ -28,14 +28,14 @@ namespace Project.Service.Repositories
 
             if (!string.IsNullOrEmpty(searchString))
             {
-                query = query.Where(m => 
-                    m.Name.Contains(searchString) || 
+                query = query.Where(m =>
+                    m.Name.Contains(searchString) ||
                     m.Abbreviation.Contains(searchString));
             }
 
             var totalCount = await query.CountAsync();
             var orderedQuery = query.OrderByProperty(sortBy, sortOrder);
-            
+
             var items = await orderedQuery
                 .Skip((pageIndex - 1) * pageSize)
                 .Take(pageSize)
@@ -44,7 +44,7 @@ namespace Project.Service.Repositories
             return new PaginatedList<VehicleMake>(items, totalCount, pageIndex, pageSize);
         }
 
-        public async Task<VehicleMake?> GetMakeByIdAsync(int id) => 
+        public async Task<VehicleMake?> GetMakeByIdAsync(int id) =>
             await _context.VehicleMakes.FindAsync(id);
 
         public async Task CreateMakeAsync(VehicleMake make)
@@ -62,11 +62,14 @@ namespace Project.Service.Repositories
         public async Task DeleteMakeAsync(int id)
         {
             var make = await _context.VehicleMakes.FindAsync(id);
-            if (make != null) _context.VehicleMakes.Remove(make);
-            await _context.SaveChangesAsync();
+            if (make != null)
+            {
+                _context.VehicleMakes.Remove(make);
+                await _context.SaveChangesAsync();
+            }
         }
 
-        public async Task<List<VehicleMake>> GetAllMakesAsync() => 
+        public async Task<List<VehicleMake>> GetAllMakesAsync() =>
             await _context.VehicleMakes.ToListAsync();
 
         #endregion
@@ -81,14 +84,14 @@ namespace Project.Service.Repositories
                 .AsQueryable();
 
             if (makeId.HasValue)
-                query = query.Where(m => m.MakeId == makeId.Value);
+                query = query.Where(m => m.VehicleMakeId == makeId.Value); // Updated FK property
 
             if (!string.IsNullOrEmpty(searchString))
                 query = query.Where(m => m.Name.Contains(searchString));
 
             var totalCount = await query.CountAsync();
             var orderedQuery = query.OrderByProperty(sortBy, sortOrder);
-            
+
             var items = await orderedQuery
                 .Skip((pageIndex - 1) * pageSize)
                 .Take(pageSize)
@@ -97,7 +100,7 @@ namespace Project.Service.Repositories
             return new PaginatedList<VehicleModel>(items, totalCount, pageIndex, pageSize);
         }
 
-        public async Task<VehicleModel?> GetModelByIdAsync(int id) => 
+        public async Task<VehicleModel?> GetModelByIdAsync(int id) =>
             await _context.VehicleModels
                 .Include(m => m.VehicleMake)
                 .FirstOrDefaultAsync(m => m.Id == id);
@@ -117,12 +120,22 @@ namespace Project.Service.Repositories
         public async Task DeleteModelAsync(int id)
         {
             var model = await _context.VehicleModels.FindAsync(id);
-            if (model != null) _context.VehicleModels.Remove(model);
-            await _context.SaveChangesAsync();
+            if (model != null)
+            {
+                _context.VehicleModels.Remove(model);
+                await _context.SaveChangesAsync();
+            }
         }
 
-        public async Task<List<VehicleModel>> GetAllModelsAsync() => 
+        public async Task<List<VehicleModel>> GetAllModelsAsync() =>
             await _context.VehicleModels.ToListAsync();
+
+        public async Task<IEnumerable<VehicleModel>> GetModelsByMakeIdAsync(int makeId)
+        {
+            return await _context.VehicleModels
+                .Where(vm => vm.VehicleMakeId == makeId) // Updated FK property
+                .ToListAsync();
+        }
 
         #endregion
     }

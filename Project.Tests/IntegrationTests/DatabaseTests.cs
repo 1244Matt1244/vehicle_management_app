@@ -5,8 +5,26 @@ using Xunit;
 
 namespace Project.Tests.IntegrationTests
 {
-    public class DatabaseTests
+    public class DatabaseTests : IClassFixture<WebApplicationFactory<Program>>
     {
+        private readonly WebApplicationFactory<Program> _factory;
+
+        public DatabaseTests(WebApplicationFactory<Program> factory)
+        {
+            _factory = factory.WithWebHostBuilder(builder => 
+            {
+                builder.ConfigureServices(services => 
+                {
+                    // Remove existing database configuration
+                    services.RemoveAll<DbContextOptions<ApplicationDbContext>>();
+
+                    // Add in-memory database with a unique name for each test
+                    services.AddDbContext<ApplicationDbContext>(options => 
+                        options.UseInMemoryDatabase($"TestDB_{Guid.NewGuid()}"));
+                });
+            });
+        }
+
         [Fact]
         public void Database_ShouldCreateVehicleMakeWithModels()
         {
@@ -22,7 +40,7 @@ namespace Project.Tests.IntegrationTests
                 context.VehicleMakes.Add(make);
                 context.SaveChanges();
 
-                var model = new VehicleModel { Id = 1, Name = "Model", Abbreviation = "M", MakeId = 1 };
+                var model = new VehicleModel { Id = 1, Name = "Model", Abbreviation = "M", VehicleMakeId = 1 };
                 context.VehicleModels.Add(model);
                 context.SaveChanges();
 
