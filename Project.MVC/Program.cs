@@ -80,7 +80,7 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAntiforgery(); // CSRF Protection Middleware
-app.UseAuthorization(); // Ensure Authorization is applied
+app.UseAuthorization(); 
 
 // Default Route Configuration
 app.MapControllerRoute(

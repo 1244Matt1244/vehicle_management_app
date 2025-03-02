@@ -28,7 +28,7 @@ namespace Project.Tests.UnitTests
             var testMake = new VehicleMake 
             { 
                 // Set Id explicitly if required
-                Id = 1, // Set a valid Id or use a method to generate it
+                Id = 1, 
                 Name = "TestMake", 
                 Abbreviation = "TM" 
             };

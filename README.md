@@ -2,7 +2,6 @@
 # Vehicle Management System 🚗
 
 [![.NET Build](https://github.com/1244Matt1244/vehicle_management_app/actions/workflows/dotnet.yml/badge.svg)](https://github.com/1244Matt1244/vehicle_management_app/actions)
-[![Test Coverage](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/1244Matt1244/.../coverage.json)](https://github.com/1244Matt1244/vehicle_management_app)
 [![License](https://img.shields.io/github/license/1244Matt1244/vehicle_management_app)](LICENSE)
 
 **Modern vehicle inventory system** with robust CRUD operations and enterprise-ready architecture.
@@ -20,9 +19,9 @@
 - **HTTPS Security** - Dev certificate configured
 
 ## 🛠 Tech Stack
-**.NET 8 Ecosystem**
+**.NET 9 Ecosystem**
 - ASP.NET Core MVC
-- Entity Framework Core
+- Entity Framework Core 9
 - AutoMapper
 - xUnit + Moq
 - SQL Server
@@ -35,7 +34,7 @@
 ## 🚀 Getting Started
 
 ### Prerequisites
-- .NET 8 SDK
+- .NET 9 SDK
 - SQL Server (LocalDB included)
 - VS Code/Rider/Visual Studio
 
@@ -50,55 +49,32 @@ dotnet restore
 dotnet run --project Project.MVC
 ```
 
-Access: https://localhost:5001
+Access: https://localhost:7266
 
 ## 🧪 Testing
 ```bash
 # Run Unit Tests
 dotnet test
-
-# Generate Coverage Report (requires reportgenerator)
-dotnet test --collect:"XPlat Code Coverage"
-reportgenerator -reports:./**/coverage.cobertura.xml -targetdir:./CoverageReport
 ```
 
-## 📈 Architecture
-```mermaid
-graph TD
-    A[Browser] --> B[MVC Controller]
-    B --> C[Vehicle Service]
-    C --> D[EF Core Repository]
-    D --> E[(SQL Database)]
-    F[AutoMapper] --> B
-    F --> C
-    G[xUnit Tests] --> C
-    G --> D
-```
+## ☁️ Deployment
 
-## ☁️ Deployment Options
-
-### Docker Development
+### Docker Production
 ```bash
-docker-compose -f docker-compose.dev.yml up --build
-```
-
-### Azure App Service
-```bash
-az webapp up --name vehicle-mgmt --resource-group VehicleGroup --runtime "DOTNET:8.0"
+docker build -t vehicle-mgmt -f Project.MVC/Dockerfile .
+docker run -p 8080:80 vehicle-mgmt
 ```
 
 ## 🔧 Roadmap
 ```diff
-+ Q3 2024 Priorities
++ 2025 Priorities
 - [x] Core CRUD Functionality
 - [x] Pagination/Sorting
 - [ ] Azure AD Integration
-- [ ] Docker Production Setup
 - [ ] Performance Benchmarking
 
-+ Quality Improvements
-! 95% Test Coverage Goal
-! API Versioning
++ Quality Goals
+! 95% Test Coverage
 ! Global Error Handling
 ```
 
@@ -110,11 +86,5 @@ az webapp up --name vehicle-mgmt --resource-group VehicleGroup --runtime "DOTNET
    - Updated documentation
    - Clean commit history
 
----
-
-**Production Guidelines**  
-[![Secure](https://img.shields.io/badge/Security-Level_1-green)](SECURITY.md)
-[![Code Style](https://img.shields.io/badge/Code%20Style-.NET%20Standard-ff69b4)](STYLEGUIDE.md)
-
-**[📘 Documentation](docs/README.md) | [📊 Project Board](https://github.com/users/1244Matt1244/projects/1) | [🐛 Issue Tracker](https://github.com/1244Matt1244/vehicle_management_app/issues)**
+**[📘 Documentation](docs/README.md) | [🐛 Issue Tracker](https://github.com/1244Matt1244/vehicle_management_app/issues)**
 ```
