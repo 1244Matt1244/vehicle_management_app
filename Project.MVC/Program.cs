@@ -8,20 +8,26 @@ using Microsoft.Extensions.Logging;
 using Project.Service.Data.Context;
 using Project.Service.Mappings;
 using Project.MVC.Mappings;
+using Project.Service;
 using Project.Service.Services;
 using Project.Service.Interfaces;
-using System.Runtime.CompilerServices; // For InternalsVisibleToAttribute
 using System;
-
-[assembly: InternalsVisibleTo("Project.Tests")] // This line exposes internals to the test project
+using Ninject;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Configure Ninject with the VehicleModule
+var kernel = new StandardKernel(new VehicleModule());
+builder.Services.AddSingleton<IKernel>(kernel);
+
+// Register services using Ninject
+builder.Services.AddScoped<IVehicleService>(provider => kernel.Get<IVehicleService>());
 
 // Logging Configuration
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
 
-// Database Configuration (Ensuring Only One Provider)
+// Database Configuration
 builder.Services.AddDbContext<ApplicationDbContext>((serviceProvider, options) =>
 {
     var env = builder.Environment;
@@ -49,9 +55,6 @@ builder.Services.AddAutoMapper(config =>
     config.AddProfile<ServiceMappingProfile>();
     config.AddProfile<MvcMappingProfile>();
 });
-
-// Service Layer Configuration
-builder.Services.AddScoped<IVehicleService, VehicleService>();
 
 // Enable Anti-Forgery Protection
 builder.Services.AddAntiforgery(options =>
