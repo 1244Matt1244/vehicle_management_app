@@ -40,13 +40,13 @@ public class Program
         var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
         builder.Services.AddDbContext<ApplicationDbContext>(options =>
             options.UseSqlServer(
-                connectionString, 
-                sqlOptions => 
+                connectionString,
+                sqlOptions =>
                 {
                     sqlOptions.EnableRetryOnFailure(
                         maxRetryCount: 5,
                         maxRetryDelay: TimeSpan.FromSeconds(30),
-                        errorNumbersToAdd: null
+                        errorNumbersToAdd: null // Pass null for this parameter
                     );
                 }
             )

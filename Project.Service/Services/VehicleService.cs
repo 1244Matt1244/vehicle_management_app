@@ -1,5 +1,3 @@
-// Project.Service/Services/VehicleService.cs
-
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
@@ -31,7 +29,9 @@ namespace Project.Service.Services
         public async Task<PaginatedList<VehicleMakeDTO>> GetMakesAsync(int pageIndex, int pageSize, 
             string sortBy, string sortOrder, string searchString)
         {
-            var query = _context.VehicleMakes.AsNoTracking();
+            var query = _context.VehicleMakes
+                .AsNoTracking()
+                .AsQueryable();  // Query initialization updated as requested
 
             if (!string.IsNullOrWhiteSpace(searchString))
             {

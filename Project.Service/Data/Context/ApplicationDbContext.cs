@@ -28,23 +28,33 @@ namespace Project.Service.Data.Context
         /// </summary>
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // Configure VehicleMake
+            // Configure VehicleMake entity
             modelBuilder.Entity<VehicleMake>()
                 .Property(vm => vm.Name)
                 .IsRequired()
                 .HasMaxLength(100);
 
-            // Configure VehicleModel
+            // Configure VehicleModel entity
             modelBuilder.Entity<VehicleModel>()
                 .Property(vm => vm.Name)
                 .IsRequired()
                 .HasMaxLength(100);
 
+            // Fix Foreign Key Configuration for VehicleModel and VehicleMake
+            modelBuilder.Entity<VehicleModel>()
+                .HasOne(vm => vm.VehicleMake) // Correct the navigation property
+                .WithMany(m=> m.VehicleModels) // Correct the navigation property on the other side
+                .HasForeignKey(vm => vm.VehicleMakeId) // Ensure this is the correct property name
+                .OnDelete(DeleteBehavior.Cascade); // Cascade delete when parent is removed
+
+            // Add explicit configuration to avoid lazy-loading issues
             modelBuilder.Entity<VehicleModel>()
                 .HasOne(vm => vm.VehicleMake)
-                .WithMany(v => v.VehicleModels) // One-to-many relationship
+                .WithMany()
                 .HasForeignKey(vm => vm.VehicleMakeId)
-                .OnDelete(DeleteBehavior.Cascade); // Cascade delete when parent is removed
+                .OnDelete(DeleteBehavior.Restrict); // Restrict delete behavior for prevention of unintended cascading
+
+            base.OnModelCreating(modelBuilder);
         }
     }
 }

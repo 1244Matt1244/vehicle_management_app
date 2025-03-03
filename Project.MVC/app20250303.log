@@ -1,11 +1,11 @@
-2025-03-03 01:31:05.794 +01:00 [INF] Executed DbCommand (34ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+2025-03-03 23:41:43.484 +01:00 [INF] Executed DbCommand (42ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
 SELECT 1
-2025-03-03 01:31:05.911 +01:00 [INF] Acquiring an exclusive lock for migration application. See https://aka.ms/efcore-docs-migrations-lock for more information if this takes too long.
-2025-03-03 01:31:05.956 +01:00 [INF] Executed DbCommand (35ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+2025-03-03 23:41:43.614 +01:00 [INF] Acquiring an exclusive lock for migration application. See https://aka.ms/efcore-docs-migrations-lock for more information if this takes too long.
+2025-03-03 23:41:43.672 +01:00 [INF] Executed DbCommand (50ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
 DECLARE @result int;
 EXEC @result = sp_getapplock @Resource = '__EFMigrationsLock', @LockOwner = 'Session', @LockMode = 'Exclusive';
 SELECT @result
-2025-03-03 01:31:06.124 +01:00 [INF] Executed DbCommand (3ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+2025-03-03 23:41:43.837 +01:00 [INF] Executed DbCommand (7ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
 IF OBJECT_ID(N'[__EFMigrationsHistory]') IS NULL
 BEGIN
     CREATE TABLE [__EFMigrationsHistory] (
@@ -14,58 +14,61 @@ BEGIN
         CONSTRAINT [PK___EFMigrationsHistory] PRIMARY KEY ([MigrationId])
     );
 END;
-2025-03-03 01:31:06.157 +01:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+2025-03-03 23:41:43.865 +01:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
 SELECT 1
-2025-03-03 01:31:06.164 +01:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+2025-03-03 23:41:43.872 +01:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
 SELECT OBJECT_ID(N'[__EFMigrationsHistory]');
-2025-03-03 01:31:06.186 +01:00 [INF] Executed DbCommand (5ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+2025-03-03 23:41:43.887 +01:00 [INF] Executed DbCommand (5ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
 SELECT [MigrationId], [ProductVersion]
 FROM [__EFMigrationsHistory]
 ORDER BY [MigrationId];
-2025-03-03 01:31:06.234 +01:00 [INF] No migrations were applied. The database is already up to date.
-2025-03-03 01:31:06.247 +01:00 [INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+2025-03-03 23:41:43.920 +01:00 [INF] Applying migration '20250303202832_InitialCreate'.
+2025-03-03 23:41:43.941 +01:00 [INF] Executed DbCommand (6ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+VALUES (N'20250303202832_InitialCreate', N'9.0.0');
+2025-03-03 23:41:43.966 +01:00 [INF] Executed DbCommand (6ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
 DECLARE @result int;
 EXEC @result = sp_releaseapplock @Resource = '__EFMigrationsLock', @LockOwner = 'Session';
 SELECT @result
-2025-03-03 01:31:06.307 +01:00 [INF] User profile is available. Using 'C:\Users\korisnik\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
-2025-03-03 01:31:06.797 +01:00 [INF] Now listening on: https://localhost:7266
-2025-03-03 01:31:06.814 +01:00 [INF] Now listening on: http://localhost:5266
-2025-03-03 01:31:06.826 +01:00 [INF] Application started. Press Ctrl+C to shut down.
-2025-03-03 01:31:06.829 +01:00 [INF] Hosting environment: Development
-2025-03-03 01:31:06.836 +01:00 [INF] Content root path: C:\Users\korisnik\Desktop\vehicle_management_app\Project.MVC
-2025-03-03 01:31:39.091 +01:00 [INF] Request starting HTTP/2 GET https://localhost:7266/ - null null
-2025-03-03 01:31:39.258 +01:00 [INF] Executing endpoint 'VehicleMakeController.Index (Project.MVC)'
-2025-03-03 01:31:39.348 +01:00 [INF] Route matched with {action = "Index", controller = "VehicleMake"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Index(Int32, Int32, System.String, System.String, System.String) on controller VehicleMakeController (Project.MVC).
-2025-03-03 01:31:39.515 +01:00 [INF] Executed action VehicleMakeController.Index (Project.MVC) in 142.583ms
-2025-03-03 01:31:39.533 +01:00 [INF] Executed endpoint 'VehicleMakeController.Index (Project.MVC)'
-2025-03-03 01:31:39.537 +01:00 [ERR] An unhandled exception has occurred while executing the request.
-Ninject.ActivationException: Error activating IMapper
-No matching bindings are available, and the type is not self-bindable.
-Activation path:
-  2) Injection of dependency IMapper into parameter mapper of constructor of type VehicleService
-  1) Request for IVehicleService
-
-Suggestions:
-  1) Ensure that you have defined a binding for IMapper.
-  2) If the binding was defined in a module, ensure that the module has been loaded into the kernel.
-  3) Ensure you have not accidentally created more than one kernel.
-  4) If you are using constructor arguments, ensure that the parameter name matches the constructors parameter name.
-
-   at Ninject.KernelBase.Resolve(IRequest request, Boolean handleMissingBindings, Boolean filterImplicitBindings)
-   at Ninject.KernelBase.Resolve(IRequest request)
-   at Ninject.Planning.Targets.Target`1.ResolveWithin(IContext parent)
-   at Ninject.Activation.Providers.StandardProvider.GetValue(IContext context, ITarget target)
-   at Ninject.Activation.Providers.StandardProvider.<>c__DisplayClass15_0.<Create>b__0(ITarget target)
-   at System.Linq.Enumerable.ArraySelectIterator`2.Fill(ReadOnlySpan`1 source, Span`1 destination, Func`2 func)
-   at System.Linq.Enumerable.ArraySelectIterator`2.ToArray()
-   at Ninject.Activation.Providers.StandardProvider.Create(IContext context)
-   at Ninject.Activation.Context.ResolveInternal(Object scope)
-   at Ninject.Activation.Context.Resolve()
-   at Ninject.KernelBase.Resolve(IRequest request, Boolean handleMissingBindings, Boolean filterImplicitBindings)
-   at Ninject.KernelBase.Resolve(IRequest request)
-   at Ninject.ResolutionExtensions.GetResolutionIterator(IResolutionRoot root, Type service, Func`2 constraint, IEnumerable`1 parameters, Boolean isOptional, Boolean isUnique)
-   at Ninject.ResolutionExtensions.Get[T](IResolutionRoot root, IParameter[] parameters)
-   at Program.<>c__DisplayClass0_0.<Main>b__1(IServiceProvider provider) in C:\Users\korisnik\Desktop\vehicle_management_app\Project.MVC\Program.cs:line 33
+2025-03-03 23:41:44.013 +01:00 [INF] User profile is available. Using 'C:\Users\korisnik\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2025-03-03 23:41:44.537 +01:00 [INF] Now listening on: https://localhost:7266
+2025-03-03 23:41:44.539 +01:00 [INF] Now listening on: http://localhost:5266
+2025-03-03 23:41:44.543 +01:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-03-03 23:41:44.555 +01:00 [INF] Hosting environment: Development
+2025-03-03 23:41:44.602 +01:00 [INF] Content root path: C:\Users\korisnik\Desktop\vehicle_management_app\Project.MVC
+2025-03-03 23:41:54.866 +01:00 [INF] Request starting HTTP/2 GET https://localhost:7266/ - null null
+2025-03-03 23:41:54.893 +01:00 [INF] Request starting HTTP/2 GET https://localhost:7266/?pageNumber=1 - null null
+2025-03-03 23:41:55.458 +01:00 [INF] Executing endpoint 'VehicleMakeController.Index (Project.MVC)'
+2025-03-03 23:41:55.464 +01:00 [INF] Executing endpoint 'VehicleMakeController.Index (Project.MVC)'
+2025-03-03 23:41:55.533 +01:00 [INF] Route matched with {action = "Index", controller = "VehicleMake"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Index(Int32, Int32, System.String, System.String, System.String) on controller VehicleMakeController (Project.MVC).
+2025-03-03 23:41:55.533 +01:00 [INF] Route matched with {action = "Index", controller = "VehicleMake"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Index(Int32, Int32, System.String, System.String, System.String) on controller VehicleMakeController (Project.MVC).
+2025-03-03 23:41:55.859 +01:00 [INF] Executed action VehicleMakeController.Index (Project.MVC) in 290.8043ms
+2025-03-03 23:41:56.307 +01:00 [INF] Executed endpoint 'VehicleMakeController.Index (Project.MVC)'
+2025-03-03 23:41:56.659 +01:00 [ERR] An unhandled exception has occurred while executing the request.
+System.InvalidOperationException: An attempt was made to use the model while it was being created. A DbContext instance cannot be used inside 'OnModelCreating' in any way that makes use of the model that is being created.
+   at Microsoft.EntityFrameworkCore.Internal.DbContextServices.CreateModel(Boolean designTime)
+   at Microsoft.EntityFrameworkCore.Internal.DbContextServices.get_Model()
+   at Microsoft.EntityFrameworkCore.Infrastructure.EntityFrameworkServicesBuilder.<>c.<TryAddCoreServices>b__8_4(IServiceProvider p)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSiteMain(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitCache(ServiceCallSite callSite, RuntimeResolverContext context, ServiceProviderEngineScope serviceProviderEngine, RuntimeResolverLock lockType)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitScopeCache(ServiceCallSite callSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSite(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSiteMain(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitCache(ServiceCallSite callSite, RuntimeResolverContext context, ServiceProviderEngineScope serviceProviderEngine, RuntimeResolverLock lockType)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitScopeCache(ServiceCallSite callSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSite(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSiteMain(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitCache(ServiceCallSite callSite, RuntimeResolverContext context, ServiceProviderEngineScope serviceProviderEngine, RuntimeResolverLock lockType)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitScopeCache(ServiceCallSite callSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSite(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSiteMain(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitCache(ServiceCallSite callSite, RuntimeResolverContext context, ServiceProviderEngineScope serviceProviderEngine, RuntimeResolverLock lockType)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitScopeCache(ServiceCallSite callSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSite(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSiteMain(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitCache(ServiceCallSite callSite, RuntimeResolverContext context, ServiceProviderEngineScope serviceProviderEngine, RuntimeResolverLock lockType)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitScopeCache(ServiceCallSite callSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSite(ServiceCallSite callSite, TArgument argument)
    at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSiteMain(ServiceCallSite callSite, TArgument argument)
    at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitCache(ServiceCallSite callSite, RuntimeResolverContext context, ServiceProviderEngineScope serviceProviderEngine, RuntimeResolverLock lockType)
    at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitScopeCache(ServiceCallSite callSite, RuntimeResolverContext context)
@@ -74,8 +77,22 @@ Suggestions:
    at Microsoft.Extensions.DependencyInjection.ServiceLookup.DynamicServiceProviderEngine.<>c__DisplayClass2_0.<RealizeService>b__0(ServiceProviderEngineScope scope)
    at Microsoft.Extensions.DependencyInjection.ServiceProvider.GetService(ServiceIdentifier serviceIdentifier, ServiceProviderEngineScope serviceProviderEngineScope)
    at Microsoft.Extensions.DependencyInjection.ServiceLookup.ServiceProviderEngineScope.GetService(Type serviceType)
-   at lambda_method10(Closure, IServiceProvider, Object[])
-   at Microsoft.AspNetCore.Mvc.Controllers.ControllerFactoryProvider.<>c__DisplayClass6_0.<CreateControllerFactory>g__CreateController|0(ControllerContext controllerContext)
+   at Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService(IServiceProvider provider, Type serviceType)
+   at Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService[T](IServiceProvider provider)
+   at Microsoft.EntityFrameworkCore.DbContext.get_DbContextDependencies()
+   at Microsoft.EntityFrameworkCore.DbContext.get_ContextServices()
+   at Microsoft.EntityFrameworkCore.DbContext.get_Model()
+   at Microsoft.EntityFrameworkCore.Internal.InternalDbSet`1.get_EntityType()
+   at Microsoft.EntityFrameworkCore.Internal.InternalDbSet`1.CheckState()
+   at Microsoft.EntityFrameworkCore.Internal.InternalDbSet`1.get_EntityQueryable()
+   at Microsoft.EntityFrameworkCore.Internal.InternalDbSet`1.System.Linq.IQueryable.get_Provider()
+   at Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.AsNoTracking[TEntity](IQueryable`1 source)
+   at Project.Service.Services.VehicleService.GetMakesAsync(Int32 pageIndex, Int32 pageSize, String sortBy, String sortOrder, String searchString) in C:\Users\korisnik\Desktop\vehicle_management_app\Project.Service\Services\VehicleService.cs:line 34
+   at VehicleMakeController.Index(Int32 pageNumber, Int32 pageSize, String sortBy, String sortOrder, String searchString) in C:\Users\korisnik\Desktop\vehicle_management_app\Project.MVC\Controllers\VehicleMakeController.cs:line 28
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.TaskOfIActionResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
    at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
    at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeInnerFilterAsync()
 --- End of stack trace from previous location ---
@@ -89,430 +106,12 @@ Suggestions:
    at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|7_0(Endpoint endpoint, Task requestTask, ILogger logger)
    at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
    at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddlewareImpl.Invoke(HttpContext context)
-2025-03-03 01:31:39.923 +01:00 [INF] Request finished HTTP/2 GET https://localhost:7266/ - 500 null text/html; charset=utf-8 836.2493ms
-2025-03-03 01:31:42.661 +01:00 [INF] Request starting HTTP/2 GET https://localhost:7266/robots.txt - application/x-www-form-urlencoded null
-2025-03-03 01:31:42.677 +01:00 [INF] Request finished HTTP/2 GET https://localhost:7266/robots.txt - 404 0 null 16.4345ms
-2025-03-03 01:31:42.757 +01:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET https://localhost:7266/robots.txt, Response status code: 404
-2025-03-03 01:32:45.098 +01:00 [INF] Request starting HTTP/1.1 GET http://localhost:5266/ - null null
-2025-03-03 01:32:45.304 +01:00 [INF] Request finished HTTP/1.1 GET http://localhost:5266/ - 307 0 null 206.459ms
-2025-03-03 01:32:45.364 +01:00 [INF] Request starting HTTP/2 GET https://localhost:7266/ - null null
-2025-03-03 01:32:45.374 +01:00 [INF] Executing endpoint 'VehicleMakeController.Index (Project.MVC)'
-2025-03-03 01:32:45.379 +01:00 [INF] Route matched with {action = "Index", controller = "VehicleMake"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Index(Int32, Int32, System.String, System.String, System.String) on controller VehicleMakeController (Project.MVC).
-2025-03-03 01:32:45.388 +01:00 [INF] Executed action VehicleMakeController.Index (Project.MVC) in 2.0768ms
-2025-03-03 01:32:45.398 +01:00 [INF] Executed endpoint 'VehicleMakeController.Index (Project.MVC)'
-2025-03-03 01:32:45.403 +01:00 [ERR] An unhandled exception has occurred while executing the request.
-Ninject.ActivationException: Error activating IMapper
-No matching bindings are available, and the type is not self-bindable.
-Activation path:
-  2) Injection of dependency IMapper into parameter mapper of constructor of type VehicleService
-  1) Request for IVehicleService
-
-Suggestions:
-  1) Ensure that you have defined a binding for IMapper.
-  2) If the binding was defined in a module, ensure that the module has been loaded into the kernel.
-  3) Ensure you have not accidentally created more than one kernel.
-  4) If you are using constructor arguments, ensure that the parameter name matches the constructors parameter name.
-
-   at Ninject.KernelBase.Resolve(IRequest request, Boolean handleMissingBindings, Boolean filterImplicitBindings)
-   at Ninject.KernelBase.Resolve(IRequest request)
-   at Ninject.Planning.Targets.Target`1.ResolveWithin(IContext parent)
-   at Ninject.Activation.Providers.StandardProvider.GetValue(IContext context, ITarget target)
-   at Ninject.Activation.Providers.StandardProvider.<>c__DisplayClass15_0.<Create>b__0(ITarget target)
-   at System.Linq.Enumerable.ArraySelectIterator`2.Fill(ReadOnlySpan`1 source, Span`1 destination, Func`2 func)
-   at System.Linq.Enumerable.ArraySelectIterator`2.ToArray()
-   at Ninject.Activation.Providers.StandardProvider.Create(IContext context)
-   at Ninject.Activation.Context.ResolveInternal(Object scope)
-   at Ninject.Activation.Context.Resolve()
-   at Ninject.KernelBase.Resolve(IRequest request, Boolean handleMissingBindings, Boolean filterImplicitBindings)
-   at Ninject.KernelBase.Resolve(IRequest request)
-   at Ninject.ResolutionExtensions.GetResolutionIterator(IResolutionRoot root, Type service, Func`2 constraint, IEnumerable`1 parameters, Boolean isOptional, Boolean isUnique)
-   at Ninject.ResolutionExtensions.Get[T](IResolutionRoot root, IParameter[] parameters)
-   at Program.<>c__DisplayClass0_0.<Main>b__1(IServiceProvider provider) in C:\Users\korisnik\Desktop\vehicle_management_app\Project.MVC\Program.cs:line 33
-   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSiteMain(ServiceCallSite callSite, TArgument argument)
-   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitCache(ServiceCallSite callSite, RuntimeResolverContext context, ServiceProviderEngineScope serviceProviderEngine, RuntimeResolverLock lockType)
-   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitScopeCache(ServiceCallSite callSite, RuntimeResolverContext context)
-   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSite(ServiceCallSite callSite, TArgument argument)
-   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.Resolve(ServiceCallSite callSite, ServiceProviderEngineScope scope)
-   at Microsoft.Extensions.DependencyInjection.ServiceLookup.DynamicServiceProviderEngine.<>c__DisplayClass2_0.<RealizeService>b__0(ServiceProviderEngineScope scope)
-   at Microsoft.Extensions.DependencyInjection.ServiceProvider.GetService(ServiceIdentifier serviceIdentifier, ServiceProviderEngineScope serviceProviderEngineScope)
-   at Microsoft.Extensions.DependencyInjection.ServiceLookup.ServiceProviderEngineScope.GetService(Type serviceType)
-   at lambda_method10(Closure, IServiceProvider, Object[])
-   at Microsoft.AspNetCore.Mvc.Controllers.ControllerFactoryProvider.<>c__DisplayClass6_0.<CreateControllerFactory>g__CreateController|0(ControllerContext controllerContext)
-   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
-   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeInnerFilterAsync()
---- End of stack trace from previous location ---
-   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeNextResourceFilter>g__Awaited|25_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
-   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.Rethrow(ResourceExecutedContextSealed context)
-   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
-   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.InvokeFilterPipelineAsync()
---- End of stack trace from previous location ---
-   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
-   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
-   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|7_0(Endpoint endpoint, Task requestTask, ILogger logger)
-   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
-   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddlewareImpl.Invoke(HttpContext context)
-2025-03-03 01:32:45.566 +01:00 [INF] Request finished HTTP/2 GET https://localhost:7266/ - 500 null text/html; charset=utf-8 201.9373ms
-2025-03-03 01:32:50.695 +01:00 [INF] Request starting HTTP/2 GET https://localhost:7266/robots.txt - application/x-www-form-urlencoded null
-2025-03-03 01:32:50.707 +01:00 [INF] Request finished HTTP/2 GET https://localhost:7266/robots.txt - 404 0 null 11.7885ms
-2025-03-03 01:32:50.723 +01:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET https://localhost:7266/robots.txt, Response status code: 404
-2025-03-03 02:27:08.578 +01:00 [INF] Executed DbCommand (25ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
-SELECT 1
-2025-03-03 02:27:08.663 +01:00 [INF] Acquiring an exclusive lock for migration application. See https://aka.ms/efcore-docs-migrations-lock for more information if this takes too long.
-2025-03-03 02:27:08.705 +01:00 [INF] Executed DbCommand (35ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
-DECLARE @result int;
-EXEC @result = sp_getapplock @Resource = '__EFMigrationsLock', @LockOwner = 'Session', @LockMode = 'Exclusive';
-SELECT @result
-2025-03-03 02:27:08.817 +01:00 [INF] Executed DbCommand (3ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
-IF OBJECT_ID(N'[__EFMigrationsHistory]') IS NULL
-BEGIN
-    CREATE TABLE [__EFMigrationsHistory] (
-        [MigrationId] nvarchar(150) NOT NULL,
-        [ProductVersion] nvarchar(32) NOT NULL,
-        CONSTRAINT [PK___EFMigrationsHistory] PRIMARY KEY ([MigrationId])
-    );
-END;
-2025-03-03 02:27:08.840 +01:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
-SELECT 1
-2025-03-03 02:27:08.845 +01:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
-SELECT OBJECT_ID(N'[__EFMigrationsHistory]');
-2025-03-03 02:27:08.856 +01:00 [INF] Executed DbCommand (4ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
-SELECT [MigrationId], [ProductVersion]
-FROM [__EFMigrationsHistory]
-ORDER BY [MigrationId];
-2025-03-03 02:27:08.877 +01:00 [INF] No migrations were applied. The database is already up to date.
-2025-03-03 02:27:08.890 +01:00 [INF] Executed DbCommand (4ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
-DECLARE @result int;
-EXEC @result = sp_releaseapplock @Resource = '__EFMigrationsLock', @LockOwner = 'Session';
-SELECT @result
-2025-03-03 02:27:08.924 +01:00 [INF] User profile is available. Using 'C:\Users\korisnik\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
-2025-03-03 02:27:09.257 +01:00 [INF] Now listening on: https://localhost:7266
-2025-03-03 02:27:09.279 +01:00 [INF] Now listening on: http://localhost:5266
-2025-03-03 02:27:09.283 +01:00 [INF] Application started. Press Ctrl+C to shut down.
-2025-03-03 02:27:09.286 +01:00 [INF] Hosting environment: Development
-2025-03-03 02:27:09.292 +01:00 [INF] Content root path: C:\Users\korisnik\Desktop\vehicle_management_app\Project.MVC
-2025-03-03 02:27:26.171 +01:00 [INF] Request starting HTTP/2 GET https://localhost:7266/ - null null
-2025-03-03 02:27:28.111 +01:00 [INF] Executing endpoint 'VehicleMakeController.Index (Project.MVC)'
-2025-03-03 02:27:28.184 +01:00 [INF] Route matched with {action = "Index", controller = "VehicleMake"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Index(Int32, Int32, System.String, System.String, System.String) on controller VehicleMakeController (Project.MVC).
-2025-03-03 02:27:29.395 +01:00 [INF] Executed action VehicleMakeController.Index (Project.MVC) in 1200.0935ms
-2025-03-03 02:27:29.407 +01:00 [INF] Executed endpoint 'VehicleMakeController.Index (Project.MVC)'
-2025-03-03 02:27:29.412 +01:00 [ERR] An unhandled exception has occurred while executing the request.
-System.InvalidOperationException: An exception has been raised that is likely due to a transient failure. Consider enabling transient error resiliency by adding 'EnableRetryOnFailure' to the 'UseSqlServer' call.
- ---> Microsoft.Data.SqlClient.SqlException (0x80131904): Cannot open database "VehicleManagement" requested by the login. The login failed.
-Login failed for user 'DESKTOP-VQID1H4\korisnik'.
-   at Microsoft.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
-   at Microsoft.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
-   at Microsoft.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
-   at Microsoft.Data.SqlClient.TdsParser.Run(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj)
-   at Microsoft.Data.SqlClient.SqlInternalConnectionTds.CompleteLogin(Boolean enlistOK)
-   at Microsoft.Data.SqlClient.SqlInternalConnectionTds.AttemptOneLogin(ServerInfo serverInfo, String newPassword, SecureString newSecurePassword, Boolean ignoreSniOpenTimeout, TimeoutTimer timeout, Boolean withFailover)
-   at Microsoft.Data.SqlClient.SqlInternalConnectionTds.LoginNoFailover(ServerInfo serverInfo, String newPassword, SecureString newSecurePassword, Boolean redirectedUserInstance, SqlConnectionString connectionOptions, SqlCredential credential, TimeoutTimer timeout)
-   at Microsoft.Data.SqlClient.SqlInternalConnectionTds.OpenLoginEnlist(TimeoutTimer timeout, SqlConnectionString connectionOptions, SqlCredential credential, String newPassword, SecureString newSecurePassword, Boolean redirectedUserInstance)
-   at Microsoft.Data.SqlClient.SqlInternalConnectionTds..ctor(DbConnectionPoolIdentity identity, SqlConnectionString connectionOptions, SqlCredential credential, Object providerInfo, String newPassword, SecureString newSecurePassword, Boolean redirectedUserInstance, SqlConnectionString userConnectionOptions, SessionData reconnectSessionData, Boolean applyTransientFaultHandling, String accessToken, DbConnectionPool pool)
-   at Microsoft.Data.SqlClient.SqlConnectionFactory.CreateConnection(DbConnectionOptions options, DbConnectionPoolKey poolKey, Object poolGroupProviderInfo, DbConnectionPool pool, DbConnection owningConnection, DbConnectionOptions userOptions)
-   at Microsoft.Data.ProviderBase.DbConnectionFactory.CreatePooledConnection(DbConnectionPool pool, DbConnection owningObject, DbConnectionOptions options, DbConnectionPoolKey poolKey, DbConnectionOptions userOptions)
-   at Microsoft.Data.ProviderBase.DbConnectionPool.CreateObject(DbConnection owningObject, DbConnectionOptions userOptions, DbConnectionInternal oldConnection)
-   at Microsoft.Data.ProviderBase.DbConnectionPool.UserCreateRequest(DbConnection owningObject, DbConnectionOptions userOptions, DbConnectionInternal oldConnection)
-   at Microsoft.Data.ProviderBase.DbConnectionPool.TryGetConnection(DbConnection owningObject, UInt32 waitForMultipleObjectsTimeout, Boolean allowCreate, Boolean onlyOneCheckConnection, DbConnectionOptions userOptions, DbConnectionInternal& connection)
-   at Microsoft.Data.ProviderBase.DbConnectionPool.WaitForPendingOpen()
---- End of stack trace from previous location ---
-   at Microsoft.EntityFrameworkCore.Storage.RelationalConnection.OpenInternalAsync(Boolean errorsExpected, CancellationToken cancellationToken)
-   at Microsoft.EntityFrameworkCore.Storage.RelationalConnection.OpenInternalAsync(Boolean errorsExpected, CancellationToken cancellationToken)
-   at Microsoft.EntityFrameworkCore.Storage.RelationalConnection.OpenAsync(CancellationToken cancellationToken, Boolean errorsExpected)
-   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
-   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.InitializeReaderAsync(AsyncEnumerator enumerator, CancellationToken cancellationToken)
-   at Microsoft.EntityFrameworkCore.SqlServer.Storage.Internal.SqlServerExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
-ClientConnectionId:00d13a70-330a-4787-977c-59b5606c1671
-Error Number:4060,State:1,Class:11
-   --- End of inner exception stack trace ---
-   at Microsoft.EntityFrameworkCore.SqlServer.Storage.Internal.SqlServerExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
-   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
-   at Microsoft.EntityFrameworkCore.Query.ShapedQueryCompilingExpressionVisitor.SingleAsync[TSource](IAsyncEnumerable`1 asyncEnumerable, CancellationToken cancellationToken)
-   at Microsoft.EntityFrameworkCore.Query.ShapedQueryCompilingExpressionVisitor.SingleAsync[TSource](IAsyncEnumerable`1 asyncEnumerable, CancellationToken cancellationToken)
-   at Project.Service.Data.Helpers.PaginatedList`1.CreateAsync(IQueryable`1 source, Int32 pageIndex, Int32 pageSize) in C:\Users\korisnik\Desktop\vehicle_management_app\Project.Service\Data\Helpers\PaginatedList.cs:line 26
-   at Project.Service.Services.VehicleService.GetMakesAsync(Int32 pageIndex, Int32 pageSize, String sortBy, String sortOrder, String searchString) in C:\Users\korisnik\Desktop\vehicle_management_app\Project.Service\Services\VehicleService.cs:line 45
-   at VehicleMakeController.Index(Int32 pageNumber, Int32 pageSize, String sortBy, String sortOrder, String searchString) in C:\Users\korisnik\Desktop\vehicle_management_app\Project.MVC\Controllers\VehicleMakeController.cs:line 28
-   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.TaskOfIActionResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
-   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
-   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
-   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
-   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
-   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeInnerFilterAsync>g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
-   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeNextResourceFilter>g__Awaited|25_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
-   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.Rethrow(ResourceExecutedContextSealed context)
-   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
-   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
-   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
-   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
-   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|7_0(Endpoint endpoint, Task requestTask, ILogger logger)
-   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
-   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddlewareImpl.Invoke(HttpContext context)
-2025-03-03 02:27:29.648 +01:00 [INF] Request finished HTTP/2 GET https://localhost:7266/ - 500 null text/html; charset=utf-8 3510.8725ms
-2025-03-03 02:27:32.822 +01:00 [INF] Request starting HTTP/2 GET https://localhost:7266/robots.txt - application/x-www-form-urlencoded null
-2025-03-03 02:27:32.833 +01:00 [INF] Request finished HTTP/2 GET https://localhost:7266/robots.txt - 404 0 null 11.2144ms
-2025-03-03 02:27:32.871 +01:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET https://localhost:7266/robots.txt, Response status code: 404
-2025-03-03 02:27:32.957 +01:00 [INF] Request starting HTTP/2 GET https://localhost:7266/robots.txt - application/x-www-form-urlencoded null
-2025-03-03 02:27:32.968 +01:00 [INF] Request finished HTTP/2 GET https://localhost:7266/robots.txt - 404 0 null 9.3177ms
-2025-03-03 02:27:32.982 +01:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET https://localhost:7266/robots.txt, Response status code: 404
-2025-03-03 02:28:42.307 +01:00 [INF] Request starting HTTP/2 GET https://localhost:7266/robots.txt - null null
-2025-03-03 02:28:42.377 +01:00 [INF] Request finished HTTP/2 GET https://localhost:7266/robots.txt - 404 0 null 70.0911ms
-2025-03-03 02:28:42.493 +01:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET https://localhost:7266/robots.txt, Response status code: 404
-2025-03-03 02:28:46.158 +01:00 [INF] Request starting HTTP/2 GET https://localhost:7266/robots.txt - application/x-www-form-urlencoded null
-2025-03-03 02:28:46.172 +01:00 [INF] Request finished HTTP/2 GET https://localhost:7266/robots.txt - 404 0 null 13.2729ms
-2025-03-03 02:28:46.183 +01:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET https://localhost:7266/robots.txt, Response status code: 404
-2025-03-03 03:18:55.964 +01:00 [INF] Executed DbCommand (49ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
-SELECT 1
-2025-03-03 03:18:56.141 +01:00 [INF] Acquiring an exclusive lock for migration application. See https://aka.ms/efcore-docs-migrations-lock for more information if this takes too long.
-2025-03-03 03:18:56.372 +01:00 [INF] Executed DbCommand (221ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
-DECLARE @result int;
-EXEC @result = sp_getapplock @Resource = '__EFMigrationsLock', @LockOwner = 'Session', @LockMode = 'Exclusive';
-SELECT @result
-2025-03-03 03:18:56.977 +01:00 [INF] Executed DbCommand (5ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
-IF OBJECT_ID(N'[__EFMigrationsHistory]') IS NULL
-BEGIN
-    CREATE TABLE [__EFMigrationsHistory] (
-        [MigrationId] nvarchar(150) NOT NULL,
-        [ProductVersion] nvarchar(32) NOT NULL,
-        CONSTRAINT [PK___EFMigrationsHistory] PRIMARY KEY ([MigrationId])
-    );
-END;
-2025-03-03 03:18:57.025 +01:00 [INF] Executed DbCommand (7ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
-SELECT 1
-2025-03-03 03:18:57.171 +01:00 [INF] Executed DbCommand (2ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
-SELECT OBJECT_ID(N'[__EFMigrationsHistory]');
-2025-03-03 03:18:57.199 +01:00 [INF] Executed DbCommand (3ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
-SELECT [MigrationId], [ProductVersion]
-FROM [__EFMigrationsHistory]
-ORDER BY [MigrationId];
-2025-03-03 03:18:57.237 +01:00 [INF] No migrations were applied. The database is already up to date.
-2025-03-03 03:18:57.349 +01:00 [INF] Executed DbCommand (85ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
-DECLARE @result int;
-EXEC @result = sp_releaseapplock @Resource = '__EFMigrationsLock', @LockOwner = 'Session';
-SELECT @result
-2025-03-03 03:18:57.566 +01:00 [INF] User profile is available. Using 'C:\Users\korisnik\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
-2025-03-03 03:18:58.096 +01:00 [INF] Now listening on: https://localhost:7266
-2025-03-03 03:18:58.113 +01:00 [INF] Now listening on: http://localhost:5266
-2025-03-03 03:18:58.118 +01:00 [INF] Application started. Press Ctrl+C to shut down.
-2025-03-03 03:18:58.125 +01:00 [INF] Hosting environment: Development
-2025-03-03 03:18:58.187 +01:00 [INF] Content root path: C:\Users\korisnik\Desktop\vehicle_management_app\Project.MVC
-2025-03-03 03:19:37.497 +01:00 [INF] Request starting HTTP/2 GET https://localhost:7266/ - null null
-2025-03-03 03:19:37.582 +01:00 [INF] Executing endpoint 'VehicleMakeController.Index (Project.MVC)'
-2025-03-03 03:19:37.638 +01:00 [INF] Route matched with {action = "Index", controller = "VehicleMake"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Index(Int32, Int32, System.String, System.String, System.String) on controller VehicleMakeController (Project.MVC).
-2025-03-03 03:19:38.807 +01:00 [INF] Executed action VehicleMakeController.Index (Project.MVC) in 1153.9129ms
-2025-03-03 03:19:38.820 +01:00 [INF] Executed endpoint 'VehicleMakeController.Index (Project.MVC)'
-2025-03-03 03:19:38.837 +01:00 [ERR] An unhandled exception has occurred while executing the request.
-System.InvalidOperationException: An exception has been raised that is likely due to a transient failure. Consider enabling transient error resiliency by adding 'EnableRetryOnFailure' to the 'UseSqlServer' call.
- ---> Microsoft.Data.SqlClient.SqlException (0x80131904): Cannot open database "VehicleManagement" requested by the login. The login failed.
-Login failed for user 'DESKTOP-VQID1H4\korisnik'.
-   at Microsoft.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
-   at Microsoft.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
-   at Microsoft.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
-   at Microsoft.Data.SqlClient.TdsParser.Run(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj)
-   at Microsoft.Data.SqlClient.SqlInternalConnectionTds.CompleteLogin(Boolean enlistOK)
-   at Microsoft.Data.SqlClient.SqlInternalConnectionTds.AttemptOneLogin(ServerInfo serverInfo, String newPassword, SecureString newSecurePassword, Boolean ignoreSniOpenTimeout, TimeoutTimer timeout, Boolean withFailover)
-   at Microsoft.Data.SqlClient.SqlInternalConnectionTds.LoginNoFailover(ServerInfo serverInfo, String newPassword, SecureString newSecurePassword, Boolean redirectedUserInstance, SqlConnectionString connectionOptions, SqlCredential credential, TimeoutTimer timeout)
-   at Microsoft.Data.SqlClient.SqlInternalConnectionTds.OpenLoginEnlist(TimeoutTimer timeout, SqlConnectionString connectionOptions, SqlCredential credential, String newPassword, SecureString newSecurePassword, Boolean redirectedUserInstance)
-   at Microsoft.Data.SqlClient.SqlInternalConnectionTds..ctor(DbConnectionPoolIdentity identity, SqlConnectionString connectionOptions, SqlCredential credential, Object providerInfo, String newPassword, SecureString newSecurePassword, Boolean redirectedUserInstance, SqlConnectionString userConnectionOptions, SessionData reconnectSessionData, Boolean applyTransientFaultHandling, String accessToken, DbConnectionPool pool)
-   at Microsoft.Data.SqlClient.SqlConnectionFactory.CreateConnection(DbConnectionOptions options, DbConnectionPoolKey poolKey, Object poolGroupProviderInfo, DbConnectionPool pool, DbConnection owningConnection, DbConnectionOptions userOptions)
-   at Microsoft.Data.ProviderBase.DbConnectionFactory.CreatePooledConnection(DbConnectionPool pool, DbConnection owningObject, DbConnectionOptions options, DbConnectionPoolKey poolKey, DbConnectionOptions userOptions)
-   at Microsoft.Data.ProviderBase.DbConnectionPool.CreateObject(DbConnection owningObject, DbConnectionOptions userOptions, DbConnectionInternal oldConnection)
-   at Microsoft.Data.ProviderBase.DbConnectionPool.UserCreateRequest(DbConnection owningObject, DbConnectionOptions userOptions, DbConnectionInternal oldConnection)
-   at Microsoft.Data.ProviderBase.DbConnectionPool.TryGetConnection(DbConnection owningObject, UInt32 waitForMultipleObjectsTimeout, Boolean allowCreate, Boolean onlyOneCheckConnection, DbConnectionOptions userOptions, DbConnectionInternal& connection)
-   at Microsoft.Data.ProviderBase.DbConnectionPool.WaitForPendingOpen()
---- End of stack trace from previous location ---
-   at Microsoft.EntityFrameworkCore.Storage.RelationalConnection.OpenInternalAsync(Boolean errorsExpected, CancellationToken cancellationToken)
-   at Microsoft.EntityFrameworkCore.Storage.RelationalConnection.OpenInternalAsync(Boolean errorsExpected, CancellationToken cancellationToken)
-   at Microsoft.EntityFrameworkCore.Storage.RelationalConnection.OpenAsync(CancellationToken cancellationToken, Boolean errorsExpected)
-   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
-   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.InitializeReaderAsync(AsyncEnumerator enumerator, CancellationToken cancellationToken)
-   at Microsoft.EntityFrameworkCore.SqlServer.Storage.Internal.SqlServerExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
-ClientConnectionId:4448e68c-b601-4139-a259-65609273b83b
-Error Number:4060,State:1,Class:11
-   --- End of inner exception stack trace ---
-   at Microsoft.EntityFrameworkCore.SqlServer.Storage.Internal.SqlServerExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
-   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
-   at Microsoft.EntityFrameworkCore.Query.ShapedQueryCompilingExpressionVisitor.SingleAsync[TSource](IAsyncEnumerable`1 asyncEnumerable, CancellationToken cancellationToken)
-   at Microsoft.EntityFrameworkCore.Query.ShapedQueryCompilingExpressionVisitor.SingleAsync[TSource](IAsyncEnumerable`1 asyncEnumerable, CancellationToken cancellationToken)
-   at Project.Service.Services.VehicleService.<>c.<<GetMakesAsync>b__3_1>d.MoveNext() in C:\Users\korisnik\Desktop\vehicle_management_app\Project.Service\Services\VehicleService.cs:line 50
---- End of stack trace from previous location ---
-   at Project.Service.Data.Helpers.PaginatedList`1.CreateAsync(IQueryable`1 source, Int32 pageIndex, Int32 pageSize, Func`2 countAsync) in C:\Users\korisnik\Desktop\vehicle_management_app\Project.Service\Data\Helpers\PaginatedList.cs:line 30
-   at Project.Service.Services.VehicleService.GetMakesAsync(Int32 pageIndex, Int32 pageSize, String sortBy, String sortOrder, String searchString) in C:\Users\korisnik\Desktop\vehicle_management_app\Project.Service\Services\VehicleService.cs:line 46
-   at VehicleMakeController.Index(Int32 pageNumber, Int32 pageSize, String sortBy, String sortOrder, String searchString) in C:\Users\korisnik\Desktop\vehicle_management_app\Project.MVC\Controllers\VehicleMakeController.cs:line 28
-   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.TaskOfIActionResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
-   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
-   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
-   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
-   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
-   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeInnerFilterAsync>g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
-   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeNextResourceFilter>g__Awaited|25_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
-   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.Rethrow(ResourceExecutedContextSealed context)
-   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
-   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
-   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
-   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
-   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|7_0(Endpoint endpoint, Task requestTask, ILogger logger)
-   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
-   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddlewareImpl.Invoke(HttpContext context)
-2025-03-03 03:19:39.163 +01:00 [INF] Request finished HTTP/2 GET https://localhost:7266/ - 500 null text/html; charset=utf-8 1688.7668ms
-2025-03-03 03:19:39.322 +01:00 [INF] Request starting HTTP/2 GET https://localhost:7266/robots.txt - application/x-www-form-urlencoded null
-2025-03-03 03:19:40.644 +01:00 [INF] Request finished HTTP/2 GET https://localhost:7266/robots.txt - 404 0 null 1321.7786ms
-2025-03-03 03:19:40.675 +01:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET https://localhost:7266/robots.txt, Response status code: 404
-<<<<<<< HEAD
-2025-03-03 04:28:09.979 +01:00 [INF] Executed DbCommand (87ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
-SELECT 1
-2025-03-03 04:28:10.157 +01:00 [INF] Acquiring an exclusive lock for migration application. See https://aka.ms/efcore-docs-migrations-lock for more information if this takes too long.
-2025-03-03 04:28:10.283 +01:00 [INF] Executed DbCommand (60ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
-DECLARE @result int;
-EXEC @result = sp_getapplock @Resource = '__EFMigrationsLock', @LockOwner = 'Session', @LockMode = 'Exclusive';
-SELECT @result
-2025-03-03 04:28:10.677 +01:00 [INF] Executed DbCommand (36ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
-IF OBJECT_ID(N'[__EFMigrationsHistory]') IS NULL
-BEGIN
-    CREATE TABLE [__EFMigrationsHistory] (
-        [MigrationId] nvarchar(150) NOT NULL,
-        [ProductVersion] nvarchar(32) NOT NULL,
-        CONSTRAINT [PK___EFMigrationsHistory] PRIMARY KEY ([MigrationId])
-    );
-END;
-2025-03-03 04:28:10.762 +01:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
-SELECT 1
-2025-03-03 04:28:10.779 +01:00 [INF] Executed DbCommand (8ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
-SELECT OBJECT_ID(N'[__EFMigrationsHistory]');
-2025-03-03 04:28:10.800 +01:00 [INF] Executed DbCommand (4ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
-SELECT [MigrationId], [ProductVersion]
-FROM [__EFMigrationsHistory]
-ORDER BY [MigrationId];
-2025-03-03 04:28:10.840 +01:00 [INF] No migrations were applied. The database is already up to date.
-2025-03-03 04:28:11.004 +01:00 [INF] Executed DbCommand (8ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
-DECLARE @result int;
-EXEC @result = sp_releaseapplock @Resource = '__EFMigrationsLock', @LockOwner = 'Session';
-SELECT @result
-2025-03-03 04:28:11.066 +01:00 [INF] User profile is available. Using 'C:\Users\korisnik\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
-2025-03-03 04:28:11.631 +01:00 [INF] Now listening on: https://localhost:7266
-2025-03-03 04:28:11.762 +01:00 [INF] Now listening on: http://localhost:5266
-2025-03-03 04:28:11.768 +01:00 [INF] Application started. Press Ctrl+C to shut down.
-2025-03-03 04:28:11.771 +01:00 [INF] Hosting environment: Development
-2025-03-03 04:28:11.778 +01:00 [INF] Content root path: C:\Users\korisnik\Desktop\vehicle_management_app\Project.MVC
-2025-03-03 04:28:20.258 +01:00 [INF] Request starting HTTP/2 GET https://localhost:7266/ - null null
-2025-03-03 04:28:20.721 +01:00 [INF] Executing endpoint 'VehicleMakeController.Index (Project.MVC)'
-2025-03-03 04:28:20.794 +01:00 [INF] Route matched with {action = "Index", controller = "VehicleMake"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Index(Int32, Int32, System.String, System.String, System.String) on controller VehicleMakeController (Project.MVC).
-2025-03-03 04:28:22.126 +01:00 [INF] Executed action VehicleMakeController.Index (Project.MVC) in 1313.0791ms
-2025-03-03 04:28:22.143 +01:00 [INF] Executed endpoint 'VehicleMakeController.Index (Project.MVC)'
-2025-03-03 04:28:22.150 +01:00 [ERR] An unhandled exception has occurred while executing the request.
-System.InvalidOperationException: An exception has been raised that is likely due to a transient failure. Consider enabling transient error resiliency by adding 'EnableRetryOnFailure' to the 'UseSqlServer' call.
- ---> Microsoft.Data.SqlClient.SqlException (0x80131904): Cannot open database "VehicleManagement" requested by the login. The login failed.
-Login failed for user 'DESKTOP-VQID1H4\korisnik'.
-   at Microsoft.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
-   at Microsoft.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
-   at Microsoft.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
-   at Microsoft.Data.SqlClient.TdsParser.Run(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj)
-   at Microsoft.Data.SqlClient.SqlInternalConnectionTds.CompleteLogin(Boolean enlistOK)
-   at Microsoft.Data.SqlClient.SqlInternalConnectionTds.AttemptOneLogin(ServerInfo serverInfo, String newPassword, SecureString newSecurePassword, Boolean ignoreSniOpenTimeout, TimeoutTimer timeout, Boolean withFailover)
-   at Microsoft.Data.SqlClient.SqlInternalConnectionTds.LoginNoFailover(ServerInfo serverInfo, String newPassword, SecureString newSecurePassword, Boolean redirectedUserInstance, SqlConnectionString connectionOptions, SqlCredential credential, TimeoutTimer timeout)
-   at Microsoft.Data.SqlClient.SqlInternalConnectionTds.OpenLoginEnlist(TimeoutTimer timeout, SqlConnectionString connectionOptions, SqlCredential credential, String newPassword, SecureString newSecurePassword, Boolean redirectedUserInstance)
-   at Microsoft.Data.SqlClient.SqlInternalConnectionTds..ctor(DbConnectionPoolIdentity identity, SqlConnectionString connectionOptions, SqlCredential credential, Object providerInfo, String newPassword, SecureString newSecurePassword, Boolean redirectedUserInstance, SqlConnectionString userConnectionOptions, SessionData reconnectSessionData, Boolean applyTransientFaultHandling, String accessToken, DbConnectionPool pool)
-   at Microsoft.Data.SqlClient.SqlConnectionFactory.CreateConnection(DbConnectionOptions options, DbConnectionPoolKey poolKey, Object poolGroupProviderInfo, DbConnectionPool pool, DbConnection owningConnection, DbConnectionOptions userOptions)
-   at Microsoft.Data.ProviderBase.DbConnectionFactory.CreatePooledConnection(DbConnectionPool pool, DbConnection owningObject, DbConnectionOptions options, DbConnectionPoolKey poolKey, DbConnectionOptions userOptions)
-   at Microsoft.Data.ProviderBase.DbConnectionPool.CreateObject(DbConnection owningObject, DbConnectionOptions userOptions, DbConnectionInternal oldConnection)
-   at Microsoft.Data.ProviderBase.DbConnectionPool.UserCreateRequest(DbConnection owningObject, DbConnectionOptions userOptions, DbConnectionInternal oldConnection)
-   at Microsoft.Data.ProviderBase.DbConnectionPool.TryGetConnection(DbConnection owningObject, UInt32 waitForMultipleObjectsTimeout, Boolean allowCreate, Boolean onlyOneCheckConnection, DbConnectionOptions userOptions, DbConnectionInternal& connection)
-   at Microsoft.Data.ProviderBase.DbConnectionPool.WaitForPendingOpen()
---- End of stack trace from previous location ---
-   at Microsoft.EntityFrameworkCore.Storage.RelationalConnection.OpenInternalAsync(Boolean errorsExpected, CancellationToken cancellationToken)
-   at Microsoft.EntityFrameworkCore.Storage.RelationalConnection.OpenInternalAsync(Boolean errorsExpected, CancellationToken cancellationToken)
-   at Microsoft.EntityFrameworkCore.Storage.RelationalConnection.OpenAsync(CancellationToken cancellationToken, Boolean errorsExpected)
-   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
-   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.InitializeReaderAsync(AsyncEnumerator enumerator, CancellationToken cancellationToken)
-   at Microsoft.EntityFrameworkCore.SqlServer.Storage.Internal.SqlServerExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
-ClientConnectionId:c2e02170-8503-44f1-9500-f87914dfacff
-Error Number:4060,State:1,Class:11
-   --- End of inner exception stack trace ---
-   at Microsoft.EntityFrameworkCore.SqlServer.Storage.Internal.SqlServerExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
-   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
-   at Microsoft.EntityFrameworkCore.Query.ShapedQueryCompilingExpressionVisitor.SingleAsync[TSource](IAsyncEnumerable`1 asyncEnumerable, CancellationToken cancellationToken)
-   at Microsoft.EntityFrameworkCore.Query.ShapedQueryCompilingExpressionVisitor.SingleAsync[TSource](IAsyncEnumerable`1 asyncEnumerable, CancellationToken cancellationToken)
-   at Project.Service.Services.VehicleService.<>c.<<GetMakesAsync>b__3_1>d.MoveNext() in C:\Users\korisnik\Desktop\vehicle_management_app\Project.Service\Services\VehicleService.cs:line 50
---- End of stack trace from previous location ---
-   at Project.Service.Data.Helpers.PaginatedList`1.CreateAsync(IQueryable`1 source, Int32 pageIndex, Int32 pageSize, Func`2 countAsync) in C:\Users\korisnik\Desktop\vehicle_management_app\Project.Service\Data\Helpers\PaginatedList.cs:line 30
-   at Project.Service.Services.VehicleService.GetMakesAsync(Int32 pageIndex, Int32 pageSize, String sortBy, String sortOrder, String searchString) in C:\Users\korisnik\Desktop\vehicle_management_app\Project.Service\Services\VehicleService.cs:line 46
-   at VehicleMakeController.Index(Int32 pageNumber, Int32 pageSize, String sortBy, String sortOrder, String searchString) in C:\Users\korisnik\Desktop\vehicle_management_app\Project.MVC\Controllers\VehicleMakeController.cs:line 28
-   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.TaskOfIActionResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
-   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
-   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
-   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
-   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
-   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeInnerFilterAsync>g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
-   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeNextResourceFilter>g__Awaited|25_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
-   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.Rethrow(ResourceExecutedContextSealed context)
-   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
-   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
-   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
-   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
-   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|7_0(Endpoint endpoint, Task requestTask, ILogger logger)
-   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
-   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddlewareImpl.Invoke(HttpContext context)
-2025-03-03 04:28:22.490 +01:00 [INF] Request finished HTTP/2 GET https://localhost:7266/ - 500 null text/html; charset=utf-8 2235.1028ms
-2025-03-03 04:28:26.286 +01:00 [INF] Request starting HTTP/2 GET https://localhost:7266/robots.txt - application/x-www-form-urlencoded null
-2025-03-03 04:28:26.327 +01:00 [INF] Request finished HTTP/2 GET https://localhost:7266/robots.txt - 404 0 null 40.1004ms
-2025-03-03 04:28:26.995 +01:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET https://localhost:7266/robots.txt, Response status code: 404
-2025-03-03 04:28:29.245 +01:00 [INF] Request starting HTTP/2 GET https://localhost:7266/favicon.ico - null null
-2025-03-03 04:28:29.293 +01:00 [INF] The file /favicon.ico was not modified
-2025-03-03 04:28:29.304 +01:00 [INF] Request finished HTTP/2 GET https://localhost:7266/favicon.ico - 304 null image/x-icon 58.8988ms
-2025-03-03 22:26:47.549 +01:00 [INF] Executed DbCommand (2,546ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
-SELECT 1
-2025-03-03 22:26:47.737 +01:00 [INF] Acquiring an exclusive lock for migration application. See https://aka.ms/efcore-docs-migrations-lock for more information if this takes too long.
-2025-03-03 22:26:48.443 +01:00 [INF] Executed DbCommand (696ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
-DECLARE @result int;
-EXEC @result = sp_getapplock @Resource = '__EFMigrationsLock', @LockOwner = 'Session', @LockMode = 'Exclusive';
-SELECT @result
-2025-03-03 22:26:48.680 +01:00 [INF] Executed DbCommand (37ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
-IF OBJECT_ID(N'[__EFMigrationsHistory]') IS NULL
-BEGIN
-    CREATE TABLE [__EFMigrationsHistory] (
-        [MigrationId] nvarchar(150) NOT NULL,
-        [ProductVersion] nvarchar(32) NOT NULL,
-        CONSTRAINT [PK___EFMigrationsHistory] PRIMARY KEY ([MigrationId])
-    );
-END;
-2025-03-03 22:26:48.737 +01:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
-SELECT 1
-2025-03-03 22:26:48.882 +01:00 [INF] Executed DbCommand (129ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
-SELECT OBJECT_ID(N'[__EFMigrationsHistory]');
-2025-03-03 22:26:49.916 +01:00 [INF] Executed DbCommand (740ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
-SELECT [MigrationId], [ProductVersion]
-FROM [__EFMigrationsHistory]
-ORDER BY [MigrationId];
-2025-03-03 22:26:49.975 +01:00 [INF] No migrations were applied. The database is already up to date.
-2025-03-03 22:26:50.158 +01:00 [INF] Executed DbCommand (34ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
-DECLARE @result int;
-EXEC @result = sp_releaseapplock @Resource = '__EFMigrationsLock', @LockOwner = 'Session';
-SELECT @result
-2025-03-03 22:26:50.267 +01:00 [INF] User profile is available. Using 'C:\Users\korisnik\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
-2025-03-03 22:26:55.027 +01:00 [INF] Now listening on: https://localhost:7266
-2025-03-03 22:26:55.030 +01:00 [INF] Now listening on: http://localhost:5266
-2025-03-03 22:26:55.527 +01:00 [INF] Application started. Press Ctrl+C to shut down.
-2025-03-03 22:26:55.535 +01:00 [INF] Hosting environment: Development
-2025-03-03 22:26:55.548 +01:00 [INF] Content root path: C:\Users\korisnik\Desktop\vehicle_management_app\Project.MVC
-2025-03-03 22:27:23.406 +01:00 [INF] Request starting HTTP/2 GET https://localhost:7266/ - null null
-2025-03-03 22:27:23.482 +01:00 [INF] Executing endpoint 'VehicleMakeController.Index (Project.MVC)'
-2025-03-03 22:27:23.595 +01:00 [INF] Route matched with {action = "Index", controller = "VehicleMake"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Index(Int32, Int32, System.String, System.String, System.String) on controller VehicleMakeController (Project.MVC).
-2025-03-03 22:27:27.678 +01:00 [INF] Executing ViewResult, running view Index.
-2025-03-03 22:27:27.829 +01:00 [INF] Executed ViewResult - view Index executed in 151.2553ms.
-2025-03-03 22:27:27.998 +01:00 [INF] Executed action VehicleMakeController.Index (Project.MVC) in 4308.8599ms
-2025-03-03 22:27:29.708 +01:00 [INF] Executed endpoint 'VehicleMakeController.Index (Project.MVC)'
-2025-03-03 22:27:29.721 +01:00 [INF] Request finished HTTP/2 GET https://localhost:7266/ - 200 null text/html; charset=utf-8 6319.2826ms
-2025-03-03 22:27:33.972 +01:00 [INF] Request starting HTTP/2 GET https://localhost:7266/robots.txt - application/x-www-form-urlencoded null
-2025-03-03 22:27:37.369 +01:00 [INF] Request finished HTTP/2 GET https://localhost:7266/robots.txt - 404 0 null 3399.1212ms
-2025-03-03 22:27:37.718 +01:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET https://localhost:7266/robots.txt, Response status code: 404
-2025-03-03 22:27:42.390 +01:00 [INF] Request starting HTTP/2 GET https://localhost:7266/?pageNumber=1 - null null
-2025-03-03 22:27:43.249 +01:00 [INF] Executing endpoint 'VehicleMakeController.Index (Project.MVC)'
-2025-03-03 22:27:43.251 +01:00 [INF] Route matched with {action = "Index", controller = "VehicleMake"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Index(Int32, Int32, System.String, System.String, System.String) on controller VehicleMakeController (Project.MVC).
-2025-03-03 22:27:43.293 +01:00 [INF] Executing ViewResult, running view Index.
-2025-03-03 22:27:43.303 +01:00 [INF] Executed ViewResult - view Index executed in 10.1291ms.
-2025-03-03 22:27:43.562 +01:00 [INF] Executed action VehicleMakeController.Index (Project.MVC) in 309.7579ms
-2025-03-03 22:27:43.565 +01:00 [INF] Executed endpoint 'VehicleMakeController.Index (Project.MVC)'
-2025-03-03 22:27:43.568 +01:00 [INF] Request finished HTTP/2 GET https://localhost:7266/?pageNumber=1 - 200 null text/html; charset=utf-8 1178.1466ms
-2025-03-03 22:27:48.946 +01:00 [INF] Request starting HTTP/2 GET https://localhost:7266/robots.txt - application/x-www-form-urlencoded null
-2025-03-03 22:27:49.015 +01:00 [INF] Request finished HTTP/2 GET https://localhost:7266/robots.txt - 404 0 null 69.1857ms
-2025-03-03 22:27:49.030 +01:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET https://localhost:7266/robots.txt, Response status code: 404
-=======
->>>>>>> 48835139a1c31d3706db19d3e90f15ef4cd2faf5
+2025-03-03 23:41:57.358 +01:00 [INF] Executing ViewResult, running view Index.
+2025-03-03 23:41:57.867 +01:00 [INF] Executed ViewResult - view Index executed in 521.0786ms.
+2025-03-03 23:41:57.923 +01:00 [INF] Executed action VehicleMakeController.Index (Project.MVC) in 2381.4713ms
+2025-03-03 23:41:57.927 +01:00 [INF] Executed endpoint 'VehicleMakeController.Index (Project.MVC)'
+2025-03-03 23:41:57.934 +01:00 [INF] Request finished HTTP/2 GET https://localhost:7266/?pageNumber=1 - 200 null text/html; charset=utf-8 3040.3484ms
+2025-03-03 23:41:57.951 +01:00 [INF] Request finished HTTP/2 GET https://localhost:7266/ - 500 null text/html; charset=utf-8 3089.8531ms
+2025-03-03 23:41:59.961 +01:00 [INF] Request starting HTTP/2 GET https://localhost:7266/robots.txt - application/x-www-form-urlencoded null
+2025-03-03 23:42:00.107 +01:00 [INF] Request finished HTTP/2 GET https://localhost:7266/robots.txt - 404 0 null 145.957ms
+2025-03-03 23:42:04.490 +01:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET https://localhost:7266/robots.txt, Response status code: 404
