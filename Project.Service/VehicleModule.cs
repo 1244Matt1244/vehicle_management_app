@@ -1,19 +1,23 @@
+// Project.Service/VehicleModule.cs
 using Ninject.Modules;
+using AutoMapper;
 using Project.Service.Data.Context;
 using Project.Service.Interfaces;
 using Project.Service.Services;
+using Project.Service.Mappings; // Only service-layer mappings
 
-namespace Project.Service
+public class VehicleModule : NinjectModule
 {
-    public class VehicleModule : NinjectModule
+    public override void Load()
     {
-        public override void Load()
-        {
-            // Bind ApplicationDbContext to itself (singleton scope)
-            Bind<ApplicationDbContext>().ToSelf().InSingletonScope();
-
-            // Bind IVehicleService to VehicleService
-            Bind<IVehicleService>().To<VehicleService>();
-        }
+        Bind<ApplicationDbContext>().ToSelf().InTransientScope();
+        Bind<IVehicleService>().To<VehicleService>();
+        
+        // Service-layer mappings only
+        var config = new MapperConfiguration(cfg => {
+            cfg.AddProfile<ServiceMappingProfile>();
+        });
+        
+        Bind<IMapper>().ToMethod(ctx => config.CreateMapper());
     }
 }
