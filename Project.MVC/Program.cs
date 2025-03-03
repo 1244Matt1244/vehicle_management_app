@@ -6,6 +6,8 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Configuration;
 using Project.Service.Data.Context;
 using Project.Service.Mappings;
+using Project.MVC.Mappings;
+using Project.Service;
 using Project.Service.Services;
 using Project.Service.Interfaces;
 using Ninject;
@@ -23,29 +25,20 @@ public class Program
             configuration.ReadFrom.Configuration(context.Configuration);
         });
 
-        // Configure Ninject as the primary container
-        var kernel = new StandardKernel(new VehicleModule());
-        builder.Host.UseServiceProviderFactory(new NinjectServiceProviderFactory(kernel));
+        // Configure Ninject for dependency injection
+        var kernel = new StandardKernel(new ServiceModule()); // Updated to ServiceModule
+        builder.Services.AddSingleton<IKernel>(kernel);
 
-        // Auto-register services from Ninject
-        builder.Services.AddControllersWithViews()
-            .AddApplicationPart(typeof(VehicleModule).Assembly);
+        // Register services using Ninject
+        builder.Services.AddScoped<IVehicleService>(provider => kernel.Get<IVehicleService>());
 
-        // Configure database context with environment-specific settings
-        builder.Services.AddDbContext<ApplicationDbContext>((serviceProvider, options) =>
-        {
-            var env = builder.Environment;
-            var configuration = serviceProvider.GetRequiredService<IConfiguration>();
+        // Add services to the container
+        builder.Services.AddControllersWithViews();
 
-            if (env.IsDevelopment())
-            {
-                options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
-            }
-            else
-            {
-                options.UseInMemoryDatabase("VehicleManagementDB");
-            }
-        });
+        // Update database context configuration
+        var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+        builder.Services.AddDbContext<ApplicationDbContext>(options =>
+            options.UseSqlServer(connectionString));
 
         // Configure AutoMapper with profiles
         builder.Services.AddAutoMapper(config =>
