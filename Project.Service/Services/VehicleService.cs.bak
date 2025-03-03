@@ -42,12 +42,10 @@ namespace Project.Service.Services
 
             query = query.OrderByProperty(sortBy, sortOrder);
             
-            // Updated return statement with custom count function
             return await PaginatedList<VehicleMakeDTO>.CreateAsync(
                 query.ProjectTo<VehicleMakeDTO>(_mapper.ConfigurationProvider),
                 pageIndex,
-                pageSize,
-                async source => await source.CountAsync()
+                pageSize
             );
         }
 
@@ -131,12 +129,10 @@ namespace Project.Service.Services
 
             query = query.OrderByProperty(sortBy, sortOrder);
             
-            // Updated return statement with custom count function
             return await PaginatedList<VehicleModelDTO>.CreateAsync(
                 query.ProjectTo<VehicleModelDTO>(_mapper.ConfigurationProvider),
                 pageIndex,
-                pageSize,
-                async source => await source.CountAsync()
+                pageSize
             );
         }
 
