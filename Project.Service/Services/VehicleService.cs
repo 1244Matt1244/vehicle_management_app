@@ -1,3 +1,5 @@
+// Project.Service/Services/VehicleService.cs
+
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
@@ -18,10 +20,11 @@ namespace Project.Service.Services
         private readonly ApplicationDbContext _context;
         private readonly IMapper _mapper;
 
+        // Constructor with fixed parameter names
         public VehicleService(ApplicationDbContext context, IMapper mapper)
         {
-            _context = context;
-            _mapper = mapper;
+            _context = context;  // Initialize the database context
+            _mapper = mapper;    // Initialize the AutoMapper instance
         }
 
         // VehicleMake Methods

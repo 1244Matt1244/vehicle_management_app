@@ -6,8 +6,6 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Configuration;
 using Project.Service.Data.Context;
 using Project.Service.Mappings;
-using Project.MVC.Mappings;
-using Project.Service;
 using Project.Service.Services;
 using Project.Service.Interfaces;
 using Ninject;
@@ -25,15 +23,13 @@ public class Program
             configuration.ReadFrom.Configuration(context.Configuration);
         });
 
-        // Configure Ninject for dependency injection
+        // Configure Ninject as the primary container
         var kernel = new StandardKernel(new VehicleModule());
-        builder.Services.AddSingleton<IKernel>(kernel);
+        builder.Host.UseServiceProviderFactory(new NinjectServiceProviderFactory(kernel));
 
-        // Register services using Ninject
-        builder.Services.AddScoped<IVehicleService>(provider => kernel.Get<IVehicleService>());
-
-        // Add services to the container
-        builder.Services.AddControllersWithViews();
+        // Auto-register services from Ninject
+        builder.Services.AddControllersWithViews()
+            .AddApplicationPart(typeof(VehicleModule).Assembly);
 
         // Configure database context with environment-specific settings
         builder.Services.AddDbContext<ApplicationDbContext>((serviceProvider, options) =>
