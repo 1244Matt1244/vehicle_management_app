@@ -356,7 +356,7 @@
             },
             "Microsoft.Extensions.DependencyInjection.Abstractions": {
               "target": "Package",
-              "version": "[9.0.2, )"
+              "version": "[9.0.0, )"
             },
             "Microsoft.Extensions.Hosting": {
               "target": "Package",
