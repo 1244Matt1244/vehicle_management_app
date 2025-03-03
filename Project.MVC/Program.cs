@@ -13,7 +13,6 @@ using Ninject;
 using Serilog;
 using System;
 using Microsoft.EntityFrameworkCore; // For UseSqlServer
-using Microsoft.EntityFrameworkCore.Storage; // Add this line to ensure SqlServerExecutionStrategy is recognized
 
 public class Program
 {
@@ -48,13 +47,6 @@ public class Program
                         maxRetryCount: 5,
                         maxRetryDelay: TimeSpan.FromSeconds(30),
                         errorNumbersToAdd: null
-                    );
-                    sqlOptions.ExecutionStrategy(
-                        context => new SqlServerExecutionStrategy(
-                            context,
-                            maxRetryCount: 5,
-                            maxDelay: TimeSpan.FromSeconds(30)
-                        )
                     );
                 }
             )
