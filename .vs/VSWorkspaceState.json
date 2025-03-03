@@ -1,7 +1,8 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\Project.Service"
   ],
-  "SelectedNode": "\\vehicle_management.db.sln",
+  "SelectedNode": "\\Project.Service\\appsettings.json",
   "PreviewInSolutionExplorer": false
 }
