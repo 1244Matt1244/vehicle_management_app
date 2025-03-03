@@ -1,5 +1,12 @@
 C:\Users\korisnik\Desktop\vehicle_management_app\Project.Tests\bin\Debug\net9.0\.msCoverageSourceRootsMapping_Project.Tests
 C:\Users\korisnik\Desktop\vehicle_management_app\Project.Tests\bin\Debug\net9.0\CoverletSourceRootsMapping_Project.Tests
+C:\Users\korisnik\Desktop\vehicle_management_app\Project.Tests\obj\Debug\net9.0\Project.Tests.csproj.AssemblyReference.cache
+C:\Users\korisnik\Desktop\vehicle_management_app\Project.Tests\obj\Debug\net9.0\MvcTestingAppManifest.json
+C:\Users\korisnik\Desktop\vehicle_management_app\Project.Tests\obj\Debug\net9.0\Project.Tests.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\korisnik\Desktop\vehicle_management_app\Project.Tests\obj\Debug\net9.0\Project.Tests.AssemblyInfoInputs.cache
+C:\Users\korisnik\Desktop\vehicle_management_app\Project.Tests\obj\Debug\net9.0\Project.Tests.AssemblyInfo.cs
+C:\Users\korisnik\Desktop\vehicle_management_app\Project.Tests\obj\Debug\net9.0\Project.Tests.csproj.CoreCompileInputs.cache
+C:\Users\korisnik\Desktop\vehicle_management_app\Project.Tests\obj\Debug\net9.0\Project.Tests.sourcelink.json
 C:\Users\korisnik\Desktop\vehicle_management_app\Project.Tests\bin\Debug\net9.0\testhost.dll
 C:\Users\korisnik\Desktop\vehicle_management_app\Project.Tests\bin\Debug\net9.0\xunit.abstractions.dll
 C:\Users\korisnik\Desktop\vehicle_management_app\Project.Tests\bin\Debug\net9.0\Project.MVC.deps.json
@@ -465,13 +472,6 @@ C:\Users\korisnik\Desktop\vehicle_management_app\Project.Tests\bin\Debug\net9.0\
 C:\Users\korisnik\Desktop\vehicle_management_app\Project.Tests\bin\Debug\net9.0\Project.Service.dll
 C:\Users\korisnik\Desktop\vehicle_management_app\Project.Tests\bin\Debug\net9.0\Project.Service.pdb
 C:\Users\korisnik\Desktop\vehicle_management_app\Project.Tests\bin\Debug\net9.0\Project.MVC.pdb
-C:\Users\korisnik\Desktop\vehicle_management_app\Project.Tests\obj\Debug\net9.0\Project.Tests.csproj.AssemblyReference.cache
-C:\Users\korisnik\Desktop\vehicle_management_app\Project.Tests\obj\Debug\net9.0\MvcTestingAppManifest.json
-C:\Users\korisnik\Desktop\vehicle_management_app\Project.Tests\obj\Debug\net9.0\Project.Tests.GeneratedMSBuildEditorConfig.editorconfig
-C:\Users\korisnik\Desktop\vehicle_management_app\Project.Tests\obj\Debug\net9.0\Project.Tests.AssemblyInfoInputs.cache
-C:\Users\korisnik\Desktop\vehicle_management_app\Project.Tests\obj\Debug\net9.0\Project.Tests.AssemblyInfo.cs
-C:\Users\korisnik\Desktop\vehicle_management_app\Project.Tests\obj\Debug\net9.0\Project.Tests.csproj.CoreCompileInputs.cache
-C:\Users\korisnik\Desktop\vehicle_management_app\Project.Tests\obj\Debug\net9.0\Project.Tests.sourcelink.json
 C:\Users\korisnik\Desktop\vehicle_management_app\Project.Tests\obj\Debug\net9.0\Project..466DD872.Up2Date
 C:\Users\korisnik\Desktop\vehicle_management_app\Project.Tests\obj\Debug\net9.0\Project.Tests.dll
 C:\Users\korisnik\Desktop\vehicle_management_app\Project.Tests\obj\Debug\net9.0\refint\Project.Tests.dll

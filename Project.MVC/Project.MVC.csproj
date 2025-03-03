@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
     <Nullable>enable</Nullable>
+    <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
     <WarningsAsErrors>nullable</WarningsAsErrors>
     <RazorLangVersion>9.0</RazorLangVersion>
   </PropertyGroup>
