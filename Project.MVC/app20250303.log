@@ -356,6 +356,7 @@ Error Number:4060,State:1,Class:11
 2025-03-03 03:19:39.322 +01:00 [INF] Request starting HTTP/2 GET https://localhost:7266/robots.txt - application/x-www-form-urlencoded null
 2025-03-03 03:19:40.644 +01:00 [INF] Request finished HTTP/2 GET https://localhost:7266/robots.txt - 404 0 null 1321.7786ms
 2025-03-03 03:19:40.675 +01:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET https://localhost:7266/robots.txt, Response status code: 404
+<<<<<<< HEAD
 2025-03-03 04:28:09.979 +01:00 [INF] Executed DbCommand (87ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
 SELECT 1
 2025-03-03 04:28:10.157 +01:00 [INF] Acquiring an exclusive lock for migration application. See https://aka.ms/efcore-docs-migrations-lock for more information if this takes too long.
@@ -513,3 +514,5 @@ SELECT @result
 2025-03-03 22:27:48.946 +01:00 [INF] Request starting HTTP/2 GET https://localhost:7266/robots.txt - application/x-www-form-urlencoded null
 2025-03-03 22:27:49.015 +01:00 [INF] Request finished HTTP/2 GET https://localhost:7266/robots.txt - 404 0 null 69.1857ms
 2025-03-03 22:27:49.030 +01:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET https://localhost:7266/robots.txt, Response status code: 404
+=======
+>>>>>>> 48835139a1c31d3706db19d3e90f15ef4cd2faf5
