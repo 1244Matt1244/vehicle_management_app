@@ -1,5 +1,6 @@
-using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Builder;  
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Net;
@@ -8,12 +9,12 @@ using System.Threading.Tasks;
 
 namespace Project.MVC.Middleware
 {
-    public class ExceptionMiddleware
+    public class ExceptionHandlerMiddleware
     {
         private readonly RequestDelegate _next;
-        private readonly ILogger<ExceptionMiddleware> _logger;
+        private readonly ILogger<ExceptionHandlerMiddleware> _logger;
 
-        public ExceptionMiddleware(RequestDelegate next, ILogger<ExceptionMiddleware> logger)
+        public ExceptionHandlerMiddleware(RequestDelegate next, ILogger<ExceptionHandlerMiddleware> logger)
         {
             _next = next;
             _logger = logger;
@@ -24,10 +25,23 @@ namespace Project.MVC.Middleware
             try
             {
                 await _next(context);
+                
+                // Handle 404 for undefined routes
+                if (context.Response.StatusCode == 404)
+                {
+                    _logger.LogWarning("404 Not Found: {Path}", context.Request.Path);
+                    context.Response.ContentType = "application/json";
+                    await context.Response.WriteAsync(JsonSerializer.Serialize(new ProblemDetails
+                    {
+                        Title = "Resource Not Found",
+                        Status = 404,
+                        Detail = $"The requested resource '{context.Request.Path}' was not found."
+                    }));
+                }
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An unhandled exception occurred");
+                _logger.LogError(ex, "Global exception caught");
                 await HandleExceptionAsync(context, ex);
             }
         }
@@ -37,20 +51,21 @@ namespace Project.MVC.Middleware
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
 
-            return context.Response.WriteAsync(JsonSerializer.Serialize(new
+            return context.Response.WriteAsync(JsonSerializer.Serialize(new ProblemDetails
             {
-                StatusCode = context.Response.StatusCode,
-                Message = "Internal Server Error"
+                Title = "Server Error",
+                Status = 500,
+                Detail = "An unexpected error occurred. Please try again later."
             }));
         }
     }
 
     public static class ExceptionMiddlewareExtensions
     {
-        public static IApplicationBuilder UseGlobalExceptionHandler(
-            this IApplicationBuilder builder)
+        public static IApplicationBuilder UseGlobalExceptionHandler(this IApplicationBuilder builder)
         {
-            return builder.UseMiddleware<ExceptionMiddleware>();
+            return builder.UseMiddleware<ExceptionHandlerMiddleware>();
         }
     }
 }
+
