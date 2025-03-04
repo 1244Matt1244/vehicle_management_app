@@ -123,12 +123,14 @@ namespace Project.Service.Services
                 .Include(m => m.VehicleMake)
                 .AsQueryable();
 
+            // Apply filters
             if (makeId.HasValue)
                 query = query.Where(m => m.VehicleMakeId == makeId.Value);
 
             if (!string.IsNullOrWhiteSpace(searchString))
                 query = query.Where(m => m.Name.Contains(searchString));
 
+            // Apply sorting
             query = query.OrderByProperty(sortBy, sortOrder);
             
             // Updated return statement with custom count function

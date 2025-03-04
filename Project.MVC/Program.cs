@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -11,8 +10,8 @@ using Project.Service.Services;
 using Project.Service.Interfaces;
 using Ninject;
 using Serilog;
+using Microsoft.EntityFrameworkCore;
 using System;
-using Microsoft.EntityFrameworkCore; // For UseSqlServer
 
 public class Program
 {
@@ -31,7 +30,7 @@ public class Program
         builder.Services.AddSingleton<IKernel>(kernel);
 
         // Register services using Ninject
-        builder.Services.AddScoped<IVehicleService>(provider => provider.GetRequiredService<IKernel>().Get<IVehicleService>());
+        builder.Services.AddScoped<IVehicleService>(provider => kernel.Get<IVehicleService>());
 
         // Add services to the container
         builder.Services.AddControllersWithViews();

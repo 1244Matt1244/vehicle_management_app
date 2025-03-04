@@ -48,7 +48,9 @@ namespace Project.MVC.Controllers
                     PageNumber = pageNumber,
                     PageSize = pageSize
                 },
-                Makes = _mapper.Map<List<VehicleMakeVM>>(makes)
+                Makes = _mapper.Map<List<VehicleMakeVM>>(makes),
+                // Assign MakeIdFilter to the makeId for filtering
+                MakeIdFilter = makeId
             };
 
             ViewBag.SortOrder = sortOrder;
