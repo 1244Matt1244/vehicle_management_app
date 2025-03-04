@@ -64,6 +64,9 @@ public class Program
             options.HeaderName = "X-CSRF-TOKEN";
         });
 
+        // Register StatusHandlerMiddleware as a scoped service
+        builder.Services.AddScoped<StatusHandlerMiddleware>();
+
         // Build the application
         var app = builder.Build();
 
@@ -90,6 +93,9 @@ public class Program
         }
 
         app.UseAuthorization();
+
+        // Use StatusHandlerMiddleware
+        app.UseMiddleware<StatusHandlerMiddleware>();
 
         // Configure default route
         app.MapControllerRoute(

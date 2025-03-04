@@ -1,23 +1,26 @@
-@model Project.MVC.ViewModels.VehicleModelEditVM 
+@model Project.MVC.ViewModels.VehicleModelEditVM
 
 <h1>Edit Vehicle Model</h1>
 
 <form asp-action="Edit">
     @Html.AntiForgeryToken()
     <input type="hidden" asp-for="Id" />
-    
+
+    <!-- Vehicle Name Field -->
     <div class="form-group">
         <label asp-for="Name"></label>
         <input asp-for="Name" class="form-control" />
         <span asp-validation-for="Name" class="text-danger"></span>
     </div>
-    
+
+    <!-- Abbreviation Field -->
     <div class="form-group">
         <label asp-for="Abbreviation"></label>
         <input asp-for="Abbreviation" class="form-control" />
         <span asp-validation-for="Abbreviation" class="text-danger"></span>
     </div>
 
+    <!-- Make Dropdown Field -->
     <div class="form-group">
         <label asp-for="MakeId"></label>
         <select asp-for="MakeId" 
@@ -28,6 +31,7 @@
         <span asp-validation-for="MakeId" class="text-danger"></span>
     </div>
 
+    <!-- Submit Button -->
     <button type="submit" class="btn btn-primary">Save</button>
 </form>
 
