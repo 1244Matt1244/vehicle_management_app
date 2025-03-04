@@ -6,23 +6,35 @@
 
 <div class="container mt-4">
     <h2>Vehicle Models</h2>
-    
-    <!-- Filter Form -->
+
+    <!-- Filter and Search Form -->
     <form asp-action="Index" method="get">
         <div class="form-group">
-            <label for="makeId">Filter by Make</label>
-            <select name="makeId" asp-items="@(new SelectList(Model.Makes, "Id", "Name", Context.Request.Query["makeId"]))" class="form-control">
+            <label for="makeId">Filter by Make:</label>
+            <select name="makeId" asp-items="@(new SelectList(Model.Makes, "Id", "Name", Model.MakeIdFilter))" class="form-control">
                 <option value="">All Makes</option>
             </select>
         </div>
-        <button type="submit" class="btn btn-primary">Filter</button>
+
+        <div class="form-group">
+            <label for="searchString">Search:</label>
+            <input type="text" name="searchString" value="@ViewBag.SearchString" class="form-control">
+        </div>
+
+        <button type="submit" class="btn btn-primary">Apply Filters</button>
     </form>
 
     <!-- Vehicle Models Table -->
     <table class="table table-striped mt-4">
         <thead>
             <tr>
-                <th>@Html.ActionLink("Name", "Index", new { sortBy = "Name", sortOrder = ViewBag.SortOrder == "asc" ? "desc" : "asc" })</th>
+                <th>
+                    <a asp-action="Index" 
+                       asp-route-sortBy="Name"
+                       asp-route-sortOrder="@(ViewBag.SortOrder == "asc" ? "desc" : "asc")">
+                        Name @(ViewBag.SortBy == "Name" ? (ViewBag.SortOrder == "asc" ? "↑" : "↓") : "")
+                    </a>
+                </th>
                 <th>Abbreviation</th>
                 <th>Make</th>
                 <th>Actions</th>
@@ -36,7 +48,7 @@
                     <td>@item.Abbreviation</td>
                     <td>@item.MakeName</td>
                     <td>
-                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-primary">Edit</a>
+                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning">Edit</a>
                         <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-info">Details</a>
                         <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger">Delete</a>
                     </td>
@@ -49,17 +61,17 @@
     <div class="pagination">
         @if (Model.PagedResults.HasPreviousPage)
         {
-            <a href="@Url.Action("Index", new { pageNumber = Model.PagedResults.PageNumber - 1, makeId = Context.Request.Query["makeId"] })" class="btn btn-outline-primary">&laquo;</a>
+            <a href="@Url.Action("Index", new { pageNumber = Model.PagedResults.PageNumber - 1, sortBy = ViewBag.SortBy, sortOrder = ViewBag.SortOrder, searchString = ViewBag.SearchString, makeId = Model.MakeIdFilter })" class="btn btn-outline-primary">&laquo;</a>
         }
 
         @for (int i = 1; i <= Model.PagedResults.TotalPages; i++)
         {
-            <a href="@Url.Action("Index", new { pageNumber = i, makeId = Context.Request.Query["makeId"] })" class="@(i == Model.PagedResults.PageNumber ? "btn btn-primary" : "btn btn-outline-primary")">@i</a>
+            <a href="@Url.Action("Index", new { pageNumber = i, sortBy = ViewBag.SortBy, sortOrder = ViewBag.SortOrder, searchString = ViewBag.SearchString, makeId = Model.MakeIdFilter })" class="@(i == Model.PagedResults.PageNumber ? "btn btn-primary" : "btn btn-outline-primary")">@i</a>
         }
 
         @if (Model.PagedResults.HasNextPage)
         {
-            <a href="@Url.Action("Index", new { pageNumber = Model.PagedResults.PageNumber + 1, makeId = Context.Request.Query["makeId"] })" class="btn btn-outline-primary">&raquo;</a>
+            <a href="@Url.Action("Index", new { pageNumber = Model.PagedResults.PageNumber + 1, sortBy = ViewBag.SortBy, sortOrder = ViewBag.SortOrder, searchString = ViewBag.SearchString, makeId = Model.MakeIdFilter })" class="btn btn-outline-primary">&raquo;</a>
         }
     </div>
 </div>

@@ -15,20 +15,24 @@ namespace Project.Service
             // AutoMapper configuration
             var mapperConfig = new MapperConfiguration(cfg =>
             {
+                // Add AutoMapper profile configurations
                 cfg.AddProfile<ServiceMappingProfile>();
             });
 
-            // Bind AutoMapper to constructor, singleton scope
+            // Bind AutoMapper to the IMapper interface using Singleton scope
             Bind<IMapper>().ToConstructor(c => new Mapper(mapperConfig)).InSingletonScope();
 
-            // Database context
+            // Configure and bind the database context (ApplicationDbContext) with transient scope
             Bind<ApplicationDbContext>().ToSelf().InTransientScope()
                 .WithConstructorArgument("options", new DbContextOptionsBuilder<ApplicationDbContext>()
                     .UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=VehicleManagement;Trusted_Connection=True;")
                     .Options);
 
-            // Services
+            // Bind IVehicleService to VehicleService (Transient Scope)
             Bind<IVehicleService>().To<VehicleService>().InTransientScope();
+
+            // Add additional service bindings as required
+            // Bind<IOtherService>().To<OtherService>().InTransientScope();
         }
     }
 }
