@@ -13,20 +13,22 @@ namespace Project.Service
         public override void Load()
         {
             // AutoMapper configuration
-            var mapperConfig = new MapperConfiguration(cfg => {
+            var mapperConfig = new MapperConfiguration(cfg =>
+            {
                 cfg.AddProfile<ServiceMappingProfile>();
             });
-            
+
+            // Bind AutoMapper to constructor, singleton scope
             Bind<IMapper>().ToConstructor(c => new Mapper(mapperConfig)).InSingletonScope();
 
             // Database context
-            Bind<ApplicationDbContext>().ToSelf().InSingletonScope()
+            Bind<ApplicationDbContext>().ToSelf().InTransientScope() // Using InTransientScope for DbContext
                 .WithConstructorArgument("options", new DbContextOptionsBuilder<ApplicationDbContext>()
                     .UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=VehicleManagement;Trusted_Connection=True;")
                     .Options);
 
             // Services
-            Bind<IVehicleService>().To<VehicleService>();
+            Bind<IVehicleService>().To<VehicleService>().InTransientScope(); // IVehicleService to VehicleService
         }
     }
 }

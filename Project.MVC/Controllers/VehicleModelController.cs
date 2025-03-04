@@ -18,6 +18,7 @@ public class VehicleModelController : Controller
         _mapper = mapper;
     }
 
+    // GET: VehicleModel/Index
     public async Task<IActionResult> Index(
         int pageNumber = 1,
         int pageSize = 10,
@@ -26,6 +27,7 @@ public class VehicleModelController : Controller
         string searchString = "",
         int? makeId = null)
     {
+        // Fetch models with paging, sorting, and filtering
         var serviceResult = await _vehicleService.GetModelsAsync(
             pageNumber,
             pageSize,
@@ -36,6 +38,7 @@ public class VehicleModelController : Controller
 
         var makes = await _vehicleService.GetAllMakesAsync();
 
+        // Create ViewModel with mapped results
         var viewModel = new VehicleModelIndexVM
         {
             PagedResults = new PagedResult<VehicleModelVM>
@@ -55,6 +58,7 @@ public class VehicleModelController : Controller
         return View(viewModel);
     }
 
+    // GET: VehicleModel/Create
     [HttpGet]
     public async Task<IActionResult> Create()
     {
@@ -66,25 +70,27 @@ public class VehicleModelController : Controller
         return View(vm);
     }
 
+    // POST: VehicleModel/Create
     [HttpPost]
     public async Task<IActionResult> Create(VehicleModelCreateVM model)
     {
         if (!ModelState.IsValid)
         {
-            return BadRequest(ModelState); // 400 - Bad Request for invalid model state
+            return BadRequest(ModelState); // Return 400 Bad Request for invalid model state
         }
 
         await _vehicleService.AddModelAsync(_mapper.Map<VehicleModelDTO>(model));
-        return Ok(); // 200 - OK for successful creation
+        return Ok(); // Return 200 OK for successful creation
     }
 
+    // GET: VehicleModel/Edit/5
     [HttpGet]
     public async Task<IActionResult> Edit(int id)
     {
         var model = await _vehicleService.GetModelByIdAsync(id);
         if (model == null)
         {
-            return NotFound(); // 404 - Not Found
+            return NotFound(); // Return 404 Not Found
         }
 
         var vm = _mapper.Map<VehicleModelEditVM>(model);
@@ -93,45 +99,49 @@ public class VehicleModelController : Controller
         return View(vm);
     }
 
+    // POST: VehicleModel/Edit/5
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Edit(VehicleModelEditVM model)
     {
         if (!ModelState.IsValid)
         {
-            return BadRequest(ModelState); // 400 - Bad Request for invalid model state
+            return BadRequest(ModelState); // Return 400 Bad Request for invalid model state
         }
 
         await _vehicleService.UpdateModelAsync(_mapper.Map<VehicleModelDTO>(model));
-        return Ok(); // 200 - OK for successful update
+        return Ok(); // Return 200 OK for successful update
     }
 
+    // GET: VehicleModel/Details/5
     [HttpGet]
     public async Task<IActionResult> Details(int id)
     {
         var model = await _vehicleService.GetModelByIdAsync(id);
         if (model == null)
         {
-            return NotFound(); // 404 - Not Found
+            return NotFound(); // Return 404 Not Found
         }
         return View(_mapper.Map<VehicleModelVM>(model)); // Display model details
     }
 
+    // GET: VehicleModel/Delete/5
     [HttpGet]
     public async Task<IActionResult> Delete(int id)
     {
         var model = await _vehicleService.GetModelByIdAsync(id);
         if (model == null)
         {
-            return NotFound(); // 404 - Not Found
+            return NotFound(); // Return 404 Not Found
         }
         return View(_mapper.Map<VehicleModelVM>(model)); // Show confirmation for deletion
     }
 
+    // POST: VehicleModel/Delete/5
     [HttpPost, ActionName("Delete")]
     public async Task<IActionResult> DeleteConfirmed(int id)
     {
         await _vehicleService.DeleteModelAsync(id);
-        return Ok(); // 200 - OK for successful deletion
+        return Ok(); // Return 200 OK for successful deletion
     }
 }
