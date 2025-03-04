@@ -64,9 +64,6 @@ public class Program
             options.HeaderName = "X-CSRF-TOKEN";
         });
 
-        // Register StatusHandlerMiddleware as a scoped service
-        builder.Services.AddScoped<StatusHandlerMiddleware>();
-
         // Build the application
         var app = builder.Build();
 
