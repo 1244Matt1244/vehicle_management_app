@@ -9,15 +9,15 @@ namespace Project.Service.Models
         public int Id { get; set; }
 
         [Required]
-        [StringLength(50)]
+        [StringLength(100)]
         public required string Name { get; set; }
 
         [Required]
         [StringLength(10)]
         public required string Abbreviation { get; set; }
 
-        [ForeignKey(nameof(VehicleMake))]  // Explicit foreign key annotation
-        public int VehicleMakeId { get; set; }  
+        [ForeignKey(nameof(VehicleMake))]
+        public int VehicleMakeId { get; set; }
 
         [Required]
         public virtual VehicleMake VehicleMake { get; set; } = null!;
