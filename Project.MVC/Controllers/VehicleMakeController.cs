@@ -6,6 +6,7 @@ using Project.Service.Data.DTOs;
 using Project.Service.Interfaces;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+
 public class VehicleMakeController : Controller
 {
     private readonly IVehicleService _vehicleService;
@@ -66,7 +67,7 @@ public class VehicleMakeController : Controller
         }
 
         var vehicleMakeDTO = _mapper.Map<VehicleMakeDTO>(vehicleMake);
-        await _vehicleService.AddMakeAsync(vehicleMakeDTO);
+        await _vehicleService.AddMakeAsync(vehicleMakeDTO); // No assignment needed
         return Ok(); // 200 - OK, successful creation
     }
 
@@ -98,7 +99,7 @@ public class VehicleMakeController : Controller
         }
 
         var vehicleMakeDTO = _mapper.Map<VehicleMakeDTO>(vehicleMake);
-        await _vehicleService.UpdateMakeAsync(vehicleMakeDTO);
+        await _vehicleService.UpdateMakeAsync(vehicleMakeDTO); // No assignment needed
         return Ok(); // 200 - OK for successful update
     }
 
@@ -131,7 +132,7 @@ public class VehicleMakeController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> DeleteConfirmed(int id)
     {
-        await _vehicleService.DeleteMakeAsync(id);
+        await _vehicleService.DeleteMakeAsync(id); // No assignment needed
         return Ok(); // 200 - OK for successful deletion
     }
 }

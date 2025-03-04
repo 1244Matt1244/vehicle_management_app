@@ -22,13 +22,14 @@ namespace Project.Service
             Bind<IMapper>().ToConstructor(c => new Mapper(mapperConfig)).InSingletonScope();
 
             // Database context
-            Bind<ApplicationDbContext>().ToSelf().InTransientScope() // Using InTransientScope for DbContext
+            Bind<ApplicationDbContext>().ToSelf().InTransientScope()
                 .WithConstructorArgument("options", new DbContextOptionsBuilder<ApplicationDbContext>()
                     .UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=VehicleManagement;Trusted_Connection=True;")
                     .Options);
 
             // Services
-            Bind<IVehicleService>().To<VehicleService>().InTransientScope(); // IVehicleService to VehicleService
+            Bind<IVehicleService>().To<VehicleService>().InTransientScope();
         }
     }
 }
+

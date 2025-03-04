@@ -27,16 +27,16 @@ public class Program
         });
 
         // Configure Ninject for dependency injection
-        var kernel = new StandardKernel(new ServiceModule()); // Updated to ServiceModule
+        var kernel = new StandardKernel(new ServiceModule());
         builder.Services.AddSingleton<IKernel>(kernel);
 
         // Register services using Ninject
-        builder.Services.AddScoped<IVehicleService>(provider => kernel.Get<IVehicleService>());
+        builder.Services.AddScoped<IVehicleService>(provider => provider.GetRequiredService<IKernel>().Get<IVehicleService>());
 
         // Add services to the container
         builder.Services.AddControllersWithViews();
 
-        // Update database context configuration with SQL Server resiliency
+        // Configure database context with SQL Server resiliency
         var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
         builder.Services.AddDbContext<ApplicationDbContext>(options =>
             options.UseSqlServer(
@@ -46,7 +46,7 @@ public class Program
                     sqlOptions.EnableRetryOnFailure(
                         maxRetryCount: 5,
                         maxRetryDelay: TimeSpan.FromSeconds(30),
-                        errorNumbersToAdd: null // Pass null for this parameter
+                        errorNumbersToAdd: null
                     );
                 }
             )
@@ -90,7 +90,6 @@ public class Program
             dbContext.Database.Migrate();
         }
 
-        app.UseAntiforgery(); // CSRF Protection Middleware
         app.UseAuthorization();
 
         // Configure default route
