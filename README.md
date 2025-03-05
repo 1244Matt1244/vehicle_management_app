@@ -35,7 +35,7 @@
 
 The system is designed with a clear separation between the presentation (MVC), business logic (Service), and data access (EF Core) layers. The diagram below illustrates the flow from development in Visual Studio to database management via SSMS.
 
-```
+```mermaid
 flowchart TD
     subgraph DEV[Development Environment]
         VS[Visual Studio]
@@ -73,7 +73,7 @@ flowchart TD
 
     style VS fill:#f9f,stroke:#333,stroke-width:2px,stroke-dasharray: 5 5
     style SSMS fill:#bbf,stroke:#333,stroke-width:2px
-```
+```mermaid
 
 ---
 
