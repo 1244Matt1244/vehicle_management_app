@@ -37,28 +37,28 @@ The system is designed with a clear separation between the presentation (MVC), b
 
 ```mermaid
 flowchart TD
-      subgraph DEV[Development Environment]
-      VS[Visual Studio]
+    subgraph DEV[Development Environment]
+    VS[Visual Studio]
     end
 
     subgraph MVC[Project.MVC (Presentation Layer)]
-      Controllers[Controllers]
-      Views[Views & ViewModels]
+    Controllers[Controllers]
+    Views[Views & ViewModels]
     end
 
     subgraph SERVICE[Project.Service (Business Logic Layer)]
-      VehicleService[VehicleService]
-      AutoMapper[AutoMapper]
+    VehicleService[VehicleService]
+    AutoMapper[AutoMapper]
     end
 
     subgraph DATA[Data Access Layer]
-      EFCore[Entity Framework Core]
-      DbContext[ApplicationDbContext]
-      SQLDB[SQL Server Database]
+    EFCore[Entity Framework Core]
+    DbContext[ApplicationDbContext]
+    SQLDB[SQL Server Database]
     end
 
     subgraph TOOLS[Database Tools]
-      SSMS[SQL Server Management Studio]
+    SSMS[SQL Server Management Studio]
     end
 
     VS -->|Develops & Edits Code| Controllers
