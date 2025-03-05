@@ -32,51 +32,28 @@
 
 ---
 
-## Architecture & Workflow
+## 📐 Architecture Overview
 
-The system is built with a clear separation of concerns between the presentation (MVC), business logic (Service), and data access (EF Core) layers. The diagram below illustrates the flow from development in Visual Studio to database management via SQL Server Management Studio (SSMS).
-
+### Layered Architecture
 ```mermaid
 flowchart TD
-    subgraph DEV[Development Environment]
-        VS[Visual Studio]
-    end
-
-    subgraph MVC[Project.MVC (Presentation Layer)]
-        Controllers[Controllers]
-        Views[Views & ViewModels]
-    end
-
-    subgraph SERVICE[Project.Service (Business Logic Layer)]
-        VehicleService[VehicleService]
-        AutoMapper[AutoMapper]
-    end
-
-    subgraph DATA[Data Access Layer]
-        EFCore[Entity Framework Core]
-        DbContext[ApplicationDbContext]
-        SQLDB[SQL Server Database]
-    end
-
-    subgraph TOOLS[Database Tools]
-        SSMS[SQL Server Management Studio]
-    end
-
-    VS -->|Develops & Edits Code| Controllers
-    VS -->|Develops & Edits Code| VehicleService
-    Controllers -->|Calls| VehicleService
-    VehicleService -->|Maps DTOs| AutoMapper
-    VehicleService -->|Queries/Updates| DbContext
-    DbContext -->|Executes EF Core Commands| SQLDB
-    SSMS --- SQLDB
-
-    Controllers --- Views
-
-    style VS fill:#f9f,stroke:#333,stroke-width:2px,stroke-dasharray: 5 5
-    style SSMS fill:#bbf,stroke:#333,stroke-width:2px
+    Presentation["Project.MVC (Presentation Layer)"]
+    Business["Project.Service (Business Layer)"]
+    Data["Project.Data (Data Layer)"]
+    Shared["Shared Core (Cross-cutting)"]
+    
+    Presentation -->|DTOs| Business
+    Business -->|Domain Models| Data
+    Data -->|EF Core| Database[(SQL Server)]
+    Shared --> Presentation
+    Shared --> Business
+    Shared --> Data
+    
+    style Presentation fill:#4CAF50,stroke:#388E3C
+    style Business fill:#2196F3,stroke:#1976D2
+    style Data fill:#9C27B0,stroke:#7B1FA2
+    style Shared fill:#FF9800,stroke:#F57C00
 ```
-
----
 
 ## Features
 
