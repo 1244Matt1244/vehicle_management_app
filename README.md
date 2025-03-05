@@ -4,7 +4,7 @@
 [![.NET Build](https://github.com/1244Matt1244/vehicle_management_app/actions/workflows/dotnet.yml/badge.svg)](https://github.com/1244Matt1244/vehicle_management_app/actions)
 [![License](https://img.shields.io/github/license/1244Matt1244/vehicle_management_app)](LICENSE)
 
-**Modern Vehicle Inventory System** built on the .NET 9 ecosystem with a clean, layered architecture. This application provides complete CRUD operations for vehicle makes and models—with advanced filtering, sorting, and paging—enforced with async/await, dependency injection via Ninject, and mapping via AutoMapper.
+**Modern Vehicle Inventory System** built on the .NET 9 ecosystem with a clean, layered architecture. This application provides complete CRUD operations for vehicle makes and models, with advanced filtering, sorting, and paging functionality—all enforced with async/await, dependency injection via Ninject, and mapping via AutoMapper.
 
 ---
 
@@ -20,59 +20,81 @@
 - [Deployment](#deployment)
 - [Contributing](#contributing)
 - [License](#license)
-- [Documentation](#documentation)
 
 ---
 
 ## Overview
 
-- **Project.MVC**: Presentation layer with controllers, views, and view models.
-- **Project.Service**: Business logic layer with EF Core models, the `VehicleService` class (supporting sorting, filtering, and paging), and AutoMapper integration.
-- **Project.Tests**: Automated tests using xUnit and Moq.
+- **Project.MVC**: The presentation layer with controllers, views, and view models.
+- **Project.Service**: The business logic layer with EF Core models, VehicleService class (with sorting, filtering, and paging), and AutoMapper integration.
+- **Project.Tests**: Automated tests written using xUnit and Moq.
 
 ---
 
-## 📐 Architecture Overview
+## Architecture & Workflow
 
-### Layered Architecture
-```mermaid
-flowchart TD
-    Presentation["Project.MVC (Presentation Layer)"]
-    Business["Project.Service (Business Layer)"]
-    Data["Project.Data (Data Layer)"]
-    Shared["Shared Core (Cross-cutting)"]
-    
-    Presentation -->|DTOs| Business
-    Business -->|Domain Models| Data
-    Data -->|EF Core| Database[(SQL Server)]
-    Shared --> Presentation
-    Shared --> Business
-    Shared --> Data
-    
-    style Presentation fill:#4CAF50,stroke:#388E3C
-    style Business fill:#2196F3,stroke:#1976D2
-    style Data fill:#9C27B0,stroke:#7B1FA2
-    style Shared fill:#FF9800,stroke:#F57C00
+The system is designed with a clear separation between the presentation (MVC), business logic (Service), and data access (EF Core) layers. The diagram below illustrates the flow from development in Visual Studio to database management via SSMS.
+
 ```
+flowchart TD
+    subgraph DEV[Development Environment]
+        VS[Visual Studio]
+    end
+
+    subgraph MVC[Project.MVC (Presentation Layer)]
+        Controllers[Controllers]
+        Views[Views & ViewModels]
+    end
+
+    subgraph SERVICE[Project.Service (Business Logic Layer)]
+        VehicleService[VehicleService]
+        AutoMapper[AutoMapper]
+    end
+
+    subgraph DATA[Data Access Layer]
+        EFCore[Entity Framework Core]
+        DbContext[ApplicationDbContext]
+        SQLDB[SQL Server Database]
+    end
+
+    subgraph TOOLS[Database Tools]
+        SSMS[SQL Server Management Studio]
+    end
+
+    VS -->|Develops & Edits Code| Controllers
+    VS -->|Develops & Edits Code| VehicleService
+    Controllers -->|Calls| VehicleService
+    VehicleService -->|Maps DTOs| AutoMapper
+    VehicleService -->|Queries/Updates| DbContext
+    DbContext -->|Executes EF Core Commands| SQLDB
+    SSMS --- SQLDB
+
+    Controllers --- Views
+
+    style VS fill:#f9f,stroke:#333,stroke-width:2px,stroke-dasharray: 5 5
+    style SSMS fill:#bbf,stroke:#333,stroke-width:2px
+```
+
+---
 
 ## Features
 
 - **Complete Vehicle Management:**  
   Full CRUD operations for vehicle makes and models.
 - **Advanced Filtering & Sorting:**  
-  Dynamic pagination, sorting, and search functionality.
+  Built-in pagination, dynamic sorting, and search functionality.
 - **Layered Architecture:**  
-  Strict separation between MVC, Service, and Data layers.
+  Separation of concerns between MVC, Service, and Data layers.
 - **Asynchronous Programming:**  
-  Async/await enforced across all layers.
+  `async/await` is enforced across all layers.
 - **Dependency Injection & IoC:**  
-  Ninject is used for DI to promote testability and loose coupling.
-- **Object Mapping:**  
+  Uses Ninject for DI to ensure testability and loose coupling.
+- **Mapping:**  
   AutoMapper converts EF models to DTOs/view models.
 - **Global Error Handling:**  
   Custom middleware returns structured JSON error responses.
 - **CI/CD & Docker Support:**  
-  Automated builds, tests, and containerized deployments.
+  Automated builds and containerized deployments.
 - **HTTPS Security:**  
   Enforced HTTPS using development certificates.
 
@@ -80,30 +102,33 @@ flowchart TD
 
 ## Requirements & Roadmap
 
-### Requirements
+### Database & Projects Setup
 
-- **Database Setup:**  
-  - **VehicleMake:** Columns: `Id`, `Name`, `Abrv` (e.g., BMW, Ford, Volkswagen)  
-  - **VehicleModel:** Columns: `Id`, `MakeId`, `Name`, `Abrv` (e.g., 128, 325, X5 for BMW)
+- **Database:**  
+  - **VehicleMake:** `(Id, Name, Abrv)` – e.g., BMW, Ford, Volkswagen  
+  - **VehicleModel:** `(Id, MakeId, Name, Abrv)` – e.g., 128, 325, X5 (BMW)
 - **Solution Structure:**  
-  - **Project.Service:** EF Core models and `VehicleService` with CRUD operations (including sorting, filtering, and paging).  
-  - **Project.MVC:** Administration views for vehicle makes and models (with filtering by make).
-- **Implementation Details:**  
-  - Use async/await throughout.
-  - Abstract classes with interfaces for unit testing.
-  - Enforce IoC/DI using Ninject (constructor injection preferred).
-  - Use AutoMapper for mapping.
-  - Use EF Core (Code First) for database access.
-  - Return view models (not EF models) in MVC.
-  - Return proper HTTP status codes.
+  - **Project.Service:** Contains EF models and `VehicleService` for CRUD (with sorting, filtering, and paging).  
+  - **Project.MVC:** Provides administration views for makes/models with filtering by make.
+  
+### Implementation Details
+
+- Enforce **async/await** across all layers.
+- Abstract classes using **interfaces** for unit testing.
+- Use **IoC/DI** via Ninject (constructor injection preferred).
+- Use **AutoMapper** for object mapping.
+- Use **EF Core (Code First)** for database access.
+- Return view models (not EF models) in MVC.
+- Return proper HTTP status codes.
+- Maintain a dedicated GitHub repository for the project.
 
 ### Roadmap
 
 #### 2025 Priorities
-- [x] Implement Core CRUD Functionality for Vehicle Makes/Models  
-- [x] Enhance Pagination, Sorting & Filtering  
-- [ ] Integrate additional security measures  
-- [ ] Refine global error handling and logging  
+- [x] Implement Core CRUD Functionality for Vehicle Makes/Models
+- [x] Enhance Pagination, Sorting & Filtering
+- [ ] Integrate additional security measures
+- [ ] Refine global error handling and logging
 
 #### Quality Goals
 - **High Test Coverage:** Robust automated testing.
@@ -114,24 +139,20 @@ flowchart TD
 
 ## Database Migrations & Build Process
 
-### Database Migrations
-
-Clean existing migrations and create a new migration to fix foreign key conflicts:
+Follow these steps to clean existing migrations, create a new migration, and update the database:
 
 ```bash
 # Clean existing migrations
 rm -rf Project.Service/Migrations/
 
-# Create a new migration
+# Create a new migration to fix foreign key conflicts
 dotnet ef migrations add FixForeignKeyConflict --project Project.Service --startup-project Project.MVC
 
-# Apply the new migration
+# Apply the new migration to the database
 dotnet ef database update --project Project.Service --startup-project Project.MVC --verbose
 ```
 
-### Build Process
-
-Perform a full clean build and run the application:
+Then, for a full clean, restore, build, and run:
 
 ```bash
 dotnet clean && dotnet restore && dotnet build
@@ -168,36 +189,30 @@ flowchart TD
 
 1. **Clone the Repository:**
    ```bash
-   git clone --recurse-submodules https://github.com/1244Matt1244/vehicle_management_app.git
+   git clone https://github.com/1244Matt1244/vehicle_management_app.git
    cd vehicle_management_app
    ```
-2. **Initialize Development Certificates:**
+2. **Trust the Development Certificate:**
    ```bash
-   dotnet dev-certs https --clean
-   dotnet dev-certs https --trust -ep ${HOME}/.aspnet/https/VehicleManagement.pfx -p "SecurePassword123!"
+   dotnet dev-certs https --trust
    ```
-3. **Configure Local Secrets:**
-   ```bash
-   dotnet user-secrets init --project Project.MVC
-   dotnet user-secrets set "ConnectionStrings:DefaultConnection" "Server=(localdb)\\MSSQLLocalDB;Database=VehicleManagement;Trusted_Connection=True;"
-   ```
-4. **Restore Dependencies and Build:**
+3. **Restore Dependencies and Build:**
    ```bash
    dotnet restore
    dotnet build
    ```
-5. **Run the Application:**
+4. **Run the Application:**
    ```bash
    dotnet run --project Project.MVC
    ```
-6. **Access the Application:**
+5. **Access the Application:**
    - Open [https://localhost:7266](https://localhost:7266) in your browser.
 
 ---
 
 ## Testing
 
-Run automated tests using xUnit and Moq:
+Run automated tests with:
 
 ```bash
 dotnet test
@@ -226,7 +241,7 @@ Test results, coverage, and performance metrics will be displayed in the termina
 
 ## Contributing
 
-Contributions are welcome! Please follow these guidelines:
+Contributions are welcome! To contribute:
 
 1. **Fork the Repository**
 2. **Create a Feature Branch:**
@@ -234,11 +249,11 @@ Contributions are welcome! Please follow these guidelines:
    git checkout -b feature/YourFeature
    ```
 3. **Implement Your Changes:**  
-   Ensure that all tests pass.
+   Ensure all tests pass.
 4. **Submit a Pull Request:**  
    Provide detailed commit messages and update documentation as needed.
 
-For open issues or feature requests, please refer to our [Issue Tracker](https://github.com/1244Matt1244/vehicle_management_app/issues).
+For open issues or ideas, please see our [Issue Tracker](https://github.com/1244Matt1244/vehicle_management_app/issues).
 
 ---
 
