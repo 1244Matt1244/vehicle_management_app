@@ -37,28 +37,28 @@ The system is designed with a clear separation between the presentation (MVC), b
 
 ```mermaid
 flowchart TD
-    subgraph DEV[Development Environment]
-        VS[Visual Studio]
+      subgraph DEV[Development Environment]
+      VS[Visual Studio]
     end
 
     subgraph MVC[Project.MVC (Presentation Layer)]
-        Controllers[Controllers]
-        Views[Views & ViewModels]
+      Controllers[Controllers]
+      Views[Views & ViewModels]
     end
 
     subgraph SERVICE[Project.Service (Business Logic Layer)]
-        VehicleService[VehicleService]
-        AutoMapper[AutoMapper]
+      VehicleService[VehicleService]
+      AutoMapper[AutoMapper]
     end
 
     subgraph DATA[Data Access Layer]
-        EFCore[Entity Framework Core]
-        DbContext[ApplicationDbContext]
-        SQLDB[SQL Server Database]
+      EFCore[Entity Framework Core]
+      DbContext[ApplicationDbContext]
+      SQLDB[SQL Server Database]
     end
 
     subgraph TOOLS[Database Tools]
-        SSMS[SQL Server Management Studio]
+      SSMS[SQL Server Management Studio]
     end
 
     VS -->|Develops & Edits Code| Controllers
@@ -121,21 +121,6 @@ flowchart TD
 - Return view models (not EF models) in MVC.
 - Return proper HTTP status codes.
 - Maintain a dedicated GitHub repository for the project.
-
-### Roadmap
-
-#### 2025 Priorities
-- [x] Implement Core CRUD Functionality for Vehicle Makes/Models
-- [x] Enhance Pagination, Sorting & Filtering
-- [ ] Integrate additional security measures
-- [ ] Refine global error handling and logging
-
-#### Quality Goals
-- **High Test Coverage:** Robust automated testing.
-- **Global Error Handling:** Precise and structured exception reporting.
-- **Clean Architecture:** Strict separation of concerns across layers.
-
----
 
 ## Database Migrations & Build Process
 
